@@ -85,8 +85,8 @@ src/app/
 - Las páginas no usan `HttpClient`; delegan en ComponentStores y en `TizoApiService`.
 - El Router conserva búsqueda, filtros y pestañas compartibles.
 - Los formularios reactivos tipados poseen selección, validación y estado sucio.
-- El mock y la API real comparten las formas públicas documentadas en
-  `specs/001-tizo-ecommerce/contracts/openapi.yaml`.
+- El mock y la API real comparten los contratos tipados de
+  [`src/app/core/api/api-contract.ts`](src/app/core/api/api-contract.ts).
 - El dinero se representa en unidades menores enteras mediante `Money`.
 - Las mutaciones nunca se reintentan automáticamente. Un timeout queda en estado `uncertain` y se
   reconcilia por clave idempotente.
@@ -110,7 +110,8 @@ mockApi: false;
 Para conectar el backend:
 
 1. Configurá `apiBaseUrl` en `src/environments/environment.ts`.
-2. Implementá el OpenAPI de `specs/001-tizo-ecommerce/contracts/openapi.yaml`.
+2. Implementá las superficies REST consumidas por
+   [`TizoApiService`](src/app/core/api/tizo-api.service.ts), respetando los contratos públicos.
 3. Conservá `X-Operator-Id`, códigos de dominio, `correlationId` e idempotencia.
 4. Ejecutá ambos builds y la suite contractual/E2E.
 
@@ -125,4 +126,3 @@ está en [docs/real-api-migration.md](docs/real-api-migration.md).
 - [Visión de producto](PRODUCT.md).
 - [Decisiones visuales](DESIGN.md).
 - [Manifiesto de pantallas Stitch](docs/stitch-screen-manifest.md).
-- [Especificación ejecutable](specs/001-tizo-ecommerce/spec.md).

@@ -2,8 +2,9 @@
 
 ## Precondiciones del backend
 
-El backend debe implementar el contrato de
-`specs/001-tizo-ecommerce/contracts/openapi.yaml` y preservar:
+El backend debe implementar los endpoints consumidos por
+`src/app/core/api/tizo-api.service.ts`, usando las formas públicas definidas en
+`src/app/core/api/api-contract.ts`, y preservar:
 
 - dinero en unidades menores enteras y moneda ISO-4217;
 - endpoints separados para cliente y operaciones;
