@@ -51,3 +51,27 @@ test('una respuesta perdida se reconcilia sin duplicar la solicitud', async ({ p
   await page.goto('/cancellations?status=REQUESTED');
   await expect(page.getByText('Orden #1042')).toHaveCount(1);
 });
+
+test('rechazar conserva la orden y permite una solicitud futura', async ({ page }) => {
+  await resetDemo(page);
+  await page.goto('/operator');
+  await page.getByRole('button', { name: /Mariana Sosa/ }).click();
+  await page.goto('/orders/1042/cancel');
+  await page.getByRole('checkbox').first().check();
+  await page.getByLabel('Motivo').selectOption('CUSTOMER_REQUEST');
+  await page.getByLabel(/Nota/).fill('El caso requiere revisión operacional.');
+  await page.getByRole('button', { name: 'Enviar solicitud' }).click();
+  await expect(page).toHaveURL(/\/cancellations\/C-\d+\?requested=1$/);
+
+  await page.getByRole('button', { name: 'Rechazar solicitud' }).click();
+  await page.getByLabel('Motivo del rechazo').fill('La orden debe continuar sin cambios.');
+  await page.getByRole('button', { name: 'Confirmar' }).click();
+  await expect(page.getByText('Caso resuelto')).toBeVisible();
+  await expect(page.getByText('Rechazada', { exact: true })).toBeVisible();
+
+  await page.goto('/orders/1042');
+  await expect(page.getByText('$ 128.400', { exact: true })).toHaveCount(2);
+  await expect(page.getByText('$ 0', { exact: true })).toBeVisible();
+  await page.getByRole('link', { name: 'Crear solicitud' }).click();
+  await expect(page.getByRole('checkbox').first()).toBeEnabled();
+});
