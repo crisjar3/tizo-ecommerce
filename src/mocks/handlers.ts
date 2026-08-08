@@ -9,6 +9,8 @@ import type {
   OpsOrder,
   ResolveCancellationCommand,
 } from '../app/core/api/api-contract';
+import { MOCK_SCENARIO_KEY } from '../app/core/demo/mock-scenario';
+import type { MockScenario } from '../app/core/demo/mock-scenario';
 import {
   buildCart,
   fingerprint,
@@ -19,10 +21,6 @@ import {
   updateDatabase,
 } from './db';
 import type { MockDatabase } from './db';
-
-export type MockScenario = 'normal' | 'slow' | 'empty' | 'error' | 'offline' | 'uncertain';
-
-export const MOCK_SCENARIO_KEY = 'tizo:mock-scenario:v1';
 
 const ok = <T extends JsonBodyType>(body: T, status = 200) => HttpResponse.json(body, { status });
 

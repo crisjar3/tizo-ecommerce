@@ -70,7 +70,7 @@
 
 - [x] T039 [P] [US5] Implement loading, empty, error and not-found states in `src/app/shared/ui/`
 - [x] T040 [P] [US5] Implement offline banner and network service in `src/app/core/network/`
-- [ ] T041 [US5] Implement demo scenario panel and reset action in `src/app/shared/ui/demo-panel/`
+- [x] T041 [US5] Implement demo scenario panel and reset action in `src/app/shared/ui/demo-panel/`
 - [x] T042 [US5] Map domain error codes to recovery actions in `src/app/core/errors/error-mapper.ts`
 
 ## Phase 8: Polish and Cross-Cutting Concerns

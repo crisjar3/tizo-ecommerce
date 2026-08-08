@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { timeout } from 'rxjs';
+import { map, timeout } from 'rxjs';
 import type { Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
@@ -153,5 +153,12 @@ export class TizoApiService {
     return this.http
       .get<readonly AuditEvent[]>(`${this.base}/ops/cancellation-history`)
       .pipe(timeout(READ_TIMEOUT));
+  }
+
+  resetDemoData(): Observable<void> {
+    return this.http.post(`${this.base}/mock/reset`, {}).pipe(
+      map(() => undefined),
+      timeout(COMMAND_TIMEOUT),
+    );
   }
 }
