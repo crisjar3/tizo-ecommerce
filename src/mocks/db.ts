@@ -2,14 +2,18 @@ import type {
   AuditEvent,
   CancellationRequest,
   Cart,
-  CustomerOrder,
-  CustomerOrderProgress,
   Operator,
   OpsOrder,
   OrderItemStatus,
   Product,
 } from '../app/core/api/api-contract';
+import {
+  itemStatusRank,
+  progressFromItemStatus,
+} from '../app/features/customer-orders/domain/customer-order-projection';
 import { createSeedDatabase } from './seeds';
+
+export { projectCustomerOrder } from '../app/features/customer-orders/domain/customer-order-projection';
 
 export interface StoredCartItem {
   productId: string;
@@ -92,26 +96,6 @@ export function buildCart(database: MockDatabase): Cart {
   };
 }
 
-export function projectCustomerOrder(order: OpsOrder): CustomerOrder {
-  return {
-    id: order.id,
-    createdAt: order.createdAt,
-    progress: deriveCustomerProgress(order),
-    items: order.items.map((item) => ({
-      id: item.id,
-      productId: item.productId,
-      name: item.name,
-      quantity: item.quantity,
-      lineTotal: item.lineTotal,
-      cancelled: item.status === 'CANCELLED',
-      refundStatus: item.refundStatus,
-    })),
-    paidTotal: order.paidTotal,
-    cancelledTotal: order.cancelledTotal,
-    activeTotal: order.activeTotal,
-  };
-}
-
 export function recalculateOrder(order: OpsOrder): OpsOrder {
   const cancelledAmount = order.items
     .filter((item) => item.status === 'CANCELLED')
@@ -122,14 +106,15 @@ export function recalculateOrder(order: OpsOrder): OpsOrder {
     cancelledAmount === 0 ? 'NONE' : activeItems.length === 0 ? 'FULL' : 'PARTIAL';
   const fulfillmentStatus: OrderItemStatus = firstActiveItem
     ? activeItems.reduce<OrderItemStatus>(
-        (current, item) => (statusRank(item.status) < statusRank(current) ? item.status : current),
+        (current, item) =>
+          itemStatusRank(item.status) < itemStatusRank(current) ? item.status : current,
         firstActiveItem.status,
       )
     : 'CANCELLED';
 
   return {
     ...order,
-    progress: deriveProgressFromStatus(fulfillmentStatus),
+    progress: progressFromItemStatus(fulfillmentStatus),
     fulfillmentStatus,
     cancellationStatus,
     cancelledTotal: { amountMinor: cancelledAmount, currency: order.paidTotal.currency },
@@ -143,28 +128,4 @@ export function recalculateOrder(order: OpsOrder): OpsOrder {
 
 export function fingerprint(value: unknown): string {
   return JSON.stringify(value, Object.keys(value as object).sort());
-}
-
-function deriveCustomerProgress(order: OpsOrder): CustomerOrderProgress {
-  const active = order.items.filter((item) => item.status !== 'CANCELLED');
-  const firstActiveItem = active[0];
-  if (!firstActiveItem) return 'CANCELLED';
-  return deriveProgressFromStatus(
-    active.reduce(
-      (current, item) => (statusRank(item.status) < statusRank(current) ? item.status : current),
-      firstActiveItem.status,
-    ),
-  );
-}
-
-function deriveProgressFromStatus(status: OrderItemStatus): CustomerOrderProgress {
-  if (status === 'DELIVERED') return 'DELIVERED';
-  if (status === 'DISPATCHED') return 'IN_TRANSIT';
-  if (status === 'PREPARING' || status === 'AT_HUB') return 'PREPARING';
-  if (status === 'CANCELLED') return 'CANCELLED';
-  return 'CONFIRMED';
-}
-
-function statusRank(status: OrderItemStatus): number {
-  return ['PENDING', 'CONFIRMED', 'PREPARING', 'AT_HUB', 'DISPATCHED', 'DELIVERED'].indexOf(status);
 }

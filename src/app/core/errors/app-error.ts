@@ -54,4 +54,17 @@ export const initialScreenState = <T>(): ScreenState<T> => ({
   error: null,
 });
 
+export const successScreenState = <T>(data: T): ScreenState<T> => ({
+  status: 'success',
+  data,
+  error: null,
+  updatedAt: Date.now(),
+});
+
+export const errorScreenState = <T>(error: AppError, data: T | null = null): ScreenState<T> => ({
+  status: 'error',
+  data,
+  error,
+});
+
 export const idleCommandState = <T>(): CommandState<T> => ({ status: 'idle' });

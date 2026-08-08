@@ -18,18 +18,18 @@
 - [x] T011 Implement idempotent MSW handlers in `src/mocks/handlers.ts`
 - [x] T012 Implement runtime mock bootstrap in `src/main.ts` and `src/mocks/browser.ts`
 - [x] T013 Implement shared shells and UI primitives in `src/app/shared/ui/`
-- [ ] T014 Configure lazy route groups in `src/app/app.routes.ts`
+- [x] T014 Configure lazy route groups in `src/app/app.routes.ts`
 
 ## Phase 3: User Story 1 - Comprar y consultar un pedido
 
 **Independent test**: catalog → cart → checkout produces one visible order and empties the cart.
 
-- [ ] T015 [P] [US1] Test money and customer projection in `src/app/features/customer-orders/domain/*.spec.ts`
-- [ ] T016 [P] [US1] Implement catalog gateway and store in `src/app/features/catalog/`
-- [ ] T017 [P] [US1] Implement cart gateway and store in `src/app/features/cart/`
-- [ ] T018 [US1] Implement marketplace and product pages in `src/app/features/catalog/ui/`
-- [ ] T019 [US1] Implement cart and idempotent checkout page in `src/app/features/cart/ui/`
-- [ ] T020 [US1] Implement customer orders list/detail in `src/app/features/customer-orders/`
+- [x] T015 [P] [US1] Test money and customer projection in `src/app/features/customer-orders/domain/*.spec.ts`
+- [x] T016 [P] [US1] Implement catalog gateway and store in `src/app/features/catalog/`
+- [x] T017 [P] [US1] Implement cart gateway and store in `src/app/features/cart/`
+- [x] T018 [US1] Implement marketplace and product pages in `src/app/features/catalog/ui/`
+- [x] T019 [US1] Implement cart and idempotent checkout page in `src/app/features/cart/ui/`
+- [x] T020 [US1] Implement customer orders list/detail in `src/app/features/customer-orders/`
 
 ## Phase 4: User Story 2 - Investigar pedidos desde Operaciones
 
@@ -68,7 +68,7 @@
 
 **Independent test**: each demo scenario renders a labelled state with keyboard-accessible recovery.
 
-- [ ] T039 [P] [US5] Implement loading, empty, error and not-found states in `src/app/shared/ui/`
+- [x] T039 [P] [US5] Implement loading, empty, error and not-found states in `src/app/shared/ui/`
 - [x] T040 [P] [US5] Implement offline banner and network service in `src/app/core/network/`
 - [ ] T041 [US5] Implement demo scenario panel and reset action in `src/app/shared/ui/demo-panel/`
 - [x] T042 [US5] Map domain error codes to recovery actions in `src/app/core/errors/error-mapper.ts`

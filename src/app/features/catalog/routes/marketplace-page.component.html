@@ -1,0 +1,67 @@
+<section class="marketplace">
+  <header class="marketplace__hero">
+    <div>
+      <span class="eyebrow">Tizo marketplace</span>
+      <h1>Encontrá algo que te acompañe todos los días.</h1>
+      <p>Productos seleccionados de tiendas independientes, en una experiencia simple y segura.</p>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <span>Selección</span><strong>de temporada</strong>
+    </div>
+  </header>
+
+  <div class="catalog-toolbar">
+    <div>
+      <h2>Nuestra selección</h2>
+      <p>Calzado, indumentaria y tecnología para tu rutina.</p>
+    </div>
+    <label class="catalog-search">
+      <span class="sr-only">Buscar productos</span>
+      <lucide-icon name="search" [size]="17" />
+      <input type="search" [formControl]="search" placeholder="Buscar producto o tienda" />
+    </label>
+  </div>
+
+  <ng-container *ngIf="store.products$ | async as state">
+    <div class="product-grid" *ngIf="state.status === 'success' && filtered(state.data).length">
+      <a
+        class="product-card"
+        *ngFor="let product of filtered(state.data); trackBy: trackProduct"
+        [routerLink]="['/shop/products', product.id]"
+      >
+        <span class="product-card__image">
+          <img [src]="product.imageUrl" [alt]="product.imageAlt" />
+          <span>{{ product.category }}</span>
+        </span>
+        <span class="product-card__copy">
+          <small>{{ product.store }}</small>
+          <strong>{{ product.name }}</strong>
+          <span>{{ product.price | money }}</span>
+        </span>
+      </a>
+    </div>
+
+    <div class="empty-center" *ngIf="state.status === 'loading'">
+      <app-page-state
+        title="Preparando la tienda"
+        message="Estamos reuniendo la selección para vos."
+      />
+    </div>
+    <div class="empty-center" *ngIf="state.status === 'success' && !filtered(state.data).length">
+      <app-page-state
+        title="No encontramos productos"
+        message="Probá con otra búsqueda o limpiá el texto ingresado."
+        actionLabel="Limpiar búsqueda"
+        (action)="search.setValue('')"
+      />
+    </div>
+    <div class="empty-center" *ngIf="state.status === 'error'">
+      <app-page-state
+        [title]="state.error.title"
+        [message]="state.error.message"
+        actionLabel="Volver a intentar"
+        (action)="store.loadProducts()"
+      />
+    </div>
+  </ng-container>
+</section>
