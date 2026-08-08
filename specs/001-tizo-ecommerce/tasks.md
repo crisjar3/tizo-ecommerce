@@ -5,7 +5,7 @@
 - [x] T001 Scaffold Angular 16 standalone project in `angular.json` and `src/`
 - [x] T002 Pin Node, pnpm and package engines in `package.json`, `.nvmrc` and `.npmrc`
 - [x] T003 Configure strict TypeScript and Angular compilation in `tsconfig*.json`
-- [ ] T004 Configure ESLint, unit scripts and Playwright in `eslint.config.js` and `playwright.config.ts`
+- [x] T004 Configure ESLint, unit scripts and Playwright in `.eslintrc.json` and `playwright.config.ts`
 - [x] T005 Configure development, demo and production environments in `src/environments/`
 
 ## Phase 2: Foundational
@@ -35,7 +35,7 @@
 
 **Independent test**: selecting an operator and a URL filter exposes internal order details only in OPS.
 
-- [ ] T021 [P] [US2] Test order DTO mappers in `src/app/features/ops-orders/data-access/*.spec.ts`
+- [x] T021 [P] [US2] Test order DTO mappers in `src/app/features/ops-orders/data-access/*.spec.ts`
 - [x] T022 [P] [US2] Implement operator selector and team pages in `src/app/features/operators/`
 - [x] T023 [US2] Implement operations order store and URL filters in `src/app/features/ops-orders/state/`
 - [x] T024 [US2] Implement seamless list/detail order page in `src/app/features/ops-orders/ui/`
@@ -56,7 +56,7 @@
 
 **Independent test**: approve/reject changes all required entities atomically and history attributes the operator.
 
-- [ ] T032 [P] [US4] Test approval, rejection and idempotency transactions in `src/mocks/*.spec.ts`
+- [x] T032 [P] [US4] Test approval, rejection and idempotency transactions in mock and E2E specs
 - [x] T033 [US4] Implement request inbox and URL tabs in `src/app/features/cancellations/ui/inbox-page.component.ts`
 - [x] T034 [US4] Implement request detail and operational effect panel in `src/app/features/cancellations/ui/request-detail.component.ts`
 - [x] T035 [US4] Implement accessible approve/reject confirmation in `src/app/features/cancellations/ui/resolve-dialog.component.ts`
@@ -75,14 +75,14 @@
 
 ## Phase 8: Polish and Cross-Cutting Concerns
 
-- [ ] T043 Add E2E customer purchase test in `e2e/customer-purchase.spec.ts`
-- [ ] T044 Add E2E cancellation lifecycle test in `e2e/cancellation-lifecycle.spec.ts`
-- [ ] T045 Add offline, conflict and uncertainty E2E tests in `e2e/recovery.spec.ts`
-- [ ] T046 Add responsive and accessibility checks in `e2e/accessibility.spec.ts`
-- [ ] T047 Add canonical visual snapshots in `e2e/visual.spec.ts`
-- [ ] T048 Configure frozen quality pipeline in `.github/workflows/quality.yml`
-- [ ] T049 Document execution and real API migration in `README.md`
-- [ ] T050 Run final build, detector and visual review over `src/app/` and `src/styles.scss`
+- [x] T043 Add E2E customer purchase test in `e2e/customer-purchase.spec.ts`
+- [x] T044 Add E2E cancellation lifecycle test in `e2e/cancellation-lifecycle.spec.ts`
+- [x] T045 Add offline, conflict and uncertainty E2E tests in `e2e/recovery.spec.ts`
+- [x] T046 Add responsive and accessibility checks in `e2e/accessibility.spec.ts`
+- [x] T047 Add canonical visual snapshots in `e2e/visual.spec.ts`
+- [x] T048 Configure frozen quality pipeline in `.github/workflows/quality.yml`
+- [x] T049 Document execution and real API migration in `README.md`
+- [x] T050 Run final build, detector and visual review over `src/app/` and `src/styles.scss`
 
 ## Dependencies
 
