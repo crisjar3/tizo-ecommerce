@@ -1,0 +1,308 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-08T23:10:42.8784782Z",
+  "title": "Design System: Tizo Ecommerce",
+  "extensions": {
+    "colorMeta": {
+      "ink": {
+        "role": "neutral",
+        "displayName": "Tinta principal",
+        "canonical": "#17171a",
+        "tonalRamp": [
+          "#111113",
+          "#242427",
+          "#3d3d43",
+          "#56565e",
+          "#74747c",
+          "#a0a0a6",
+          "#d2d2d5",
+          "#f4f4f5"
+        ]
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Tinta suave",
+        "canonical": "#4a4a50",
+        "tonalRamp": [
+          "#171719",
+          "#2b2b2f",
+          "#404045",
+          "#5a5a61",
+          "#77777e",
+          "#9d9da3",
+          "#cbcbce",
+          "#f1f1f2"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Metadato legible",
+        "canonical": "#686870",
+        "tonalRamp": [
+          "#1b1b1e",
+          "#323237",
+          "#4b4b51",
+          "#686870",
+          "#85858c",
+          "#aaaab0",
+          "#d2d2d5",
+          "#f3f3f4"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Papel Tizo",
+        "canonical": "#f7f7f4",
+        "tonalRamp": [
+          "#252522",
+          "#42423e",
+          "#62625d",
+          "#83837d",
+          "#aaa9a3",
+          "#cfcec8",
+          "#e9e8e3",
+          "#f7f7f4"
+        ]
+      },
+      "panel": {
+        "role": "neutral",
+        "displayName": "Panel limpio",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#262626",
+          "#484848",
+          "#6a6a6a",
+          "#8c8c8c",
+          "#adadad",
+          "#cecece",
+          "#eeeeee",
+          "#ffffff"
+        ]
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Borde de papel",
+        "canonical": "#e8e7e2",
+        "tonalRamp": [
+          "#24231f",
+          "#44433e",
+          "#64635d",
+          "#85847d",
+          "#aaa9a2",
+          "#cccbc4",
+          "#e8e7e2",
+          "#f8f8f5"
+        ]
+      },
+      "action": {
+        "role": "primary",
+        "displayName": "Tinta de acción",
+        "canonical": "#242427",
+        "tonalRamp": [
+          "#0c0c0e",
+          "#171719",
+          "#242427",
+          "#3e3e43",
+          "#5e5e65",
+          "#88888e",
+          "#bdbdc1",
+          "#eeeeef"
+        ]
+      },
+      "accent-violet": {
+        "role": "primary",
+        "displayName": "Violeta de continuidad",
+        "canonical": "#6356d9",
+        "tonalRamp": [
+          "#171236",
+          "#261f5a",
+          "#382f80",
+          "#4b40aa",
+          "#6356d9",
+          "#8378e8",
+          "#b0a9f4",
+          "#eeeaff"
+        ]
+      },
+      "success": {
+        "role": "secondary",
+        "displayName": "Verde de confirmación",
+        "canonical": "#247557",
+        "tonalRamp": [
+          "#0d2a20",
+          "#13422f",
+          "#195b42",
+          "#247557",
+          "#3c9270",
+          "#68b193",
+          "#a6d2c0",
+          "#edf7f1"
+        ]
+      },
+      "warning": {
+        "role": "tertiary",
+        "displayName": "Ámbar operacional",
+        "canonical": "#8f560e",
+        "tonalRamp": [
+          "#301b05",
+          "#4b2a07",
+          "#6a3d0a",
+          "#8f560e",
+          "#b87420",
+          "#d99d53",
+          "#efc991",
+          "#fff6e7"
+        ]
+      },
+      "danger": {
+        "role": "tertiary",
+        "displayName": "Rojo de decisión",
+        "canonical": "#b24338",
+        "tonalRamp": [
+          "#3a1210",
+          "#5b201c",
+          "#7e2e28",
+          "#a33c33",
+          "#c4584e",
+          "#dc837b",
+          "#efb7b2",
+          "#fff1ef"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display comercial",
+        "purpose": "Mensaje principal del marketplace."
+      },
+      "headline": {
+        "displayName": "Encabezado operativo",
+        "purpose": "Páginas, entidades y decisiones."
+      },
+      "body": {
+        "displayName": "Lectura funcional",
+        "purpose": "Contenido, contexto y recuperación."
+      },
+      "label": {
+        "displayName": "Etiqueta de control",
+        "purpose": "Campos, botones, estado y metadatos."
+      }
+    },
+    "shadows": [
+      {
+        "name": "panel-ambiental",
+        "value": "0 12px 34px rgba(22, 22, 20, 0.035)",
+        "purpose": "Separar el marco principal del papel."
+      },
+      {
+        "name": "focus-violet",
+        "value": "0 0 0 3px rgba(99, 86, 217, 0.28)",
+        "purpose": "Foco visible para teclado y campos."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-tizo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Hover y microtransiciones de controles."
+      }
+    ],
+    "breakpoints": [
+      { "name": "minimum", "value": "360px" },
+      { "name": "mobile", "value": "767px" },
+      { "name": "compact-ops", "value": "900px" },
+      { "name": "wide", "value": "1200px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Acción dominante, oscura y compacta.",
+      "html": "<button class=\"ds-btn-primary\">Confirmar decisión</button>",
+      "css": ".ds-btn-primary { min-height: 40px; padding: 0 16px; border: 0; border-radius: var(--tizo-radius-control); background: var(--tizo-primary); color: #fff; font: 700 12.5px Manrope, sans-serif; transition: background 180ms var(--tizo-ease), transform 180ms var(--tizo-ease); } .ds-btn-primary:hover { background: var(--tizo-primary-hover); } .ds-btn-primary:active { transform: translateY(1px); } .ds-btn-primary:focus-visible { outline: none; box-shadow: var(--tizo-focus); }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Acción reversible sobre panel blanco.",
+      "html": "<button class=\"ds-btn-secondary\">Volver</button>",
+      "css": ".ds-btn-secondary { min-height: 40px; padding: 0 16px; border: 1px solid var(--tizo-border); border-radius: var(--tizo-radius-control); background: var(--tizo-panel); color: var(--tizo-text-soft); font: 700 12.5px Manrope, sans-serif; } .ds-btn-secondary:hover { border-color: var(--tizo-border-strong); background: var(--tizo-subtle); } .ds-btn-secondary:focus-visible { outline: none; box-shadow: var(--tizo-focus); }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Campo claro con foco violeta inequívoco.",
+      "html": "<label class=\"ds-field\"><span>Motivo</span><input value=\"Pedido del cliente\"></label>",
+      "css": ".ds-field { display: grid; gap: 7px; color: var(--tizo-text); font: 700 12px Manrope, sans-serif; } .ds-field input { min-height: 42px; padding: 10px 12px; border: 1px solid var(--tizo-border); border-radius: var(--tizo-radius-control); background: var(--tizo-panel); color: var(--tizo-text); font: 400 13px Manrope, sans-serif; } .ds-field input:focus-visible { border-color: var(--tizo-accent); outline: none; box-shadow: var(--tizo-focus); }"
+    },
+    {
+      "name": "Status Chip",
+      "kind": "chip",
+      "description": "Estado semántico que nunca depende solo del color.",
+      "html": "<span class=\"ds-status-chip\"><span aria-hidden=\"true\"></span>En preparación</span>",
+      "css": ".ds-status-chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; background: var(--tizo-warning-bg); color: var(--tizo-warning); font: 700 11px Manrope, sans-serif; } .ds-status-chip > span { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }"
+    },
+    {
+      "name": "Content Panel",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "Marco de trabajo continuo con separación ambiental mínima.",
+      "html": "<section class=\"ds-panel\"><strong>Productos solicitados</strong><p>Contexto y efecto operacional.</p></section>",
+      "css": ".ds-panel { padding: 24px; border: 1px solid var(--tizo-border); border-radius: var(--tizo-radius-panel); background: var(--tizo-panel); color: var(--tizo-text); box-shadow: var(--tizo-shadow); font: 400 13px/1.6 Manrope, sans-serif; } .ds-panel strong { display: block; margin-bottom: 8px; font-size: 15px; } .ds-panel p { margin: 0; color: var(--tizo-muted); }"
+    },
+    {
+      "name": "Operational Nav Item",
+      "kind": "nav",
+      "description": "Destino activo con icono, texto y superficie sutil.",
+      "html": "<a class=\"ds-nav-item\" href=\"#\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M3 6h18M5 6l1 14h12l1-14M9 10v6m6-6v6\"/></svg><span>Solicitudes</span></a>",
+      "css": ".ds-nav-item { display: flex; min-height: 44px; align-items: center; gap: 12px; padding: 0 13px; border-radius: 11px; background: var(--tizo-subtle); color: var(--tizo-text); font: 700 12px Manrope, sans-serif; text-decoration: none; } .ds-nav-item svg { width: 18px; height: 18px; fill: none; stroke: var(--tizo-accent); stroke-width: 1.8; } .ds-nav-item:hover { background: var(--tizo-accent-soft); } .ds-nav-item:focus-visible { outline: none; box-shadow: var(--tizo-focus); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "La mesa de control cálida",
+    "overview": "Tizo une una tienda editorial sobria con un backoffice de alta precisión. Papel tibio, tinta casi negra y violeta escaso mantienen una identidad común mientras la tarea domina la decoración.",
+    "keyCharacteristics": [
+      "Papel cálido, paneles blancos y divisiones discretas.",
+      "Jerarquía compacta en Operaciones y expresiva en el marketplace.",
+      "Acciones primarias oscuras; violeta reservado para continuidad, foco y montos vigentes.",
+      "Estados tipados, recuperaciones explícitas y lectura cómoda desde 360 px."
+    ],
+    "rules": [
+      {
+        "name": "The One Action Rule",
+        "body": "La acción principal es casi negra; el violeta no compite como relleno de botones primarios.",
+        "section": "colors"
+      },
+      {
+        "name": "The State in Words Rule",
+        "body": "Todo color semántico aparece con texto y, cuando ayuda, con icono.",
+        "section": "colors"
+      },
+      {
+        "name": "The Numeric Clarity Rule",
+        "body": "Montos, versiones y contadores usan cifras tabulares y peso alto.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-by-Default Rule",
+        "body": "Una sombra no crea jerarquía por sí sola; primero deben resolverla la agrupación, el contraste tonal y el borde.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do mantener monto, estado y efecto cerca de cada decisión operacional.",
+      "Do usar Lucide con etiqueta o nombre accesible para acciones y navegación.",
+      "Do comprobar 1280, 768, 390 y el ancho mínimo de 360 px."
+    ],
+    "donts": [
+      "Don't usar violeta como relleno de la acción primaria.",
+      "Don't convertir cada métrica o fila en una tarjeta independiente.",
+      "Don't comunicar estado, riesgo o selección únicamente mediante color.",
+      "Don't usar emoji, caracteres Unicode o glifos tipográficos como iconos de interfaz."
+    ]
+  }
+}
