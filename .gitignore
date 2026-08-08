@@ -6,6 +6,7 @@
 /coverage/
 /dist/
 /node_modules/
+/out-tsc/
 /playwright-report/
 /test-results/
 
@@ -19,4 +20,3 @@ Thumbs.db
 
 package-lock.json
 yarn.lock
-

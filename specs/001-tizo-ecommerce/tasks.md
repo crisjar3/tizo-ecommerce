@@ -2,11 +2,11 @@
 
 ## Phase 1: Setup
 
-- [ ] T001 Scaffold Angular 16 standalone project in `angular.json` and `src/`
-- [ ] T002 Pin Node, pnpm and package engines in `package.json`, `.nvmrc` and `.npmrc`
-- [ ] T003 Configure strict TypeScript and Angular compilation in `tsconfig*.json`
+- [x] T001 Scaffold Angular 16 standalone project in `angular.json` and `src/`
+- [x] T002 Pin Node, pnpm and package engines in `package.json`, `.nvmrc` and `.npmrc`
+- [x] T003 Configure strict TypeScript and Angular compilation in `tsconfig*.json`
 - [ ] T004 Configure ESLint, unit scripts and Playwright in `eslint.config.js` and `playwright.config.ts`
-- [ ] T005 Configure development, demo and production environments in `src/environments/`
+- [x] T005 Configure development, demo and production environments in `src/environments/`
 
 ## Phase 2: Foundational
 

@@ -1,0 +1,10 @@
+.angular
+.agents
+.specify
+coverage
+dist
+docs
+node_modules
+playwright-report
+test-results
+pnpm-lock.yaml
