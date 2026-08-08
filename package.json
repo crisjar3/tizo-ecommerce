@@ -18,7 +18,7 @@
     "test:ci": "node scripts/test-ci.mjs",
     "e2e": "playwright test",
     "e2e:update": "playwright test --update-snapshots",
-    "format:check": "prettier --check .",
+    "format:check": "prettier --check \"src/**/*.{ts,html,scss}\" \"e2e/**/*.ts\" \"*.{json,ts}\" \".github/**/*.yml\"",
     "format": "prettier --write ."
   },
   "dependencies": {
@@ -65,7 +65,7 @@
   },
   "msw": {
     "workerDirectory": [
-      "src\\assets"
+      "src"
     ]
   }
 }

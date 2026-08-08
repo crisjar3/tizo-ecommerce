@@ -1,5 +1,11 @@
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  inject,
+} from '@angular/core';
 import type { OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -413,6 +419,7 @@ export class CancellationRequestPageComponent implements OnInit, HasPendingCance
   private readonly opsOrders = inject(OpsOrdersStore);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly changeDetector = inject(ChangeDetectorRef);
 
   get selectedIds(): readonly string[] {
     return this.form.controls.itemIds.value;
@@ -440,6 +447,7 @@ export class CancellationRequestPageComponent implements OnInit, HasPendingCance
             amount: item.lineTotal,
             disabled: item.cancelled || !['CONFIRMED', 'PREPARING'].includes(state.data.progress),
           }));
+        this.changeDetector.markForCheck();
       });
       this.customerOrders.loadOrder(this.orderId);
     } else {
@@ -455,11 +463,13 @@ export class CancellationRequestPageComponent implements OnInit, HasPendingCance
             amount: item.lineTotal,
             disabled: !item.cancellable,
           }));
+        this.changeDetector.markForCheck();
       });
       this.opsOrders.loadOrder(this.orderId);
     }
     this.store.command$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((command) => {
       this.submitting = command.status === 'submitting';
+      this.changeDetector.markForCheck();
       if (command.status === 'success') {
         this.completed = true;
         this.form.markAsPristine();

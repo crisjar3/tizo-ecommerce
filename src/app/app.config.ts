@@ -1,16 +1,18 @@
+import { registerLocaleData } from '@angular/common';
+import localeEsAr from '@angular/common/locales/es-AR';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { importProvidersFrom, type ApplicationConfig } from '@angular/core';
+import { importProvidersFrom, LOCALE_ID, type ApplicationConfig } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import {
   ArrowLeft,
   ArrowRight,
   Check,
-  CheckCircle2,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
   CircleAlert,
+  CircleCheck,
   CircleX,
   ClipboardList,
   Clock3,
@@ -50,9 +52,12 @@ import {
 import { routes } from './app.routes';
 import { operatorContextInterceptor } from './core/api/operator-context.interceptor';
 
+registerLocaleData(localeEsAr);
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideAnimations(),
+    { provide: LOCALE_ID, useValue: 'es-AR' },
     provideHttpClient(withInterceptors([operatorContextInterceptor])),
     provideRouter(routes),
     importProvidersFrom(
@@ -60,11 +65,11 @@ export const appConfig: ApplicationConfig = {
         ArrowLeft,
         ArrowRight,
         Check,
-        CheckCircle2,
         ChevronDown,
         ChevronLeft,
         ChevronRight,
         CircleAlert,
+        CircleCheck,
         CircleX,
         ClipboardList,
         Clock3,

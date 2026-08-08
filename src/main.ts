@@ -9,7 +9,7 @@ async function prepareMockApi(): Promise<void> {
   const { worker } = await import('./mocks/browser');
   await worker.start({
     onUnhandledRequest: 'bypass',
-    serviceWorker: { url: '/assets/mockServiceWorker.js' },
+    serviceWorker: { url: '/mockServiceWorker.js' },
   });
 }
 
