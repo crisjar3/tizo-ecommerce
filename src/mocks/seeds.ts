@@ -19,8 +19,7 @@ export const seedProducts: Product[] = [
     category: 'Calzado',
     price: ars(7_200_000),
     stock: 18,
-    imageUrl:
-      'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=85',
+    imageUrl: '/assets/products/running-shoe.jpg',
     imageAlt: 'Zapatilla deportiva roja sobre fondo claro',
   },
   {
@@ -32,8 +31,7 @@ export const seedProducts: Product[] = [
     category: 'Abrigos',
     price: ars(4_400_000),
     stock: 7,
-    imageUrl:
-      'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=900&q=85',
+    imageUrl: '/assets/products/jacket.jpg',
     imageAlt: 'Campera de cuero oscura colgada',
   },
   {
@@ -45,8 +43,7 @@ export const seedProducts: Product[] = [
     category: 'Básicos',
     price: ars(1_890_000),
     stock: 24,
-    imageUrl:
-      'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=85',
+    imageUrl: '/assets/products/shirt.jpg',
     imageAlt: 'Remera blanca de algodón',
   },
   {
@@ -58,8 +55,7 @@ export const seedProducts: Product[] = [
     category: 'Tecnología',
     price: ars(3_120_000),
     stock: 11,
-    imageUrl:
-      'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=85',
+    imageUrl: '/assets/products/headphones.jpg',
     imageAlt: 'Auriculares negros sobre fondo amarillo',
   },
 ];
