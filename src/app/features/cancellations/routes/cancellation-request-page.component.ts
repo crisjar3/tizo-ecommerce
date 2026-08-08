@@ -14,6 +14,7 @@ import { LucideAngularModule } from 'lucide-angular';
 
 import { CANCELLATION_REASONS } from '../../../core/api/api-contract';
 import type { Money } from '../../../core/api/api-contract';
+import { NetworkStatusService } from '../../../core/network/network-status.service';
 import { MoneyPipe } from '../../../shared/ui/money/money.pipe';
 import { PageStateComponent } from '../../../shared/ui/page-state/page-state.component';
 import { CustomerOrdersStore } from '../../customer-orders/state/customer-orders.store';
@@ -153,7 +154,9 @@ interface CancellationLineView {
         <button
           class="btn btn--primary"
           type="submit"
-          [disabled]="form.invalid || !selectedIds.length || submitting"
+          [disabled]="
+            form.invalid || !selectedIds.length || submitting || (network.online$ | async) === false
+          "
         >
           {{ submitting ? 'Enviando…' : 'Enviar solicitud' }}</button
         ><a
@@ -402,6 +405,7 @@ interface CancellationLineView {
 })
 export class CancellationRequestPageComponent implements OnInit, HasPendingCancellationForm {
   readonly store = inject(CancellationsStore);
+  readonly network = inject(NetworkStatusService);
   readonly reasons = CANCELLATION_REASONS;
   readonly customer = inject(ActivatedRoute).snapshot.data['customer'] === true;
   readonly orderId = inject(ActivatedRoute).snapshot.paramMap.get('orderId') ?? '';

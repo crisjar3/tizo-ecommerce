@@ -6,6 +6,7 @@ import { Router, RouterLink } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 
 import type { CartItem } from '../../../core/api/api-contract';
+import { NetworkStatusService } from '../../../core/network/network-status.service';
 import { MoneyPipe } from '../../../shared/ui/money/money.pipe';
 import { PageStateComponent } from '../../../shared/ui/page-state/page-state.component';
 import { CartStore } from '../state/cart.store';
@@ -39,7 +40,9 @@ import { CartStore } from '../state/cart.store';
             <div class="quantity" aria-label="Cantidad">
               <button
                 type="button"
-                [disabled]="item.quantity <= 1 || isSubmitting"
+                [disabled]="
+                  item.quantity <= 1 || isSubmitting || (network.online$ | async) === false
+                "
                 (click)="change(item, -1)"
                 [attr.aria-label]="'Quitar una unidad de ' + item.product.name"
               >
@@ -48,7 +51,11 @@ import { CartStore } from '../state/cart.store';
               <span>{{ item.quantity }}</span>
               <button
                 type="button"
-                [disabled]="item.quantity >= item.product.stock || isSubmitting"
+                [disabled]="
+                  item.quantity >= item.product.stock ||
+                  isSubmitting ||
+                  (network.online$ | async) === false
+                "
                 (click)="change(item, 1)"
                 [attr.aria-label]="'Agregar una unidad de ' + item.product.name"
               >
@@ -60,7 +67,7 @@ import { CartStore } from '../state/cart.store';
               class="remove"
               type="button"
               (click)="store.removeItem(item.product.id)"
-              [disabled]="isSubmitting"
+              [disabled]="isSubmitting || (network.online$ | async) === false"
               [attr.aria-label]="'Eliminar ' + item.product.name"
             >
               <lucide-icon name="trash-2" [size]="16" />
@@ -83,7 +90,7 @@ import { CartStore } from '../state/cart.store';
           <button
             class="btn btn--primary checkout"
             type="button"
-            [disabled]="isSubmitting"
+            [disabled]="isSubmitting || (network.online$ | async) === false"
             (click)="store.checkout()"
           >
             <lucide-icon name="lock-keyhole" [size]="15" />
@@ -358,6 +365,7 @@ import { CartStore } from '../state/cart.store';
 })
 export class CartPageComponent implements OnInit {
   readonly store = inject(CartStore);
+  readonly network = inject(NetworkStatusService);
   isSubmitting = false;
   private readonly destroyRef = inject(DestroyRef);
   private readonly router = inject(Router);

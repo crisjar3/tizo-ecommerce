@@ -9,6 +9,7 @@ import type {
   CancellationRequestItem,
   CancellationRequestStatus,
 } from '../../../core/api/api-contract';
+import { NetworkStatusService } from '../../../core/network/network-status.service';
 import { MoneyPipe } from '../../../shared/ui/money/money.pipe';
 import { PageStateComponent } from '../../../shared/ui/page-state/page-state.component';
 import { StatusBadgeComponent } from '../../../shared/ui/status-badge/status-badge.component';
@@ -121,11 +122,16 @@ import { CancellationsStore } from '../state/cancellations.store';
               <button
                 class="btn btn--primary"
                 type="button"
-                [disabled]="!state.data.validNow"
+                [disabled]="!state.data.validNow || (network.online$ | async) === false"
                 (click)="openDialog('approve')"
               >
                 <lucide-icon name="circle-check" [size]="15" /> Aprobar cancelación</button
-              ><button class="btn btn--secondary" type="button" (click)="openDialog('reject')">
+              ><button
+                class="btn btn--secondary"
+                type="button"
+                [disabled]="(network.online$ | async) === false"
+                (click)="openDialog('reject')"
+              >
                 <lucide-icon name="circle-x" [size]="15" /> Rechazar solicitud
               </button></ng-container
             ><ng-template #resolution
@@ -220,7 +226,10 @@ import { CancellationsStore } from '../state/cancellations.store';
                 [class.btn--primary]="dialogAction === 'approve'"
                 [class.btn--danger]="dialogAction === 'reject'"
                 type="button"
-                [disabled]="dialogAction === 'reject' && rejectionNote.invalid"
+                [disabled]="
+                  (dialogAction === 'reject' && rejectionNote.invalid) ||
+                  (network.online$ | async) === false
+                "
                 (click)="confirm(state.data.id, state.data.version)"
               >
                 Confirmar
@@ -491,6 +500,7 @@ import { CancellationsStore } from '../state/cancellations.store';
 export class CancellationDetailPageComponent implements OnInit {
   @ViewChild('dialog') private dialog?: ElementRef<HTMLElement>;
   readonly store = inject(CancellationsStore);
+  readonly network = inject(NetworkStatusService);
   readonly requested = inject(ActivatedRoute).snapshot.queryParamMap.get('requested') === '1';
   readonly rejectionNote = new FormControl('', {
     nonNullable: true,
