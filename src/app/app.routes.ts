@@ -1,5 +1,7 @@
 import type { Routes } from '@angular/router';
 
+import { pendingCancellationGuard } from './features/cancellations/guards/pending-cancellation.guard';
+
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'shop' },
   {
@@ -35,6 +37,15 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/customer-orders/routes/customer-orders-page.component').then(
             (component) => component.CustomerOrdersPageComponent,
+          ),
+      },
+      {
+        path: 'my/orders/:orderId/cancel',
+        canDeactivate: [pendingCancellationGuard],
+        data: { customer: true },
+        loadComponent: () =>
+          import('./features/cancellations/routes/cancellation-request-page.component').then(
+            (component) => component.CancellationRequestPageComponent,
           ),
       },
       {
@@ -75,10 +86,40 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'orders/:orderId/cancel',
+        canDeactivate: [pendingCancellationGuard],
+        data: { customer: false },
+        loadComponent: () =>
+          import('./features/cancellations/routes/cancellation-request-page.component').then(
+            (component) => component.CancellationRequestPageComponent,
+          ),
+      },
+      {
         path: 'orders/:orderId',
         loadComponent: () =>
           import('./features/ops-orders/routes/ops-order-detail-page.component').then(
             (component) => component.OpsOrderDetailPageComponent,
+          ),
+      },
+      {
+        path: 'cancellations',
+        loadComponent: () =>
+          import('./features/cancellations/routes/cancellation-inbox-page.component').then(
+            (component) => component.CancellationInboxPageComponent,
+          ),
+      },
+      {
+        path: 'cancellations/history',
+        loadComponent: () =>
+          import('./features/cancellations/routes/cancellation-history-page.component').then(
+            (component) => component.CancellationHistoryPageComponent,
+          ),
+      },
+      {
+        path: 'cancellations/:requestId',
+        loadComponent: () =>
+          import('./features/cancellations/routes/cancellation-detail-page.component').then(
+            (component) => component.CancellationDetailPageComponent,
           ),
       },
     ],

@@ -401,7 +401,16 @@ export const handlers = [
       const previous = database.idempotency.find(
         (record) => record.scope === scope && record.key === command.idempotencyKey,
       );
-      if (previous) return ok(previous.response as JsonBodyType);
+      if (previous) {
+        if (previous.fingerprint !== fingerprint(command)) {
+          return apiError(
+            409,
+            'IDEMPOTENCY_KEY_REUSED',
+            'La clave ya fue usada con otra decisión.',
+          );
+        }
+        return ok(previous.response as JsonBodyType);
+      }
       if (current.status !== 'REQUESTED') {
         return apiError(409, 'REQUEST_ALREADY_RESOLVED', 'Otro operador ya resolvió la solicitud.');
       }
@@ -486,6 +495,20 @@ export const handlers = [
       if (index < 0) return apiError(404, 'REQUEST_NOT_FOUND', 'La solicitud no existe.');
       const current = database.requests[index];
       if (!current) return apiError(404, 'REQUEST_NOT_FOUND', 'La solicitud no existe.');
+      const scope = `reject:${current.id}`;
+      const previous = database.idempotency.find(
+        (record) => record.scope === scope && record.key === command.idempotencyKey,
+      );
+      if (previous) {
+        if (previous.fingerprint !== fingerprint(command)) {
+          return apiError(
+            409,
+            'IDEMPOTENCY_KEY_REUSED',
+            'La clave ya fue usada con otra decisión.',
+          );
+        }
+        return ok(previous.response as JsonBodyType);
+      }
       if (current.status !== 'REQUESTED') {
         return apiError(409, 'REQUEST_ALREADY_RESOLVED', 'Otro operador ya resolvió la solicitud.');
       }
@@ -509,6 +532,13 @@ export const handlers = [
         occurredAt: rejected.resolvedAt ?? new Date().toISOString(),
         correlationId: `corr-${crypto.randomUUID()}`,
         summary: 'Solicitud rechazada; la orden no cambió.',
+      });
+      database.idempotency.push({
+        scope,
+        key: command.idempotencyKey,
+        fingerprint: fingerprint(command),
+        status: 200,
+        response: rejected,
       });
       return ok(rejected);
     });

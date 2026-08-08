@@ -45,24 +45,24 @@
 
 **Independent test**: creating a request leaves the order unchanged and adds one REQUESTED item.
 
-- [ ] T026 [P] [US3] Test cancelability and affected amount rules in `src/app/features/cancellations/domain/*.spec.ts`
-- [ ] T027 [US3] Implement typed cancellation gateway in `src/app/features/cancellations/data-access/`
-- [ ] T028 [US3] Implement ComponentStore command states in `src/app/features/cancellations/state/`
-- [ ] T029 [US3] Implement OPS cancellation form in `src/app/features/cancellations/ui/ops-cancel-page.component.ts`
-- [ ] T030 [US3] Implement customer cancellation form in `src/app/features/cancellations/ui/customer-cancel-page.component.ts`
-- [ ] T031 [US3] Implement unsaved form guard in `src/app/features/cancellations/guards/`
+- [x] T026 [P] [US3] Test cancelability and affected amount rules in `src/app/features/cancellations/domain/*.spec.ts`
+- [x] T027 [US3] Implement typed cancellation gateway in `src/app/features/cancellations/data-access/`
+- [x] T028 [US3] Implement ComponentStore command states in `src/app/features/cancellations/state/`
+- [x] T029 [US3] Implement OPS cancellation form in `src/app/features/cancellations/ui/ops-cancel-page.component.ts`
+- [x] T030 [US3] Implement customer cancellation form in `src/app/features/cancellations/ui/customer-cancel-page.component.ts`
+- [x] T031 [US3] Implement unsaved form guard in `src/app/features/cancellations/guards/`
 
 ## Phase 6: User Story 4 - Resolver y auditar cancelaciones
 
 **Independent test**: approve/reject changes all required entities atomically and history attributes the operator.
 
 - [ ] T032 [P] [US4] Test approval, rejection and idempotency transactions in `src/mocks/*.spec.ts`
-- [ ] T033 [US4] Implement request inbox and URL tabs in `src/app/features/cancellations/ui/inbox-page.component.ts`
-- [ ] T034 [US4] Implement request detail and operational effect panel in `src/app/features/cancellations/ui/request-detail.component.ts`
-- [ ] T035 [US4] Implement accessible approve/reject confirmation in `src/app/features/cancellations/ui/resolve-dialog.component.ts`
-- [ ] T036 [US4] Implement uncertain outcome reconciliation in `src/app/features/cancellations/state/`
-- [ ] T037 [US4] Implement cancellation history in `src/app/features/cancellations/ui/history-page.component.ts`
-- [ ] T038 [US4] Refresh customer and OPS projections after resolution in `src/app/features/cancellations/`
+- [x] T033 [US4] Implement request inbox and URL tabs in `src/app/features/cancellations/ui/inbox-page.component.ts`
+- [x] T034 [US4] Implement request detail and operational effect panel in `src/app/features/cancellations/ui/request-detail.component.ts`
+- [x] T035 [US4] Implement accessible approve/reject confirmation in `src/app/features/cancellations/ui/resolve-dialog.component.ts`
+- [x] T036 [US4] Implement uncertain outcome reconciliation in `src/app/features/cancellations/state/`
+- [x] T037 [US4] Implement cancellation history in `src/app/features/cancellations/ui/history-page.component.ts`
+- [x] T038 [US4] Refresh customer and OPS projections after resolution in `src/app/features/cancellations/`
 
 ## Phase 7: User Story 5 - Recuperarse de estados operativos
 
