@@ -1,0 +1,28 @@
+<div class="customer-shell">
+  <header class="customer-header">
+    <a class="customer-brand" routerLink="/shop" aria-label="Tizo, ir a la tienda">
+      <span class="brand-mark" aria-hidden="true">T</span>
+      <span>Tizo</span>
+    </a>
+
+    <nav aria-label="Navegación de cliente">
+      <a routerLink="/shop" routerLinkActive="active">
+        <lucide-icon name="shopping-bag" [size]="17" />
+        <span>Tienda</span>
+      </a>
+      <a routerLink="/my/orders" routerLinkActive="active">
+        <lucide-icon name="package-open" [size]="17" />
+        <span>Mis pedidos</span>
+      </a>
+      <a class="cart-link" routerLink="/cart" routerLinkActive="active">
+        <lucide-icon name="shopping-cart" [size]="17" />
+        <span>Carrito</span>
+      </a>
+    </nav>
+
+    <a class="ops-entry" routerLink="/operator">Ir a Operaciones</a>
+  </header>
+
+  <app-offline-banner />
+  <main class="customer-content"><router-outlet /></main>
+</div>

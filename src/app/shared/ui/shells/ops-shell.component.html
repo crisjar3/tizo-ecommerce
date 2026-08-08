@@ -1,0 +1,63 @@
+<div class="ops-shell">
+  <aside class="sidebar">
+    <a class="brand" routerLink="/orders" aria-label="Tizo Backoffice">
+      <span class="brand__mark" aria-hidden="true">T</span>
+      <span><strong>Backoffice</strong><small>Ecommerce</small></span>
+    </a>
+
+    <nav aria-label="Navegación de operaciones">
+      <a routerLink="/orders" routerLinkActive="active">
+        <lucide-icon name="package-search" [size]="18" /><span>Órdenes</span>
+      </a>
+      <a
+        routerLink="/cancellations"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <lucide-icon name="inbox" [size]="18" /><span>Solicitudes</span>
+      </a>
+      <a routerLink="/cancellations/history" routerLinkActive="active">
+        <lucide-icon name="history" [size]="18" /><span>Cancelaciones</span>
+      </a>
+      <a routerLink="/operators" routerLinkActive="active">
+        <lucide-icon name="users" [size]="18" /><span>Operadores</span>
+      </a>
+    </nav>
+
+    <a
+      class="operator-card"
+      routerLink="/operator"
+      *ngIf="operatorSession.activeOperator$ | async as operator; else chooseOperator"
+    >
+      <span class="avatar">{{ operator.initials }}</span>
+      <span class="operator-card__copy">
+        <strong>{{ operator.name }}</strong>
+        <small><span class="online-dot"></span> Operador activo</small>
+        <span>Cambiar operador</span>
+      </span>
+    </a>
+    <ng-template #chooseOperator>
+      <a class="operator-card operator-card--empty" routerLink="/operator">
+        <span class="avatar">OP</span>
+        <span class="operator-card__copy"
+          ><strong>Elegí un operador</strong><span>Configurar sesión</span></span
+        >
+      </a>
+    </ng-template>
+  </aside>
+
+  <section class="ops-workspace">
+    <app-offline-banner />
+    <header class="topbar">
+      <div class="global-search">
+        <lucide-icon name="search" [size]="17" aria-hidden="true" />
+        <label class="sr-only" for="global-search">Buscar en el backoffice</label>
+        <input id="global-search" type="search" placeholder="Buscar orden o solicitud" />
+        <kbd>⌘ K</kbd>
+      </div>
+      <span class="online-pill"><lucide-icon name="wifi" [size]="13" /> En línea</span>
+      <a class="customer-link" routerLink="/shop">Vista cliente</a>
+    </header>
+    <main class="ops-content"><router-outlet /></main>
+  </section>
+</div>
