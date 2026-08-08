@@ -1,5 +1,8 @@
 /.angular/
+/.agents/
 /.cache/
+/.impeccable/
+/.specify/
 /.atl/
 /.idea/
 /.vscode/
@@ -9,6 +12,7 @@
 /out-tsc/
 /playwright-report/
 /test-results/
+/specs/
 
 .DS_Store
 Thumbs.db
