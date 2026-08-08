@@ -47,6 +47,43 @@ export const routes: Routes = [
     ],
   },
   {
+    path: '',
+    loadComponent: () =>
+      import('./shared/ui/shells/ops-shell.component').then(
+        (component) => component.OpsShellComponent,
+      ),
+    children: [
+      {
+        path: 'operator',
+        loadComponent: () =>
+          import('./features/operators/routes/operator-selector-page.component').then(
+            (component) => component.OperatorSelectorPageComponent,
+          ),
+      },
+      {
+        path: 'operators',
+        loadComponent: () =>
+          import('./features/operators/routes/operators-page.component').then(
+            (component) => component.OperatorsPageComponent,
+          ),
+      },
+      {
+        path: 'orders',
+        loadComponent: () =>
+          import('./features/ops-orders/routes/ops-orders-page.component').then(
+            (component) => component.OpsOrdersPageComponent,
+          ),
+      },
+      {
+        path: 'orders/:orderId',
+        loadComponent: () =>
+          import('./features/ops-orders/routes/ops-order-detail-page.component').then(
+            (component) => component.OpsOrderDetailPageComponent,
+          ),
+      },
+    ],
+  },
+  {
     path: '404',
     loadComponent: () =>
       import('./shared/ui/not-found/not-found-page.component').then(

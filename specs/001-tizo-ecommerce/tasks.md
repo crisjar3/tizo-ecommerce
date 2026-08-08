@@ -36,10 +36,10 @@
 **Independent test**: selecting an operator and a URL filter exposes internal order details only in OPS.
 
 - [ ] T021 [P] [US2] Test order DTO mappers in `src/app/features/ops-orders/data-access/*.spec.ts`
-- [ ] T022 [P] [US2] Implement operator selector and team pages in `src/app/features/operators/`
-- [ ] T023 [US2] Implement operations order store and URL filters in `src/app/features/ops-orders/state/`
-- [ ] T024 [US2] Implement seamless list/detail order page in `src/app/features/ops-orders/ui/`
-- [ ] T025 [US2] Implement order not-found and recovery behavior in `src/app/features/ops-orders/`
+- [x] T022 [P] [US2] Implement operator selector and team pages in `src/app/features/operators/`
+- [x] T023 [US2] Implement operations order store and URL filters in `src/app/features/ops-orders/state/`
+- [x] T024 [US2] Implement seamless list/detail order page in `src/app/features/ops-orders/ui/`
+- [x] T025 [US2] Implement order not-found and recovery behavior in `src/app/features/ops-orders/`
 
 ## Phase 5: User Story 3 - Solicitar una cancelación
 
