@@ -58,6 +58,26 @@ describe('mock database domain projections', () => {
     );
   });
 
+  it('keeps an untouched order active and marks a fully cancelled order', () => {
+    const source = createSeedDatabase().orders[0] as OpsOrder;
+
+    const untouched = recalculateOrder(source);
+    const fullyCancelled = recalculateOrder({
+      ...source,
+      items: source.items.map((item) => ({
+        ...item,
+        status: 'CANCELLED' as const,
+        cancelled: true,
+      })),
+    });
+
+    expect(untouched.cancellationStatus).toBe('NONE');
+    expect(untouched.cancelledTotal.amountMinor).toBe(0);
+    expect(fullyCancelled.cancellationStatus).toBe('FULL');
+    expect(fullyCancelled.fulfillmentStatus).toBe('CANCELLED');
+    expect(fullyCancelled.activeTotal.amountMinor).toBe(0);
+  });
+
   it('commits database changes only when a transaction completes', () => {
     resetDatabase();
     const before = readDatabase().cart;
@@ -76,5 +96,24 @@ describe('mock database domain projections', () => {
     expect(fingerprint({ reasonCode: 'A', orderId: '1042' })).toBe(
       fingerprint({ orderId: '1042', reasonCode: 'A' }),
     );
+  });
+
+  it('recovers deterministically from corrupt or outdated session data', () => {
+    sessionStorage.setItem('tizo:mock-db:v1', '{not-json');
+    expect(readDatabase().schemaVersion).toBe(1);
+
+    sessionStorage.setItem(
+      'tizo:mock-db:v1',
+      JSON.stringify({ ...createSeedDatabase(), schemaVersion: 0 }),
+    );
+    expect(readDatabase().schemaVersion).toBe(1);
+  });
+
+  it('ignores cart lines whose product no longer exists', () => {
+    const database = createSeedDatabase();
+    database.cart = [{ productId: 'missing-product', quantity: 3 }];
+
+    expect(buildCart(database).items).toEqual([]);
+    expect(buildCart(database).total.amountMinor).toBe(0);
   });
 });

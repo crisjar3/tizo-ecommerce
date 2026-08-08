@@ -38,4 +38,45 @@ describe('normalizeHttpError', () => {
     expect(normalizeHttpError(networkError).retryable).toBeTrue();
     expect(normalizeHttpError(networkError, true).retryable).toBeFalse();
   });
+
+  it('classifies validation, not found, forbidden and server responses', () => {
+    expect(normalizeHttpError(new HttpErrorResponse({ status: 422 })).kind).toBe('validation');
+    expect(normalizeHttpError(new HttpErrorResponse({ status: 404 })).kind).toBe('not-found');
+    expect(normalizeHttpError(new HttpErrorResponse({ status: 403 })).kind).toBe('forbidden');
+
+    const server = normalizeHttpError(new HttpErrorResponse({ status: 503 }));
+    expect(server.kind).toBe('server');
+    expect(server.retryable).toBeTrue();
+  });
+
+  it('falls back safely for malformed HTTP envelopes and unknown errors', () => {
+    const malformed = normalizeHttpError(
+      new HttpErrorResponse({ status: 409, error: { message: 'missing code' } }),
+    );
+    expect(malformed.kind).toBe('conflict');
+    expect(malformed.code).toBe('HTTP_409');
+    expect(malformed.title).toBe('La información cambió');
+
+    const unknown = normalizeHttpError(new Error('private details'));
+    expect(unknown.kind).toBe('unknown');
+    expect(unknown.message).not.toContain('private details');
+  });
+
+  it('preserves field errors from validation envelopes', () => {
+    const result = normalizeHttpError(
+      new HttpErrorResponse({
+        status: 400,
+        error: {
+          code: 'INVALID_REASON',
+          message: 'Revisá el motivo.',
+          correlationId: 'corr-fields',
+          fieldErrors: { reasonNote: ['Escribí más detalle.'] },
+        },
+      }),
+      true,
+    );
+
+    expect(result.fieldErrors?.['reasonNote']).toEqual(['Escribí más detalle.']);
+    expect(result.status).toBe(400);
+  });
 });

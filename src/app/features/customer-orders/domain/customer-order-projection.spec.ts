@@ -1,6 +1,11 @@
 import type { OpsOrder } from '../../../core/api/api-contract';
 import { createSeedDatabase } from '../../../../mocks/seeds';
-import { deriveCustomerProgress, projectCustomerOrder } from './customer-order-projection';
+import {
+  deriveCustomerProgress,
+  itemStatusRank,
+  progressFromItemStatus,
+  projectCustomerOrder,
+} from './customer-order-projection';
 
 describe('customer order projection', () => {
   it('does not expose internal operation fields', () => {
@@ -27,5 +32,19 @@ describe('customer order projection', () => {
     };
 
     expect(deriveCustomerProgress(cancelled)).toBe('CANCELLED');
+  });
+
+  it('maps every operational milestone to the safe customer progress', () => {
+    expect(progressFromItemStatus('PENDING')).toBe('CONFIRMED');
+    expect(progressFromItemStatus('AT_HUB')).toBe('PREPARING');
+    expect(progressFromItemStatus('PREPARING')).toBe('PREPARING');
+    expect(progressFromItemStatus('DISPATCHED')).toBe('IN_TRANSIT');
+    expect(progressFromItemStatus('DELIVERED')).toBe('DELIVERED');
+    expect(progressFromItemStatus('CANCELLED')).toBe('CANCELLED');
+  });
+
+  it('orders internal milestones without exposing them to the projection', () => {
+    expect(itemStatusRank('PENDING')).toBeLessThan(itemStatusRank('AT_HUB'));
+    expect(itemStatusRank('AT_HUB')).toBeLessThan(itemStatusRank('DELIVERED'));
   });
 });

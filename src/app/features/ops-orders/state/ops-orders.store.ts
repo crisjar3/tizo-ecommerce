@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { ComponentStore, tapResponse } from '@ngrx/component-store';
-import { switchMap, tap } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs';
 
 import type { OpsOrder, PaginatedOrders } from '../../../core/api/api-contract';
 import { TizoApiService } from '../../../core/api/tizo-api.service';
@@ -11,6 +11,7 @@ import {
   successScreenState,
 } from '../../../core/errors/app-error';
 import { normalizeHttpError } from '../../../core/errors/error-mapper';
+import { mapOpsOrderDto, mapPaginatedOpsOrdersDto } from '../data-access/ops-order.mapper';
 
 interface OpsOrdersState {
   readonly orders: ScreenState<PaginatedOrders>;
@@ -28,6 +29,7 @@ export class OpsOrdersStore extends ComponentStore<OpsOrdersState> {
       tap(() => this.patchState({ orders: initialScreenState() })),
       switchMap((filters) =>
         this.api.listOpsOrders(filters).pipe(
+          map(mapPaginatedOpsOrdersDto),
           tapResponse(
             (orders) => this.patchState({ orders: successScreenState(orders) }),
             (error: unknown) =>
@@ -43,6 +45,7 @@ export class OpsOrdersStore extends ComponentStore<OpsOrdersState> {
       tap(() => this.patchState({ selected: initialScreenState() })),
       switchMap((orderId) =>
         this.api.getOpsOrder(orderId).pipe(
+          map(mapOpsOrderDto),
           tapResponse(
             (order) => this.patchState({ selected: successScreenState(order) }),
             (error: unknown) =>
