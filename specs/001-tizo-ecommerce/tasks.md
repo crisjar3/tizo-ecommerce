@@ -11,12 +11,12 @@
 ## Phase 2: Foundational
 
 - [x] T006 [P] Create design tokens and global browser surfaces in `src/styles/_tokens.scss` and `src/styles.scss`
-- [ ] T007 [P] Define domain and API contract types in `src/app/core/api/api-contract.ts`
-- [ ] T008 [P] Implement ScreenState, CommandState and AppError in `src/app/core/errors/`
-- [ ] T009 [P] Implement operator session and HTTP context in `src/app/core/session/`
-- [ ] T010 Implement MSW database, seeds and persistence in `src/mocks/`
-- [ ] T011 Implement idempotent MSW handlers in `src/mocks/handlers.ts`
-- [ ] T012 Implement runtime mock bootstrap in `src/main.ts` and `src/mocks/browser.ts`
+- [x] T007 [P] Define domain and API contract types in `src/app/core/api/api-contract.ts`
+- [x] T008 [P] Implement ScreenState, CommandState and AppError in `src/app/core/errors/`
+- [x] T009 [P] Implement operator session and HTTP context in `src/app/core/session/`
+- [x] T010 Implement MSW database, seeds and persistence in `src/mocks/`
+- [x] T011 Implement idempotent MSW handlers in `src/mocks/handlers.ts`
+- [x] T012 Implement runtime mock bootstrap in `src/main.ts` and `src/mocks/browser.ts`
 - [x] T013 Implement shared shells and UI primitives in `src/app/shared/ui/`
 - [ ] T014 Configure lazy route groups in `src/app/app.routes.ts`
 
@@ -71,7 +71,7 @@
 - [ ] T039 [P] [US5] Implement loading, empty, error and not-found states in `src/app/shared/ui/`
 - [x] T040 [P] [US5] Implement offline banner and network service in `src/app/core/network/`
 - [ ] T041 [US5] Implement demo scenario panel and reset action in `src/app/shared/ui/demo-panel/`
-- [ ] T042 [US5] Map domain error codes to recovery actions in `src/app/core/errors/error-mapper.ts`
+- [x] T042 [US5] Map domain error codes to recovery actions in `src/app/core/errors/error-mapper.ts`
 
 ## Phase 8: Polish and Cross-Cutting Concerns
 
