@@ -1,0 +1,11 @@
+[build]
+  command = "pnpm run build:demo"
+  publish = "dist/tizo-ecommerce"
+
+[build.environment]
+  NODE_VERSION = "18.20.8"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
