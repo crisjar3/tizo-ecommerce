@@ -7,10 +7,7 @@ import type {
   OrderItemStatus,
   Product,
 } from '../app/core/api/api-contract';
-import {
-  itemStatusRank,
-  progressFromItemStatus,
-} from '../app/features/customer-orders/domain/customer-order-projection';
+import { itemStatusRank } from '../app/features/customer-orders/domain/customer-order-projection';
 import { createSeedDatabase } from './seeds';
 
 export { projectCustomerOrder } from '../app/features/customer-orders/domain/customer-order-projection';
@@ -114,7 +111,6 @@ export function recalculateOrder(order: OpsOrder): OpsOrder {
 
   return {
     ...order,
-    progress: progressFromItemStatus(fulfillmentStatus),
     fulfillmentStatus,
     cancellationStatus,
     cancelledTotal: { amountMinor: cancelledAmount, currency: order.paidTotal.currency },

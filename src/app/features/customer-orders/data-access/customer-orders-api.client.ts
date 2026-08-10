@@ -6,7 +6,7 @@ import type { Observable } from 'rxjs';
 import { API_BASE_URL } from '../../../core/api/api-base-url.token';
 import type {
   CustomerOrder,
-  CustomerOrderProgress,
+  CustomerOrderStatus,
   RefundStatus,
 } from '../../../core/api/api-contract';
 import type { components } from '../../../core/api/generated/tizo-api.types';
@@ -41,7 +41,8 @@ export function mapCustomerOrderSummary(dto: CustomerOrderSummaryDto): CustomerO
   return {
     id: dto.id,
     createdAt: dto.createdAt,
-    progress: mapCustomerProgress(dto),
+    status: mapCustomerStatus(dto),
+    itemCount: dto.totalItems,
     items: [],
     paidTotal: { ...dto.paidTotal },
     cancelledTotal: subtractMoney(dto.paidTotal, dto.activeTotal),
@@ -68,20 +69,8 @@ export function mapCustomerOrderDetail(dto: CustomerOrderDetailDto): CustomerOrd
   };
 }
 
-function mapCustomerProgress(dto: CustomerOrderSummaryDto): CustomerOrderProgress {
-  if (dto.cancellationStatus === 'FULL') return 'CANCELLED';
-  switch (dto.progressStatus) {
-    case 'PENDING':
-      return 'CONFIRMED';
-    case 'PREPARING':
-    case 'READY_FOR_PICKUP':
-      return 'PREPARING';
-    case 'IN_TRANSIT_TO_HUB':
-    case 'AT_HUB':
-      return 'IN_TRANSIT';
-    case 'DELIVERED':
-      return 'DELIVERED';
-  }
+function mapCustomerStatus(dto: CustomerOrderSummaryDto): CustomerOrderStatus {
+  return dto.cancellationStatus === 'FULL' ? 'CANCELLED' : dto.status;
 }
 
 function subtractMoney(

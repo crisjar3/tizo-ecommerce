@@ -1,5 +1,4 @@
 import type {
-  CustomerOrderProgress,
   Money,
   OpsOrder,
   OpsOrderItem,
@@ -16,7 +15,7 @@ export function mapOpsOrderSummary(dto: OpsOrderSummaryDto): OpsOrder {
   return {
     id: dto.id,
     createdAt: dto.createdAt,
-    progress: mapProgress(dto.status, dto.cancellationStatus),
+    itemCount: dto.totalItems,
     paidTotal: cloneMoney(dto.paidTotal),
     cancelledTotal: subtractMoney(dto.paidTotal, dto.activeTotal),
     activeTotal: cloneMoney(dto.activeTotal),
@@ -63,23 +62,6 @@ function mapOpsOrderItem(dto: OpsOrderDetailDto['items'][number]): OpsOrderItem 
       ? 'Se liberará el inventario reservado al aprobar.'
       : 'La línea ya no admite cancelación.',
   };
-}
-
-function mapProgress(
-  status: OpsOrderSummaryDto['status'],
-  cancellationStatus: OpsOrderSummaryDto['cancellationStatus'],
-): CustomerOrderProgress {
-  if (cancellationStatus === 'FULL') return 'CANCELLED';
-  switch (status) {
-    case 'AWAITING_STORES':
-      return 'CONFIRMED';
-    case 'READY_TO_DISPATCH':
-      return 'PREPARING';
-    case 'DISPATCHED':
-      return 'IN_TRANSIT';
-    case 'DELIVERED':
-      return 'DELIVERED';
-  }
 }
 
 function cloneMoney(money: Money): Money {

@@ -240,7 +240,10 @@ describe('official API clients', () => {
     expect(checkout.request.body).toEqual({ idempotencyKey: 'checkout-key' });
     checkout.flush({ order: customerDetail, idempotencyKey: 'checkout-key', created: true });
 
-    customerOrdersApi.list().subscribe((orders) => expect(orders.length).toBe(1));
+    customerOrdersApi.list().subscribe((orders) => {
+      expect(orders.length).toBe(1);
+      expect(orders[0]?.itemCount).toBe(customerSummary.totalItems);
+    });
     const orders = http.expectOne(
       (request) => request.url === '/api/me/orders' && request.params.get('page') === '1',
     );

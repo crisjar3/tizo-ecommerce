@@ -19,20 +19,27 @@ const base: Summary = {
 };
 
 describe('customer order mapper', () => {
-  it('maps every public progress state and full cancellation', () => {
-    const cases: readonly [Summary['progressStatus'], string][] = [
-      ['PENDING', 'CONFIRMED'],
-      ['PREPARING', 'PREPARING'],
-      ['READY_FOR_PICKUP', 'PREPARING'],
-      ['IN_TRANSIT_TO_HUB', 'IN_TRANSIT'],
-      ['AT_HUB', 'IN_TRANSIT'],
+  it('preserves the summary item count without materializing detail lines', () => {
+    const result = mapCustomerOrderSummary({ ...base, totalItems: 11 });
+
+    expect(result.itemCount).toBe(11);
+    expect(result.items).toEqual([]);
+  });
+
+  it('maps the order status and ignores progressStatus', () => {
+    const cases: readonly [Summary['status'], string][] = [
+      ['AWAITING_STORES', 'AWAITING_STORES'],
+      ['READY_TO_DISPATCH', 'READY_TO_DISPATCH'],
+      ['DISPATCHED', 'DISPATCHED'],
       ['DELIVERED', 'DELIVERED'],
     ];
 
-    cases.forEach(([progressStatus, expected]) =>
-      expect(mapCustomerOrderSummary({ ...base, progressStatus }).progress).toBe(expected),
+    cases.forEach(([status, expected]) =>
+      expect(mapCustomerOrderSummary({ ...base, status, progressStatus: 'PENDING' }).status).toBe(
+        expected,
+      ),
     );
-    expect(mapCustomerOrderSummary({ ...base, cancellationStatus: 'FULL' }).progress).toBe(
+    expect(mapCustomerOrderSummary({ ...base, cancellationStatus: 'FULL' }).status).toBe(
       'CANCELLED',
     );
   });

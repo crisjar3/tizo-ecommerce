@@ -454,7 +454,7 @@ export class CancellationRequestPageComponent implements OnInit, HasPendingCance
             detail: `${item.quantity} unidad`,
             effect: '',
             amount: item.lineTotal,
-            disabled: item.cancelled || !['CONFIRMED', 'PREPARING'].includes(order.progress),
+            disabled: item.cancelled || item.cancellable === false,
           }));
         }
         this.changeDetector.markForCheck();

@@ -378,7 +378,7 @@ export class CartPageComponent implements OnInit {
     this.store.load();
     this.store.command$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((command) => {
       this.isSubmitting = command.status === 'submitting';
-      if (command.status === 'success' && 'progress' in command.data) {
+      if (command.status === 'success' && 'id' in command.data) {
         void this.router.navigate(['/my/orders', command.data.id], { queryParams: { created: 1 } });
       }
     });

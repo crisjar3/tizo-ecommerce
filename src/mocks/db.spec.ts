@@ -24,13 +24,13 @@ describe('mock database domain projections', () => {
     expect(cart.items[0]?.lineTotal.amountMinor).toBe(14_400_000);
   });
 
-  it('uses the least advanced active line for customer progress', () => {
+  it('projects the official order status without internal operation fields', () => {
     const order = createSeedDatabase().orders[0];
     expect(order).toBeDefined();
 
     const projection = projectCustomerOrder(order as OpsOrder);
 
-    expect(projection.progress).toBe('CONFIRMED');
+    expect(projection.status).toBe('AWAITING_STORES');
     expect('customerEmail' in projection).toBeFalse();
     expect('fulfillmentStatus' in projection).toBeFalse();
     expect('store' in (projection.items[0] ?? {})).toBeFalse();

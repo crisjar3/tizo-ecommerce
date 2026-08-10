@@ -77,39 +77,34 @@ describe('operations order DTO mapper', () => {
     expect(result.page).toBe(2);
     expect(result.total).toBe(7);
     expect(result.items[0]?.customerName).toBe('Ana Martínez');
+    expect(result.items[0]?.itemCount).toBe(summary.totalItems);
     expect(result.items[0] as unknown).not.toBe(summary as unknown);
   });
 
-  it('derives progress from every official order status and full cancellation', () => {
+  it('preserves every official fulfillment status', () => {
     expect(
       mapPaginatedOpsOrdersDto({
         items: [summary],
         pagination: { page: 1, pageSize: 20, totalItems: 1, totalPages: 1 },
-      }).items[0]?.progress,
-    ).toBe('CONFIRMED');
+      }).items[0]?.fulfillmentStatus,
+    ).toBe('AWAITING_STORES');
     expect(
       mapPaginatedOpsOrdersDto({
         items: [{ ...summary, status: 'READY_TO_DISPATCH' }],
         pagination: { page: 1, pageSize: 20, totalItems: 1, totalPages: 1 },
-      }).items[0]?.progress,
-    ).toBe('PREPARING');
+      }).items[0]?.fulfillmentStatus,
+    ).toBe('READY_TO_DISPATCH');
     expect(
       mapPaginatedOpsOrdersDto({
         items: [{ ...summary, status: 'DISPATCHED' }],
         pagination: { page: 1, pageSize: 20, totalItems: 1, totalPages: 1 },
-      }).items[0]?.progress,
-    ).toBe('IN_TRANSIT');
+      }).items[0]?.fulfillmentStatus,
+    ).toBe('DISPATCHED');
     expect(
       mapPaginatedOpsOrdersDto({
         items: [{ ...summary, status: 'DELIVERED' }],
         pagination: { page: 1, pageSize: 20, totalItems: 1, totalPages: 1 },
-      }).items[0]?.progress,
+      }).items[0]?.fulfillmentStatus,
     ).toBe('DELIVERED');
-    expect(
-      mapPaginatedOpsOrdersDto({
-        items: [{ ...summary, cancellationStatus: 'FULL' }],
-        pagination: { page: 1, pageSize: 20, totalItems: 1, totalPages: 1 },
-      }).items[0]?.progress,
-    ).toBe('CANCELLED');
   });
 });

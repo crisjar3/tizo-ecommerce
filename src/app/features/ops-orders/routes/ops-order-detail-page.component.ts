@@ -4,12 +4,13 @@ import type { OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 
-import type { OpsOrderItem, OrderItemStatus } from '../../../core/api/api-contract';
+import type { OpsOrderItem } from '../../../core/api/api-contract';
 import { MoneyPipe } from '../../../shared/ui/money/money.pipe';
 import { PageStateComponent } from '../../../shared/ui/page-state/page-state.component';
 import { StatusBadgeComponent } from '../../../shared/ui/status-badge/status-badge.component';
 import { hasCancellableItems } from '../domain/ops-order.rules';
 import { OpsOrdersStore } from '../state/ops-orders.store';
+import { opsOrderStatusLabel, opsOrderStatusTone } from '../ui/ops-order-status';
 
 @Component({
   selector: 'app-ops-order-detail-page',
@@ -43,7 +44,7 @@ import { OpsOrdersStore } from '../state/ops-orders.store';
           <div class="layout-actions">
             <app-status-badge
               [label]="statusLabel(state.data.fulfillmentStatus)"
-              [tone]="state.data.fulfillmentStatus === 'DISPATCHED' ? 'info' : 'warning'"
+              [tone]="statusTone(state.data.fulfillmentStatus)"
             /><a
               class="btn btn--primary"
               *ngIf="hasCancellable(state.data.items)"
@@ -87,9 +88,7 @@ import { OpsOrdersStore } from '../state/ops-orders.store';
             </div>
             <app-status-badge
               [label]="statusLabel(item.status)"
-              [tone]="
-                item.status === 'CANCELLED' ? 'danger' : item.cancellable ? 'warning' : 'neutral'
-              "
+              [tone]="statusTone(item.status)"
             /><strong class="line-money">{{ item.lineTotal | money }}</strong>
           </article>
         </section>
@@ -181,7 +180,7 @@ import { OpsOrdersStore } from '../state/ops-orders.store';
       }
       .line-copy span {
         margin-top: 5px;
-        color: #786747;
+        color: var(--tizo-text-soft);
         font-size: 9.5px;
       }
       .line-money {
@@ -217,6 +216,8 @@ import { OpsOrdersStore } from '../state/ops-orders.store';
 })
 export class OpsOrderDetailPageComponent implements OnInit {
   readonly store = inject(OpsOrdersStore);
+  readonly statusLabel = opsOrderStatusLabel;
+  readonly statusTone = opsOrderStatusTone;
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   ngOnInit(): void {
@@ -230,20 +231,5 @@ export class OpsOrderDetailPageComponent implements OnInit {
   }
   trackItem(_: number, item: OpsOrderItem): string {
     return item.id;
-  }
-  statusLabel(status: OrderItemStatus): string {
-    return {
-      PENDING: 'Pendiente',
-      CONFIRMED: 'Confirmada',
-      PREPARING: 'En preparación',
-      READY_FOR_PICKUP: 'Lista para retirar',
-      IN_TRANSIT_TO_HUB: 'Hacia el hub',
-      AT_HUB: 'En hub',
-      AWAITING_STORES: 'Esperando tiendas',
-      READY_TO_DISPATCH: 'Lista para despachar',
-      DISPATCHED: 'Despachada',
-      DELIVERED: 'Entregada',
-      CANCELLED: 'Cancelada',
-    }[status];
   }
 }

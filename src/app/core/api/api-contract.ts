@@ -32,10 +32,10 @@ export interface Cart {
   readonly total: Money;
 }
 
-export type CustomerOrderProgress =
-  | 'CONFIRMED'
-  | 'PREPARING'
-  | 'IN_TRANSIT'
+export type CustomerOrderStatus =
+  | 'AWAITING_STORES'
+  | 'READY_TO_DISPATCH'
+  | 'DISPATCHED'
   | 'DELIVERED'
   | 'CANCELLED';
 
@@ -78,7 +78,8 @@ export interface CustomerOrderItem {
 export interface CustomerOrder {
   readonly id: string;
   readonly createdAt: string;
-  readonly progress: CustomerOrderProgress;
+  readonly status: CustomerOrderStatus;
+  readonly itemCount: number;
   readonly items: readonly CustomerOrderItem[];
   readonly paidTotal: Money;
   readonly cancelledTotal: Money;
@@ -94,7 +95,7 @@ export interface OpsOrderItem extends CustomerOrderItem {
   readonly operationalEffect: string;
 }
 
-export interface OpsOrder extends Omit<CustomerOrder, 'items'> {
+export interface OpsOrder extends Omit<CustomerOrder, 'items' | 'status'> {
   readonly customerName: string;
   readonly customerEmail: string;
   readonly fulfillmentStatus: OrderItemStatus;

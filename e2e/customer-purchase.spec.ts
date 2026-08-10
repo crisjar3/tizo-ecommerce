@@ -15,6 +15,10 @@ test('cliente compra y consulta el mismo pedido en ambas superficies', async ({ 
 
   await page.goto('/my/orders');
   await expect(page.getByText(`Pedido #${orderId}`)).toBeVisible();
+  const customerOrderCard = page.locator('.order-card').filter({ hasText: `Pedido #${orderId}` });
+  await expect(customerOrderCard.getByText('1 producto', { exact: true })).toBeVisible();
+  await expect(customerOrderCard.getByText('Esperando tiendas', { exact: true })).toBeVisible();
+  await expect(customerOrderCard.locator('.badge')).toHaveAttribute('data-tone', 'warning');
   await page.goto('/orders');
   await expect(page.getByText(`#${orderId}`, { exact: true })).toBeVisible();
 });

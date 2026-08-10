@@ -7,12 +7,16 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { debounceTime } from 'rxjs';
 import { LucideAngularModule } from 'lucide-angular';
 
-import type { OpsOrder, OrderItemStatus } from '../../../core/api/api-contract';
+import type { OpsOrder } from '../../../core/api/api-contract';
 import { MoneyPipe } from '../../../shared/ui/money/money.pipe';
 import { PageStateComponent } from '../../../shared/ui/page-state/page-state.component';
 import { StatusBadgeComponent } from '../../../shared/ui/status-badge/status-badge.component';
-import type { StatusTone } from '../../../shared/ui/status-badge/status-badge.component';
 import { OpsOrdersStore } from '../state/ops-orders.store';
+import {
+  opsOrderCancellationTone,
+  opsOrderStatusLabel,
+  opsOrderStatusTone,
+} from '../ui/ops-order-status';
 
 @Component({
   selector: 'app-ops-orders-page',
@@ -96,9 +100,9 @@ import { OpsOrdersStore } from '../state/ops-orders.store';
             [label]="statusLabel(order.fulfillmentStatus)"
             [tone]="statusTone(order.fulfillmentStatus)" /><app-status-badge
             [label]="cancellationLabel(order.cancellationStatus)"
-            [tone]="order.cancellationStatus === 'NONE' ? 'neutral' : 'warning'" /><strong
-            class="money"
-            >{{ order.activeTotal | money }}</strong
+            [tone]="cancellationTone(order.cancellationStatus)" /><strong class="money">{{
+            order.activeTotal | money
+          }}</strong
           ><lucide-icon name="chevron-right" [size]="16"
         /></a>
       </section>
@@ -305,6 +309,9 @@ import { OpsOrdersStore } from '../state/ops-orders.store';
 })
 export class OpsOrdersPageComponent implements OnInit {
   readonly store = inject(OpsOrdersStore);
+  readonly cancellationTone = opsOrderCancellationTone;
+  readonly statusLabel = opsOrderStatusLabel;
+  readonly statusTone = opsOrderStatusTone;
   readonly filters = new FormGroup({
     search: new FormControl('', { nonNullable: true }),
     status: new FormControl('', { nonNullable: true }),
@@ -362,29 +369,5 @@ export class OpsOrdersPageComponent implements OnInit {
       PARTIAL: 'Parcial',
       FULL: 'Completa',
     }[status];
-  }
-  statusLabel(status: OrderItemStatus): string {
-    return {
-      PENDING: 'Pendiente',
-      CONFIRMED: 'Confirmada',
-      PREPARING: 'En preparación',
-      READY_FOR_PICKUP: 'Lista para retirar',
-      IN_TRANSIT_TO_HUB: 'Hacia el hub',
-      AT_HUB: 'En hub',
-      AWAITING_STORES: 'Esperando tiendas',
-      READY_TO_DISPATCH: 'Lista para despachar',
-      DISPATCHED: 'Despachada',
-      DELIVERED: 'Entregada',
-      CANCELLED: 'Cancelada',
-    }[status];
-  }
-  statusTone(status: OrderItemStatus): StatusTone {
-    return status === 'DELIVERED'
-      ? 'success'
-      : status === 'CANCELLED'
-        ? 'danger'
-        : status === 'DISPATCHED'
-          ? 'info'
-          : 'warning';
   }
 }

@@ -4,11 +4,17 @@ import type { OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 
-import type { CustomerOrderItem, CustomerOrderProgress } from '../../../core/api/api-contract';
+import type { CustomerOrderItem } from '../../../core/api/api-contract';
 import { MoneyPipe } from '../../../shared/ui/money/money.pipe';
 import { PageStateComponent } from '../../../shared/ui/page-state/page-state.component';
 import { StatusBadgeComponent } from '../../../shared/ui/status-badge/status-badge.component';
 import { CustomerOrdersStore } from '../state/customer-orders.store';
+import {
+  customerOrderStatusCopy,
+  customerOrderStatusLabel,
+  customerOrderStatusTitle,
+  customerOrderStatusTone,
+} from '../ui/customer-order-status';
 
 @Component({
   selector: 'app-customer-order-detail-page',
@@ -46,20 +52,20 @@ import { CustomerOrdersStore } from '../state/customer-orders.store';
             </p>
           </div>
           <app-status-badge
-            [label]="statusLabel(state.data.progress)"
-            [tone]="state.data.progress === 'CANCELLED' ? 'danger' : 'info'"
+            [label]="statusLabel(state.data.status)"
+            [tone]="statusTone(state.data.status)"
           />
         </header>
 
         <div class="progress-card panel">
           <span class="progress-icon"
             ><lucide-icon
-              [name]="state.data.progress === 'CANCELLED' ? 'circle-x' : 'package-check'"
+              [name]="state.data.status === 'CANCELLED' ? 'circle-x' : 'package-check'"
               [size]="22"
           /></span>
           <div>
-            <strong>{{ progressTitle(state.data.progress) }}</strong>
-            <p>{{ progressCopy(state.data.progress) }}</p>
+            <strong>{{ statusTitle(state.data.status) }}</strong>
+            <p>{{ statusCopy(state.data.status) }}</p>
           </div>
         </div>
 
@@ -104,7 +110,7 @@ import { CustomerOrdersStore } from '../state/customer-orders.store';
             </div>
           </section>
           <a
-            *ngIf="canRequestCancellation(state.data.progress)"
+            *ngIf="canRequestCancellation(state.data.items)"
             class="btn btn--secondary"
             [routerLink]="['/my/orders', state.data.id, 'cancel']"
             ><lucide-icon name="circle-x" [size]="15" /> Solicitar cancelación</a
@@ -152,7 +158,7 @@ import { CustomerOrdersStore } from '../state/customer-orders.store';
         gap: 11px;
         margin-bottom: 18px;
         padding: 14px 17px;
-        border: 1px solid #cfe9d9;
+        border: 1px solid var(--tizo-success-border);
         border-radius: 13px;
         background: var(--tizo-success-bg);
         color: var(--tizo-success);
@@ -262,6 +268,10 @@ import { CustomerOrdersStore } from '../state/customer-orders.store';
 export class CustomerOrderDetailPageComponent implements OnInit {
   readonly store = inject(CustomerOrdersStore);
   readonly created = inject(ActivatedRoute).snapshot.queryParamMap.get('created') === '1';
+  readonly statusCopy = customerOrderStatusCopy;
+  readonly statusLabel = customerOrderStatusLabel;
+  readonly statusTitle = customerOrderStatusTitle;
+  readonly statusTone = customerOrderStatusTone;
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   ngOnInit(): void {
@@ -273,30 +283,7 @@ export class CustomerOrderDetailPageComponent implements OnInit {
   trackItem(_: number, item: CustomerOrderItem): string {
     return item.id;
   }
-  canRequestCancellation(status: CustomerOrderProgress): boolean {
-    return status === 'CONFIRMED' || status === 'PREPARING';
-  }
-  statusLabel(status: CustomerOrderProgress): string {
-    return {
-      CONFIRMED: 'Confirmado',
-      PREPARING: 'En preparación',
-      IN_TRANSIT: 'En camino',
-      DELIVERED: 'Entregado',
-      CANCELLED: 'Cancelado',
-    }[status];
-  }
-  progressTitle(status: CustomerOrderProgress): string {
-    return status === 'CANCELLED'
-      ? 'Este pedido fue cancelado'
-      : status === 'IN_TRANSIT'
-        ? 'Tu pedido está en camino'
-        : status === 'DELIVERED'
-          ? 'Tu pedido fue entregado'
-          : 'Estamos preparando tu pedido';
-  }
-  progressCopy(status: CustomerOrderProgress): string {
-    return status === 'CANCELLED'
-      ? 'Las líneas canceladas y sus reembolsos aparecen debajo.'
-      : 'El avance se calcula con el producto activo más atrasado, para no prometer de más.';
+  canRequestCancellation(items: readonly CustomerOrderItem[]): boolean {
+    return items.some((item) => item.cancellable && !item.cancelled);
   }
 }

@@ -1,11 +1,11 @@
 import type {
   CancellationRequest,
   Cart,
-  CustomerOrderProgress,
   Money,
   Operator,
   OpsOrder,
   OpsOrderItem,
+  OrderItemStatus,
   Product,
 } from '../app/core/api/api-contract';
 import type { components } from '../app/core/api/generated/tizo-api.types';
@@ -62,7 +62,7 @@ export function toCustomerOrderSummary(order: OpsOrder): Schema['CustomerOrderSu
     status: toOrderStatus(order),
     cancellationStatus:
       order.cancellationStatus === 'REQUESTED' ? 'NONE' : order.cancellationStatus,
-    progressStatus: toCustomerProgress(order.progress),
+    progressStatus: toCustomerProgress(order.fulfillmentStatus),
     paidTotal: toMoney(order.paidTotal),
     activeTotal: toMoney(order.activeTotal),
     totalItems: order.items.reduce((sum, item) => sum + item.quantity, 0),
@@ -316,15 +316,23 @@ function toOrderStatus(order: OpsOrder): Schema['OrderStatus'] {
 }
 
 function toCustomerProgress(
-  progress: CustomerOrderProgress,
+  status: OrderItemStatus,
 ): Schema['CustomerOrderSummary']['progressStatus'] {
-  switch (progress) {
+  switch (status) {
+    case 'PENDING':
     case 'CONFIRMED':
+    case 'AWAITING_STORES':
       return 'PENDING';
     case 'PREPARING':
       return 'PREPARING';
-    case 'IN_TRANSIT':
+    case 'READY_FOR_PICKUP':
+      return 'READY_FOR_PICKUP';
+    case 'IN_TRANSIT_TO_HUB':
       return 'IN_TRANSIT_TO_HUB';
+    case 'AT_HUB':
+    case 'READY_TO_DISPATCH':
+    case 'DISPATCHED':
+      return 'AT_HUB';
     case 'DELIVERED':
     case 'CANCELLED':
       return 'DELIVERED';

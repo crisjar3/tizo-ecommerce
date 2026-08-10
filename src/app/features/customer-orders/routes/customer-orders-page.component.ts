@@ -4,12 +4,12 @@ import type { OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 
-import type { CustomerOrder, CustomerOrderProgress } from '../../../core/api/api-contract';
+import type { CustomerOrder } from '../../../core/api/api-contract';
 import { MoneyPipe } from '../../../shared/ui/money/money.pipe';
 import { PageStateComponent } from '../../../shared/ui/page-state/page-state.component';
 import { StatusBadgeComponent } from '../../../shared/ui/status-badge/status-badge.component';
-import type { StatusTone } from '../../../shared/ui/status-badge/status-badge.component';
 import { CustomerOrdersStore } from '../state/customer-orders.store';
+import { customerOrderStatusLabel, customerOrderStatusTone } from '../ui/customer-order-status';
 
 @Component({
   selector: 'app-customer-orders-page',
@@ -49,16 +49,16 @@ import { CustomerOrdersStore } from '../state/customer-orders.store';
             <span
               >Pedido <strong>#{{ order.id }}</strong></span
             ><app-status-badge
-              [label]="statusLabel(order.progress)"
-              [tone]="statusTone(order.progress)"
+              [label]="statusLabel(order.status)"
+              [tone]="statusTone(order.status)"
             />
           </div>
           <div class="order-card__body">
             <span class="order-icon"><lucide-icon name="package" [size]="21" /></span>
             <div>
               <strong
-                >{{ order.items.length }}
-                {{ order.items.length === 1 ? 'producto' : 'productos' }}</strong
+                >{{ order.itemCount }}
+                {{ order.itemCount === 1 ? 'producto' : 'productos' }}</strong
               ><small>Comprado el {{ order.createdAt | date: 'd MMM y, HH:mm' }}</small>
             </div>
             <strong class="order-total">{{ order.activeTotal | money }}</strong
@@ -191,6 +191,8 @@ import { CustomerOrdersStore } from '../state/customer-orders.store';
 })
 export class CustomerOrdersPageComponent implements OnInit {
   readonly store = inject(CustomerOrdersStore);
+  readonly statusLabel = customerOrderStatusLabel;
+  readonly statusTone = customerOrderStatusTone;
   private readonly router = inject(Router);
 
   ngOnInit(): void {
@@ -201,24 +203,5 @@ export class CustomerOrdersPageComponent implements OnInit {
   }
   trackOrder(_: number, order: CustomerOrder): string {
     return order.id;
-  }
-
-  statusLabel(status: CustomerOrderProgress): string {
-    return {
-      CONFIRMED: 'Confirmado',
-      PREPARING: 'En preparación',
-      IN_TRANSIT: 'En camino',
-      DELIVERED: 'Entregado',
-      CANCELLED: 'Cancelado',
-    }[status];
-  }
-  statusTone(status: CustomerOrderProgress): StatusTone {
-    return status === 'DELIVERED'
-      ? 'success'
-      : status === 'CANCELLED'
-        ? 'danger'
-        : status === 'IN_TRANSIT'
-          ? 'info'
-          : 'warning';
   }
 }

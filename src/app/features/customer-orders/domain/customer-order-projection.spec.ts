@@ -1,9 +1,8 @@
 import type { OpsOrder } from '../../../core/api/api-contract';
 import { createSeedDatabase } from '../../../../mocks/seeds';
 import {
-  deriveCustomerProgress,
+  deriveCustomerOrderStatus,
   itemStatusRank,
-  progressFromItemStatus,
   projectCustomerOrder,
 } from './customer-order-projection';
 
@@ -16,12 +15,35 @@ describe('customer order projection', () => {
     expect('fulfillmentStatus' in projection).toBeFalse();
     expect('store' in (projection.items[0] ?? {})).toBeFalse();
     expect('status' in (projection.items[0] ?? {})).toBeFalse();
+    expect(projection.status).toBe('AWAITING_STORES');
+    expect(projection.itemCount).toBe(
+      order.items.reduce((total, item) => total + item.quantity, 0),
+    );
   });
 
-  it('derives progress from the least advanced active line', () => {
+  it('derives the public status from the order status', () => {
     const order = createSeedDatabase().orders[0] as OpsOrder;
 
-    expect(deriveCustomerProgress(order)).toBe('CONFIRMED');
+    expect(deriveCustomerOrderStatus(order)).toBe('AWAITING_STORES');
+    expect(deriveCustomerOrderStatus({ ...order, fulfillmentStatus: 'AT_HUB' })).toBe(
+      'READY_TO_DISPATCH',
+    );
+    expect(deriveCustomerOrderStatus({ ...order, fulfillmentStatus: 'READY_TO_DISPATCH' })).toBe(
+      'READY_TO_DISPATCH',
+    );
+    expect(
+      deriveCustomerOrderStatus({
+        ...order,
+        fulfillmentStatus: 'PREPARING',
+        dispatchedAt: order.createdAt,
+      }),
+    ).toBe('DISPATCHED');
+    expect(deriveCustomerOrderStatus({ ...order, fulfillmentStatus: 'DISPATCHED' })).toBe(
+      'DISPATCHED',
+    );
+    expect(deriveCustomerOrderStatus({ ...order, fulfillmentStatus: 'DELIVERED' })).toBe(
+      'DELIVERED',
+    );
   });
 
   it('ignores cancelled lines and reports a fully cancelled order', () => {
@@ -31,20 +53,11 @@ describe('customer order projection', () => {
       items: order.items.map((item) => ({ ...item, status: 'CANCELLED', cancelled: true })),
     };
 
-    expect(deriveCustomerProgress(cancelled)).toBe('CANCELLED');
-  });
-
-  it('maps every operational milestone to the safe customer progress', () => {
-    expect(progressFromItemStatus('PENDING')).toBe('CONFIRMED');
-    expect(progressFromItemStatus('AWAITING_STORES')).toBe('CONFIRMED');
-    expect(progressFromItemStatus('READY_FOR_PICKUP')).toBe('PREPARING');
-    expect(progressFromItemStatus('IN_TRANSIT_TO_HUB')).toBe('PREPARING');
-    expect(progressFromItemStatus('AT_HUB')).toBe('PREPARING');
-    expect(progressFromItemStatus('READY_TO_DISPATCH')).toBe('PREPARING');
-    expect(progressFromItemStatus('PREPARING')).toBe('PREPARING');
-    expect(progressFromItemStatus('DISPATCHED')).toBe('IN_TRANSIT');
-    expect(progressFromItemStatus('DELIVERED')).toBe('DELIVERED');
-    expect(progressFromItemStatus('CANCELLED')).toBe('CANCELLED');
+    expect(deriveCustomerOrderStatus(cancelled)).toBe('CANCELLED');
+    expect(deriveCustomerOrderStatus({ ...order, cancellationStatus: 'FULL' })).toBe('CANCELLED');
+    expect(deriveCustomerOrderStatus({ ...order, fulfillmentStatus: 'CANCELLED' })).toBe(
+      'CANCELLED',
+    );
   });
 
   it('orders internal milestones without exposing them to the projection', () => {

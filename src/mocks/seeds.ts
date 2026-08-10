@@ -102,7 +102,6 @@ export const seedOperators: Operator[] = [
 const order1042: OpsOrder = {
   id: '1042',
   createdAt: '2026-08-03T14:25:00.000Z',
-  progress: 'PREPARING',
   customerName: 'Ana Martínez',
   customerEmail: 'ana.martinez@example.test',
   fulfillmentStatus: 'PREPARING',
@@ -112,6 +111,7 @@ const order1042: OpsOrder = {
   paidTotal: ars(12_840_000),
   cancelledTotal: ars(0),
   activeTotal: ars(12_840_000),
+  itemCount: 3,
   items: [
     {
       id: 'item-1042-1',
@@ -164,10 +164,10 @@ const order1040: OpsOrder = {
   customerName: 'Juan Cruz Díaz',
   customerEmail: 'juan.diaz@example.test',
   createdAt: '2026-08-02T18:10:00.000Z',
-  progress: 'IN_TRANSIT',
   fulfillmentStatus: 'DISPATCHED',
   paidTotal: ars(3_120_000),
   activeTotal: ars(3_120_000),
+  itemCount: 1,
   version: 5,
   dispatchedAt: '2026-08-03T11:00:00.000Z',
   items: [

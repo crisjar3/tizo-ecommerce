@@ -314,7 +314,6 @@ export const handlers = [
       const order: OpsOrder = {
         id: nextId,
         createdAt: new Date().toISOString(),
-        progress: 'CONFIRMED',
         customerName: 'Cliente demo',
         customerEmail: 'cliente@tizo.test',
         fulfillmentStatus: 'CONFIRMED',
@@ -324,6 +323,7 @@ export const handlers = [
         paidTotal: cart.total,
         cancelledTotal: { amountMinor: 0, currency: cart.total.currency },
         activeTotal: cart.total,
+        itemCount: cart.itemCount,
         items: cart.items.map((line, index) => ({
           id: `item-${nextId}-${index + 1}`,
           productId: line.product.id,
