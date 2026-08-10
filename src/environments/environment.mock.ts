@@ -1,5 +1,5 @@
 export const environment = {
-  production: true,
+  production: false,
   mockApi: true,
   apiBaseUrl: '/api',
   demoControls: true,

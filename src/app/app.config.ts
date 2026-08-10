@@ -50,6 +50,9 @@ import {
 } from 'lucide-angular';
 
 import { routes } from './app.routes';
+import { environment } from '../environments/environment';
+import { API_BASE_URL } from './core/api/api-base-url.token';
+import { correlationIdInterceptor } from './core/api/correlation-id.interceptor';
 import { operatorContextInterceptor } from './core/api/operator-context.interceptor';
 
 registerLocaleData(localeEsAr);
@@ -58,7 +61,8 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideAnimations(),
     { provide: LOCALE_ID, useValue: 'es-AR' },
-    provideHttpClient(withInterceptors([operatorContextInterceptor])),
+    { provide: API_BASE_URL, useValue: environment.apiBaseUrl },
+    provideHttpClient(withInterceptors([correlationIdInterceptor, operatorContextInterceptor])),
     provideRouter(routes),
     importProvidersFrom(
       LucideAngularModule.pick({

@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { map, timeout } from 'rxjs';
 import type { Observable } from 'rxjs';
 
-import { environment } from '../../../environments/environment';
+import { API_BASE_URL } from './api-base-url.token';
 import type {
   AuditEvent,
   CancellationRequest,
@@ -24,7 +24,7 @@ const COMMAND_TIMEOUT = 15_000;
 @Injectable({ providedIn: 'root' })
 export class TizoApiService {
   private readonly http = inject(HttpClient);
-  private readonly base = environment.apiBaseUrl;
+  private readonly base = inject(API_BASE_URL);
 
   listProducts(): Observable<readonly Product[]> {
     return this.http
