@@ -25,3 +25,12 @@ Thumbs.db
 
 package-lock.json
 yarn.lock
+
+# Local product, design and migration artifacts
+/docs/stitch-screen-manifest.md
+/docs/real-api-migration.md
+/docs/mock-scenarios.md
+/docs/flujo-pantallas.html
+/docs/08-arquitectura-frontend-angular.md
+/PRODUCT.md
+/DESIGN.md
