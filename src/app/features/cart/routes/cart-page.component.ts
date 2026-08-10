@@ -28,7 +28,7 @@ import { CartStore } from '../state/cart.store';
     </header>
 
     <ng-container *ngIf="store.cart$ | async as state">
-      <div class="cart-layout" *ngIf="state.status === 'success' && state.data.items.length">
+      <div class="cart-layout" *ngIf="state.data !== null && state.data.items.length">
         <section class="cart-items" aria-label="Productos en el carrito">
           <article class="cart-item" *ngFor="let item of state.data.items; trackBy: trackItem">
             <img [src]="item.product.imageUrl" [alt]="item.product.imageAlt" />
@@ -103,10 +103,7 @@ import { CartStore } from '../state/cart.store';
         </aside>
       </div>
 
-      <div
-        class="empty-center panel"
-        *ngIf="state.status === 'success' && !state.data.items.length"
-      >
+      <div class="empty-center panel" *ngIf="state.data !== null && !state.data.items.length">
         <app-page-state
           title="Tu carrito está vacío"
           message="Explorá la tienda y agregá productos para comenzar."
@@ -117,7 +114,7 @@ import { CartStore } from '../state/cart.store';
       <div class="empty-center" *ngIf="state.status === 'loading'">
         <app-page-state title="Cargando el carrito" message="Estamos recuperando tu selección." />
       </div>
-      <div class="empty-center" *ngIf="state.status === 'error'">
+      <div class="empty-center" *ngIf="state.status === 'error' && state.data === null">
         <app-page-state
           [title]="state.error.title"
           [message]="state.error.message"
@@ -147,6 +144,13 @@ import { CartStore } from '../state/cart.store';
           ><strong>No sabemos si la compra se completó</strong>Revisá Mis pedidos antes de volver a
           confirmar.</span
         >
+        <button
+          class="btn btn--secondary"
+          type="button"
+          (click)="store.reconcileCheckout(command.idempotencyKey)"
+        >
+          Verificar resultado
+        </button>
         <a class="btn btn--secondary" routerLink="/my/orders">Ver mis pedidos</a>
       </section>
     </ng-container>

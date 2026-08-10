@@ -22,7 +22,7 @@ import { OperatorsStore } from '../state/operators.store';
         <h1>¿Quién está operando?</h1>
         <p>Elegí tu perfil para atribuir solicitudes, decisiones y eventos de auditoría.</p>
         <ng-container *ngIf="store.operators$ | async as state">
-          <div class="operator-grid" *ngIf="state.status === 'success'">
+          <div class="operator-grid" *ngIf="state.data !== null">
             <button
               type="button"
               *ngFor="let operator of state.data; trackBy: trackOperator"
@@ -42,7 +42,7 @@ import { OperatorsStore } from '../state/operators.store';
             message="Estamos preparando los perfiles disponibles."
           />
           <app-page-state
-            *ngIf="state.status === 'error'"
+            *ngIf="state.status === 'error' && state.data === null"
             [title]="state.error.title"
             [message]="state.error.message"
             actionLabel="Reintentar"

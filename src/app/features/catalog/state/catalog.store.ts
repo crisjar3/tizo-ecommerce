@@ -3,14 +3,15 @@ import { ComponentStore, tapResponse } from '@ngrx/component-store';
 import { switchMap, tap } from 'rxjs';
 
 import type { Product } from '../../../core/api/api-contract';
-import { TizoApiService } from '../../../core/api/tizo-api.service';
 import type { ScreenState } from '../../../core/errors/app-error';
 import {
-  errorScreenState,
+  beginScreenState,
+  failScreenState,
   initialScreenState,
   successScreenState,
 } from '../../../core/errors/app-error';
 import { normalizeHttpError } from '../../../core/errors/error-mapper';
+import { CatalogApiClient } from '../data-access/catalog-api.client';
 
 interface CatalogState {
   readonly products: ScreenState<readonly Product[]>;
@@ -24,21 +25,21 @@ const initialState: CatalogState = {
 
 @Injectable()
 export class CatalogStore extends ComponentStore<CatalogState> {
-  private readonly api = inject(TizoApiService);
+  private readonly api = inject(CatalogApiClient);
 
   readonly products$ = this.select((state) => state.products);
   readonly selectedProduct$ = this.select((state) => state.selectedProduct);
 
   readonly loadProducts = this.effect<void>((trigger$) =>
     trigger$.pipe(
-      tap(() => this.patchState({ products: initialScreenState() })),
+      tap(() => this.patchState({ products: beginScreenState(this.get().products) })),
       switchMap(() =>
-        this.api.listProducts().pipe(
+        this.api.list().pipe(
           tapResponse(
             (products) => this.patchState({ products: successScreenState(products) }),
             (error: unknown) =>
               this.patchState({
-                products: errorScreenState(normalizeHttpError(error)),
+                products: failScreenState(this.get().products, normalizeHttpError(error)),
               }),
           ),
         ),
@@ -48,14 +49,17 @@ export class CatalogStore extends ComponentStore<CatalogState> {
 
   readonly loadProduct = this.effect<string>((productId$) =>
     productId$.pipe(
-      tap(() => this.patchState({ selectedProduct: initialScreenState() })),
+      tap(() => this.patchState({ selectedProduct: beginScreenState(this.get().selectedProduct) })),
       switchMap((productId) =>
-        this.api.getProduct(productId).pipe(
+        this.api.get(productId).pipe(
           tapResponse(
             (product) => this.patchState({ selectedProduct: successScreenState(product) }),
             (error: unknown) =>
               this.patchState({
-                selectedProduct: errorScreenState(normalizeHttpError(error)),
+                selectedProduct: failScreenState(
+                  this.get().selectedProduct,
+                  normalizeHttpError(error),
+                ),
               }),
           ),
         ),

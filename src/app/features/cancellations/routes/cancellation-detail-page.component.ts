@@ -9,6 +9,7 @@ import type {
   CancellationRequestItem,
   CancellationRequestStatus,
 } from '../../../core/api/api-contract';
+import { IdempotencyKeyFactory } from '../../../core/api/idempotency-key.factory';
 import { NetworkStatusService } from '../../../core/network/network-status.service';
 import { MoneyPipe } from '../../../shared/ui/money/money.pipe';
 import { PageStateComponent } from '../../../shared/ui/page-state/page-state.component';
@@ -36,7 +37,7 @@ import { CancellationsStore } from '../state/cancellations.store';
       ><lucide-icon name="arrow-left" [size]="16" /> Volver a solicitudes</a
     >
     <ng-container *ngIf="store.selected$ | async as state">
-      <article *ngIf="state.status === 'success'">
+      <article *ngIf="state.data !== null">
         <section class="created-notice" *ngIf="requested">
           <lucide-icon name="circle-check" [size]="18" /><span
             ><strong>Solicitud creada</strong>La orden sigue intacta hasta que se apruebe.</span
@@ -66,7 +67,7 @@ import { CancellationsStore } from '../state/cancellations.store';
         <section
           class="validity-banner"
           [class.validity-banner--invalid]="!state.data.validNow"
-          *ngIf="state.data.status === 'REQUESTED'"
+          *ngIf="state.data.status === 'PENDING'"
         >
           <lucide-icon
             [name]="state.data.validNow ? 'shield-check' : 'triangle-alert'"
@@ -115,9 +116,9 @@ import { CancellationsStore } from '../state/cancellations.store';
           <aside class="decision panel">
             <span class="eyebrow">Decisión operacional</span>
             <h2>
-              {{ state.data.status === 'REQUESTED' ? 'Resolver solicitud' : 'Caso resuelto' }}
+              {{ state.data.status === 'PENDING' ? 'Resolver solicitud' : 'Caso resuelto' }}
             </h2>
-            <ng-container *ngIf="state.data.status === 'REQUESTED'; else resolution"
+            <ng-container *ngIf="state.data.status === 'PENDING'; else resolution"
               ><p>La aprobación actualizará todas las líneas y montos en una única operación.</p>
               <button
                 class="btn btn--primary"
@@ -230,7 +231,13 @@ import { CancellationsStore } from '../state/cancellations.store';
                   (dialogAction === 'reject' && rejectionNote.invalid) ||
                   (network.online$ | async) === false
                 "
-                (click)="confirm(state.data.id, state.data.version)"
+                (click)="
+                  confirm(
+                    state.data.id,
+                    state.data.version,
+                    state.data.currentOrderVersion ?? state.data.version
+                  )
+                "
               >
                 Confirmar
               </button>
@@ -244,7 +251,7 @@ import { CancellationsStore } from '../state/cancellations.store';
           message="Estamos comparando la solicitud con la orden vigente."
         />
       </div>
-      <div class="empty-center panel" *ngIf="state.status === 'error'">
+      <div class="empty-center panel" *ngIf="state.status === 'error' && state.data === null">
         <app-page-state
           [title]="state.error.title"
           [message]="state.error.message"
@@ -507,9 +514,11 @@ export class CancellationDetailPageComponent implements OnInit {
     validators: [Validators.required, Validators.minLength(4)],
   });
   dialogAction: 'approve' | 'reject' | null = null;
+  private dialogIdempotencyKey: string | null = null;
   private previousFocus: HTMLElement | null = null;
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly idempotencyKeys = inject(IdempotencyKeyFactory);
   ngOnInit(): void {
     this.reload();
   }
@@ -519,23 +528,26 @@ export class CancellationDetailPageComponent implements OnInit {
   openDialog(action: 'approve' | 'reject'): void {
     this.previousFocus = document.activeElement as HTMLElement | null;
     this.dialogAction = action;
+    this.dialogIdempotencyKey = this.idempotencyKeys.create();
     if (action === 'approve') this.rejectionNote.setValue('');
     requestAnimationFrame(() => this.dialog?.nativeElement.focus());
   }
   closeDialog(): void {
     this.dialogAction = null;
+    this.dialogIdempotencyKey = null;
     requestAnimationFrame(() => this.previousFocus?.focus());
   }
-  confirm(requestId: string, expectedVersion: number): void {
+  confirm(requestId: string, expectedVersion: number, expectedOrderVersion: number): void {
     if (!this.dialogAction || (this.dialogAction === 'reject' && this.rejectionNote.invalid))
       return;
     this.store.resolve({
       requestId,
       action: this.dialogAction,
       command: {
-        idempotencyKey: crypto.randomUUID(),
+        idempotencyKey: this.dialogIdempotencyKey ?? this.idempotencyKeys.create(),
         expectedVersion,
-        rejectionCode: this.dialogAction === 'reject' ? 'OPERATOR_REJECTED' : undefined,
+        expectedOrderVersion,
+        rejectionCode: this.dialogAction === 'reject' ? 'OTHER' : undefined,
         rejectionNote: this.dialogAction === 'reject' ? this.rejectionNote.value : undefined,
       },
     });
@@ -549,7 +561,7 @@ export class CancellationDetailPageComponent implements OnInit {
   }
   statusLabel(status: CancellationRequestStatus): string {
     return {
-      REQUESTED: 'Pendiente',
+      PENDING: 'Pendiente',
       APPROVED: 'Aprobada',
       COMPLETED: 'Completada',
       REJECTED: 'Rechazada',

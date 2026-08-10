@@ -39,7 +39,7 @@ import { CustomerOrdersStore } from '../state/customer-orders.store';
     </header>
 
     <ng-container *ngIf="store.orders$ | async as state">
-      <section class="orders-list" *ngIf="state.status === 'success' && state.data.length">
+      <section class="orders-list" *ngIf="state.data !== null && state.data.length">
         <a
           class="order-card"
           *ngFor="let order of state.data; trackBy: trackOrder"
@@ -66,7 +66,7 @@ import { CustomerOrdersStore } from '../state/customer-orders.store';
           </div>
         </a>
       </section>
-      <div class="empty-center panel" *ngIf="state.status === 'success' && !state.data.length">
+      <div class="empty-center panel" *ngIf="state.data !== null && !state.data.length">
         <app-page-state
           title="Todavía no tenés pedidos"
           message="Cuando completes una compra, vas a poder seguirla desde acá."
@@ -80,7 +80,7 @@ import { CustomerOrdersStore } from '../state/customer-orders.store';
           message="Estamos recuperando tu historial de compras."
         />
       </div>
-      <div class="empty-center" *ngIf="state.status === 'error'">
+      <div class="empty-center" *ngIf="state.status === 'error' && state.data === null">
         <app-page-state
           [title]="state.error.title"
           [message]="state.error.message"

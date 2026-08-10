@@ -4,1556 +4,1608 @@
  */
 
 export interface paths {
-    "/api/catalog/products": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Listar productos */
-        get: operations["listProducts"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+  '/api/catalog/products': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/catalog/products/{productId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Obtener detalle de producto */
-        get: operations["getProduct"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Listar productos */
+    get: operations['listProducts'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/catalog/products/{productId}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/me/cart": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Obtener carrito del cliente actual */
-        get: operations["getCart"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Obtener detalle de producto */
+    get: operations['getProduct'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/me/cart': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/me/cart/items/{productId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /** Agregar o actualizar una línea del carrito */
-        put: operations["updateCartItem"];
-        post?: never;
-        /** Eliminar una línea del carrito de forma idempotente */
-        delete: operations["deleteCartItem"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Obtener carrito del cliente actual */
+    get: operations['getCart'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/me/cart/items/{productId}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/me/orders": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Listar pedidos del cliente actual */
-        get: operations["listCustomerOrders"];
-        put?: never;
-        /** Crear un pedido desde el carrito */
-        post: operations["createOrder"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    /** Agregar o actualizar una línea del carrito */
+    put: operations['updateCartItem'];
+    post?: never;
+    /** Eliminar una línea del carrito de forma idempotente */
+    delete: operations['deleteCartItem'];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/me/orders': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/me/orders/by-idempotency-key/{idempotencyKey}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Reconciliar un checkout por clave idempotente */
-        get: operations["reconcileCheckout"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Listar pedidos del cliente actual */
+    get: operations['listCustomerOrders'];
+    put?: never;
+    /** Crear un pedido desde el carrito */
+    post: operations['createOrder'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/me/orders/by-idempotency-key/{idempotencyKey}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/me/orders/{orderId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Obtener el detalle de un pedido para el cliente */
-        get: operations["getCustomerOrder"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Reconciliar un checkout por clave idempotente */
+    get: operations['reconcileCheckout'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/me/orders/{orderId}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/me/orders/{orderId}/cancellation-requests": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Crear una solicitud de cancelación del cliente */
-        post: operations["createCustomerCancellation"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Obtener el detalle de un pedido para el cliente */
+    get: operations['getCustomerOrder'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/me/orders/{orderId}/cancellation-requests': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/me/cancellation-requests/by-idempotency-key/{idempotencyKey}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Reconciliar creación de cancelación del cliente */
-        get: operations["reconcileCustomerCancellation"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /** Crear una solicitud de cancelación del cliente */
+    post: operations['createCustomerCancellation'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/me/cancellation-requests/by-idempotency-key/{idempotencyKey}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/ops/operators": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Listar operadores */
-        get: operations["listOperators"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Reconciliar creación de cancelación del cliente */
+    get: operations['reconcileCustomerCancellation'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/ops/operators': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/ops/orders": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Listar pedidos para operaciones */
-        get: operations["listOpsOrders"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Listar operadores */
+    get: operations['listOperators'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/ops/orders': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/ops/orders/{orderId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Obtener detalle operacional de pedido */
-        get: operations["getOpsOrder"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Listar pedidos para operaciones */
+    get: operations['listOpsOrders'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/ops/orders/{orderId}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/ops/cancellation-requests": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Listar solicitudes de cancelación */
-        get: operations["listCancellationRequests"];
-        put?: never;
-        /** Crear una solicitud operacional */
-        post: operations["createOpsCancellation"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Obtener detalle operacional de pedido */
+    get: operations['getOpsOrder'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/ops/cancellation-requests': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/ops/cancellation-requests/by-idempotency-key/{idempotencyKey}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Reconciliar una mutación operacional */
-        get: operations["reconcileOpsCancellation"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Listar solicitudes de cancelación */
+    get: operations['listCancellationRequests'];
+    put?: never;
+    /** Crear una solicitud operacional */
+    post: operations['createOpsCancellation'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/ops/cancellation-requests/by-idempotency-key/{idempotencyKey}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/ops/cancellation-requests/{requestId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Obtener detalle de solicitud */
-        get: operations["getCancellationRequest"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Reconciliar una mutación operacional */
+    get: operations['reconcileOpsCancellation'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/ops/cancellation-requests/{requestId}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/ops/cancellation-requests/{requestId}/approve": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Aprobar y aplicar una cancelación */
-        post: operations["approveCancellationRequest"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Obtener detalle de solicitud */
+    get: operations['getCancellationRequest'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/ops/cancellation-requests/{requestId}/approve': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/ops/cancellation-requests/{requestId}/reject": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Rechazar una solicitud sin modificar el pedido */
-        post: operations["rejectCancellationRequest"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /** Aprobar y aplicar una cancelación */
+    post: operations['approveCancellationRequest'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/ops/cancellation-requests/{requestId}/reject': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/ops/cancellation-history": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Listar historial terminal de cancelaciones */
-        get: operations["listCancellationHistory"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    get?: never;
+    put?: never;
+    /** Rechazar una solicitud sin modificar el pedido */
+    post: operations['rejectCancellationRequest'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/ops/cancellation-history': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    "/api/mock/reset": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Restaurar datos y escenario de demo
-         * @description Esta operación sólo existe fuera de production cuando las herramientas demo están habilitadas.
-         */
-        post: operations["resetDemo"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
+    /** Listar historial terminal de cancelaciones */
+    get: operations['listCancellationHistory'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/mock/reset': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
+    get?: never;
+    put?: never;
+    /**
+     * Restaurar datos y escenario de demo
+     * @description Esta operación sólo existe fuera de production cuando las herramientas demo están habilitadas.
+     */
+    post: operations['resetDemo'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
-    schemas: {
-        /** @enum {string} */
-        CurrencyCode: "ARS";
-        Money: {
-            /** Format: int64 */
-            amountMinor: number;
-            currency: components["schemas"]["CurrencyCode"];
-        };
-        Pagination: {
-            page: number;
-            pageSize: number;
-            /** Format: int64 */
-            totalItems: number;
-            totalPages: number;
-        };
-        /** @enum {string} */
-        ApiErrorCategory: "VALIDATION" | "AUTHENTICATION" | "AUTHORIZATION" | "NOT_FOUND" | "CONFLICT" | "DOMAIN" | "INTERNAL";
-        /** @enum {string} */
-        ApiRecoveryAction: "RELOAD" | "VERIFY_COMMAND" | "OPEN_EXISTING_CANCELLATION" | "RETURN_TO_ORDER" | "SELECT_OPERATOR" | "READ_ONLY";
-        ApiError: {
-            category: components["schemas"]["ApiErrorCategory"];
-            code: string;
-            message: string;
-            fieldErrors?: {
-                [key: string]: string[];
-            };
-            correlationId: string;
-            retryable: boolean;
-            recoveryAction?: components["schemas"]["ApiRecoveryAction"] | null;
-        };
-        ApiProblem: {
-            /** Format: uri-reference */
-            type: string;
-            title: string;
-            status: number;
-            detail: string;
-            /** Format: uri-reference */
-            instance: string;
-            error: components["schemas"]["ApiError"];
-        };
-        ProductSummary: {
-            id: string;
-            name: string;
-            description: string;
-            category: string;
-            imageUrl: string;
-            price: components["schemas"]["Money"];
-            availableStock: number;
-            available: boolean;
-        };
-        ProductAttribute: {
-            name: string;
-            value: string;
-        };
-        ProductDetail: components["schemas"]["ProductSummary"] & {
-            longDescription: string;
-            imageUrls: string[];
-            attributes: components["schemas"]["ProductAttribute"][];
-        };
-        ProductListResponse: {
-            items: components["schemas"]["ProductSummary"][];
-            pagination: components["schemas"]["Pagination"];
-        };
-        UpdateCartItemRequest: {
-            quantity: number;
-        };
-        CartItem: {
-            productId: string;
-            productName: string;
-            imageUrl: string;
-            unitPrice: components["schemas"]["Money"];
-            quantity: number;
-            lineTotal: components["schemas"]["Money"];
-            availableStock: number;
-        };
-        Cart: {
-            id: string;
-            customerId: string;
-            items: components["schemas"]["CartItem"][];
-            subtotal: components["schemas"]["Money"];
-            totalItems: number;
-            /** Format: date-time */
-            updatedAt: string;
-        };
-        /** @enum {string} */
-        OrderItemStatus: "PENDING" | "PREPARING" | "READY_FOR_PICKUP" | "IN_TRANSIT_TO_HUB" | "AT_HUB" | "CANCELLED";
-        /** @enum {string} */
-        OrderStatus: "AWAITING_STORES" | "READY_TO_DISPATCH" | "DISPATCHED" | "DELIVERED";
-        /** @enum {string} */
-        OrderCancellationStatus: "NONE" | "PARTIAL" | "FULL";
-        /** @enum {string} */
-        CancellationRequestStatus: "PENDING" | "APPROVED" | "REJECTED" | "COMPLETED";
-        /** @enum {string} */
-        CancellationReasonCode: "CUSTOMER_REQUEST" | "OUT_OF_STOCK" | "STORE_UNABLE" | "FRAUD_SUSPICION" | "OTHER";
-        /** @enum {string} */
-        RejectionCode: "ORDER_ALREADY_DISPATCHED" | "ITEM_NOT_CANCELLABLE" | "REQUEST_ALREADY_RESOLVED" | "CONCURRENT_MODIFICATION" | "OTHER";
-        /** @enum {string} */
-        RefundStatus: "NOT_REQUIRED" | "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED";
-        /** @enum {string} */
-        ActorType: "CUSTOMER" | "OPERATOR" | "SYSTEM";
-        /** @enum {string} */
-        CustomerItemStatus: "CONFIRMED" | "PREPARING" | "ON_THE_WAY" | "DELIVERED" | "CANCELLED";
-        CustomerAddress: {
-            recipientName: string;
-            line1: string;
-            line2: string | null;
-            city: string;
-            region: string;
-            postalCode: string;
-            countryCode: string;
-        };
-        CustomerOrderItem: {
-            id: string;
-            productId: string;
-            productName: string;
-            imageUrl: string;
-            quantity: number;
-            unitPrice: components["schemas"]["Money"];
-            lineTotal: components["schemas"]["Money"];
-            customerStatus: components["schemas"]["CustomerItemStatus"];
-            cancellable: boolean;
-        };
-        CustomerRefundProjection: {
-            status: components["schemas"]["RefundStatus"];
-            amount: components["schemas"]["Money"] | null;
-            /** Format: date-time */
-            updatedAt: string | null;
-        };
-        CustomerCancellationSummary: {
-            requestId: string;
-            /** @enum {string} */
-            status: "PENDING" | "REJECTED" | "COMPLETED";
-            affectedAmount: components["schemas"]["Money"];
-            /** Format: date-time */
-            requestedAt: string;
-            /** Format: date-time */
-            resolvedAt: string | null;
-            refund: components["schemas"]["CustomerRefundProjection"];
-        };
-        CustomerOrderSummary: {
-            id: string;
-            displayNumber: string;
-            /** Format: date-time */
-            createdAt: string;
-            status: components["schemas"]["OrderStatus"];
-            cancellationStatus: components["schemas"]["OrderCancellationStatus"];
-            /** @enum {string} */
-            progressStatus: "PENDING" | "PREPARING" | "READY_FOR_PICKUP" | "IN_TRANSIT_TO_HUB" | "AT_HUB" | "DELIVERED";
-            paidTotal: components["schemas"]["Money"];
-            activeTotal: components["schemas"]["Money"];
-            totalItems: number;
-            cancelledItems: number;
-        };
-        CustomerOrderDetail: components["schemas"]["CustomerOrderSummary"] & {
-            items: components["schemas"]["CustomerOrderItem"][];
-            deliveryAddress: components["schemas"]["CustomerAddress"];
-            cancellation: components["schemas"]["CustomerCancellationSummary"] | null;
-            /** Format: int64 */
-            version: number;
-        };
-        CustomerOrderListResponse: {
-            items: components["schemas"]["CustomerOrderSummary"][];
-            pagination: components["schemas"]["Pagination"];
-        };
-        CreateOrderRequest: {
-            idempotencyKey: string;
-        };
-        CreateOrderResponse: {
-            order: components["schemas"]["CustomerOrderDetail"];
-            idempotencyKey: string;
-            created: boolean;
-        };
-        CheckoutReconciliationResponse: {
-            /** @description Siempre `true` cuando la reconciliación encuentra el resultado durable. */
-            found: boolean;
-            idempotencyKey: string;
-            order: components["schemas"]["CustomerOrderDetail"];
-        };
-        CreateCustomerCancellationRequest: {
-            itemIds: string[];
-            reasonCode: components["schemas"]["CancellationReasonCode"];
-            reasonNote?: string;
-            idempotencyKey: string;
-            /** Format: int64 */
-            expectedOrderVersion: number;
-        };
-        CustomerCancellationReceipt: {
-            requestId: string;
-            orderId: string;
-            /** @constant */
-            status: "PENDING";
-            itemIds: string[];
-            affectedAmount: components["schemas"]["Money"];
-            /** Format: date-time */
-            requestedAt: string;
-            idempotencyKey: string;
-            created: boolean;
-        };
-        CustomerCancellationReconciliationResponse: {
-            /** @description Siempre `true` cuando la reconciliación encuentra el resultado durable. */
-            found: boolean;
-            request: components["schemas"]["CustomerCancellationReceipt"];
-        };
-        /** @enum {string} */
-        OperatorRole: "OPERATOR" | "SUPERVISOR";
-        Operator: {
-            id: string;
-            name: string;
-            /** Format: email */
-            email: string;
-            avatarUrl: string | null;
-            role: components["schemas"]["OperatorRole"];
-            active: boolean;
-        };
-        OperatorListResponse: {
-            items: components["schemas"]["Operator"][];
-        };
-        OpsCustomerSummary: {
-            id: string;
-            name: string;
-            /** Format: email */
-            email: string;
-        };
-        OpsOrderSummary: {
-            id: string;
-            displayNumber: string;
-            customer: components["schemas"]["OpsCustomerSummary"];
-            /** Format: date-time */
-            createdAt: string;
-            /** Format: date-time */
-            updatedAt: string;
-            status: components["schemas"]["OrderStatus"];
-            cancellationStatus: components["schemas"]["OrderCancellationStatus"];
-            /** Format: date-time */
-            dispatchedAt: string | null;
-            paidTotal: components["schemas"]["Money"];
-            activeTotal: components["schemas"]["Money"];
-            totalItems: number;
-            cancelledItems: number;
-            /** Format: int64 */
-            version: number;
-        };
-        OpsOrderListResponse: {
-            items: components["schemas"]["OpsOrderSummary"][];
-            pagination: components["schemas"]["Pagination"];
-        };
-        StoreProjection: {
-            id: string;
-            name: string;
-        };
-        HubProjection: {
-            id: string;
-            name: string;
-        };
-        OpsOrderItem: {
-            id: string;
-            productId: string;
-            productName: string;
-            imageUrl: string;
-            storeId: string;
-            storeName: string;
-            quantity: number;
-            unitPrice: components["schemas"]["Money"];
-            lineTotal: components["schemas"]["Money"];
-            status: components["schemas"]["OrderItemStatus"];
-            cancellable: boolean;
-            /** Format: date-time */
-            cancelledAt: string | null;
-        };
-        CancellationEligibility: {
-            eligible: boolean;
-            eligibleItemIds: string[];
-            /** @enum {string|null} */
-            blockedBy: "DISPATCHED" | "EFFECTIVE_CANCELLATION" | "NO_ELIGIBLE_ITEMS" | null;
-        };
-        OpsOrderDetail: components["schemas"]["OpsOrderSummary"] & {
-            items: components["schemas"]["OpsOrderItem"][];
-            deliveryAddress: components["schemas"]["CustomerAddress"];
-            stores: components["schemas"]["StoreProjection"][];
-            hub: components["schemas"]["HubProjection"] | null;
-            activeCancellationRequestId: string | null;
-            cancellationEligibility: components["schemas"]["CancellationEligibility"];
-        };
-        CancellationActor: {
-            type: components["schemas"]["ActorType"];
-            id: string;
-            name: string;
-        };
-        CancellationRequestSummary: {
-            id: string;
-            orderId: string;
-            orderDisplayNumber: string;
-            status: components["schemas"]["CancellationRequestStatus"];
-            requestedBy: components["schemas"]["CancellationActor"];
-            /** Format: date-time */
-            requestedAt: string;
-            /** Format: date-time */
-            resolvedAt: string | null;
-            reasonCode: components["schemas"]["CancellationReasonCode"];
-            requestedAmount: components["schemas"]["Money"];
-            itemCount: number;
-        };
-        CancellationCounts: {
-            pending: number;
-            completed: number;
-            rejected: number;
-        };
-        CancellationRequestListResponse: {
-            items: components["schemas"]["CancellationRequestSummary"][];
-            pagination: components["schemas"]["Pagination"];
-            counts: components["schemas"]["CancellationCounts"];
-        };
-        CancellationRequestItem: {
-            itemId: string;
-            productId: string;
-            productName: string;
-            storeId: string;
-            storeName: string;
-            quantity: number;
-            unitPrice: components["schemas"]["Money"];
-            requestedAmount: components["schemas"]["Money"];
-            currentStatus: components["schemas"]["OrderItemStatus"];
-            stillCancellable: boolean;
-        };
-        RefundProjection: {
-            status: components["schemas"]["RefundStatus"];
-            amount: components["schemas"]["Money"] | null;
-            providerReference: string | null;
-            /** Format: date-time */
-            updatedAt: string | null;
-            failureCode: string | null;
-        };
-        /** @enum {string} */
-        OperationalEffectType: "INVENTORY" | "CUSTOMER_NOTIFICATION" | "REFUND";
-        /** @enum {string} */
-        OperationalEffectStatus: "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED";
-        OperationalEffect: {
-            type: components["schemas"]["OperationalEffectType"];
-            status: components["schemas"]["OperationalEffectStatus"];
-            /** Format: date-time */
-            updatedAt: string;
-            failureCode: string | null;
-        };
-        /** @enum {string} */
-        AuditAction: "REQUEST_CREATED" | "REQUEST_APPROVED" | "REQUEST_REJECTED" | "CANCELLATION_COMPLETED" | "EFFECT_UPDATED";
-        AuditEvent: {
-            id: string;
-            action: components["schemas"]["AuditAction"];
-            actor: components["schemas"]["CancellationActor"];
-            /** Format: date-time */
-            occurredAt: string;
-            note: string | null;
-        };
-        /** @enum {string} */
-        CancellationInvalidatedBy: "DISPATCHED" | "ITEM_STATE_CHANGED" | "REQUEST_ALREADY_RESOLVED" | "CONCURRENT_MODIFICATION";
-        CancellationRequestDetail: {
-            id: string;
-            orderId: string;
-            orderDisplayNumber: string;
-            status: components["schemas"]["CancellationRequestStatus"];
-            requestedBy: components["schemas"]["CancellationActor"];
-            resolvedBy: components["schemas"]["CancellationActor"] | null;
-            /** Format: date-time */
-            requestedAt: string;
-            /** Format: date-time */
-            resolvedAt: string | null;
-            reasonCode: components["schemas"]["CancellationReasonCode"];
-            reasonNote: string | null;
-            rejectionCode: components["schemas"]["RejectionCode"] | null;
-            rejectionNote: string | null;
-            items: components["schemas"]["CancellationRequestItem"][];
-            requestedAmount: components["schemas"]["Money"];
-            currentAffectedAmount: components["schemas"]["Money"];
-            effectiveOrderId: string | null;
-            /** Format: int64 */
-            expectedOrderVersion: number;
-            /** Format: int64 */
-            currentOrderVersion: number;
-            /** Format: date-time */
-            orderDispatchedAt: string | null;
-            stillValid: boolean;
-            invalidatedBy: components["schemas"]["CancellationInvalidatedBy"] | null;
-            refund: components["schemas"]["RefundProjection"];
-            effects: components["schemas"]["OperationalEffect"][];
-            audit: components["schemas"]["AuditEvent"][];
-            /** Format: int64 */
-            version: number;
-        };
-        CreateOpsCancellationRequest: {
-            orderId: string;
-            itemIds: string[];
-            reasonCode: components["schemas"]["CancellationReasonCode"];
-            reasonNote?: string;
-            idempotencyKey: string;
-            /** Format: int64 */
-            expectedOrderVersion: number;
-        };
-        CreateOpsCancellationResponse: {
-            request: components["schemas"]["CancellationRequestDetail"];
-            idempotencyKey: string;
-            created: boolean;
-        };
-        ApproveCancellationRequest: {
-            idempotencyKey: string;
-            /** Format: int64 */
-            expectedRequestVersion: number;
-            /** Format: int64 */
-            expectedOrderVersion: number;
-            note?: string;
-        };
-        RejectCancellationRequest: {
-            idempotencyKey: string;
-            /** Format: int64 */
-            expectedRequestVersion: number;
-            rejectionCode: components["schemas"]["RejectionCode"];
-            rejectionNote?: string;
-        };
-        ResolveCancellationResponse: {
-            request: components["schemas"]["CancellationRequestDetail"];
-            order: components["schemas"]["OpsOrderDetail"];
-            replayed: boolean;
-        };
-        /** @enum {string} */
-        IdempotencyScope: "CREATE" | "APPROVE" | "REJECT";
-        OpsCancellationReconciliationResponse: {
-            /** @description Siempre `true` cuando la reconciliación encuentra el resultado durable. */
-            found: boolean;
-            scope: components["schemas"]["IdempotencyScope"];
-            request: components["schemas"]["CancellationRequestDetail"];
-            order: components["schemas"]["OpsOrderDetail"] | null;
-        };
-        CancellationHistoryItem: {
-            requestId: string;
-            orderId: string;
-            orderDisplayNumber: string;
-            /** @enum {string} */
-            status: "COMPLETED" | "REJECTED";
-            reasonCode: components["schemas"]["CancellationReasonCode"];
-            rejectionCode: components["schemas"]["RejectionCode"] | null;
-            requestedBy: components["schemas"]["CancellationActor"];
-            resolvedBy: components["schemas"]["CancellationActor"] | null;
-            /** Format: date-time */
-            requestedAt: string;
-            /** Format: date-time */
-            resolvedAt: string;
-            affectedAmount: components["schemas"]["Money"];
-            refundStatus: components["schemas"]["RefundStatus"];
-        };
-        CancellationHistoryResponse: {
-            items: components["schemas"]["CancellationHistoryItem"][];
-            pagination: components["schemas"]["Pagination"];
-        };
-        /** @enum {string} */
-        MockScenario: "normal" | "slow" | "empty" | "server-error" | "timeout-before-commit" | "timeout-after-commit" | "concurrent-resolution" | "dispatched-order";
-        ResetMockRequest: {
-            /** @default normal */
-            scenario: components["schemas"]["MockScenario"];
-        };
-        ResetMockResponse: {
-            /** Format: date-time */
-            resetAt: string;
-            schemaVersion: number;
-            scenario: components["schemas"]["MockScenario"];
-        };
+  schemas: {
+    /** @enum {string} */
+    CurrencyCode: 'ARS';
+    Money: {
+      /** Format: int64 */
+      amountMinor: number;
+      currency: components['schemas']['CurrencyCode'];
     };
-    responses: {
-        /** @description Petición malformada */
-        BadRequest: {
-            headers: {
-                "X-Correlation-Id": components["headers"]["CorrelationId"];
-                [name: string]: unknown;
-            };
-            content: {
-                "application/problem+json": components["schemas"]["ApiProblem"];
-            };
-        };
-        /** @description Identidad ausente o inválida */
-        Unauthenticated: {
-            headers: {
-                "X-Correlation-Id": components["headers"]["CorrelationId"];
-                [name: string]: unknown;
-            };
-            content: {
-                "application/problem+json": components["schemas"]["ApiProblem"];
-            };
-        };
-        /** @description Identidad sin permiso */
-        Forbidden: {
-            headers: {
-                "X-Correlation-Id": components["headers"]["CorrelationId"];
-                [name: string]: unknown;
-            };
-            content: {
-                "application/problem+json": components["schemas"]["ApiProblem"];
-            };
-        };
-        /** @description Recurso inexistente o no visible */
-        NotFound: {
-            headers: {
-                "X-Correlation-Id": components["headers"]["CorrelationId"];
-                [name: string]: unknown;
-            };
-            content: {
-                "application/problem+json": components["schemas"]["ApiProblem"];
-            };
-        };
-        /** @description Conflicto de dominio, versión o idempotencia */
-        Conflict: {
-            headers: {
-                "X-Correlation-Id": components["headers"]["CorrelationId"];
-                [name: string]: unknown;
-            };
-            content: {
-                "application/problem+json": components["schemas"]["ApiProblem"];
-            };
-        };
-        /** @description Validación semántica */
-        UnprocessableEntity: {
-            headers: {
-                "X-Correlation-Id": components["headers"]["CorrelationId"];
-                [name: string]: unknown;
-            };
-            content: {
-                "application/problem+json": components["schemas"]["ApiProblem"];
-            };
-        };
-        /** @description Límite de peticiones excedido */
-        TooManyRequests: {
-            headers: {
-                "X-Correlation-Id": components["headers"]["CorrelationId"];
-                "Retry-After": components["headers"]["RetryAfter"];
-                "RateLimit-Limit": components["headers"]["RateLimitLimit"];
-                "RateLimit-Remaining": components["headers"]["RateLimitRemaining"];
-                "RateLimit-Reset": components["headers"]["RateLimitReset"];
-                [name: string]: unknown;
-            };
-            content: {
-                "application/problem+json": components["schemas"]["ApiProblem"];
-            };
-        };
-        /** @description Error inesperado sin detalle interno */
-        InternalError: {
-            headers: {
-                "X-Correlation-Id": components["headers"]["CorrelationId"];
-                [name: string]: unknown;
-            };
-            content: {
-                "application/problem+json": components["schemas"]["ApiProblem"];
-            };
-        };
+    Pagination: {
+      page: number;
+      pageSize: number;
+      /** Format: int64 */
+      totalItems: number;
+      totalPages: number;
     };
-    parameters: {
-        Page: number;
-        PageSize: number;
-        SortDirection: "asc" | "desc";
-        ProductId: string;
-        OrderId: string;
-        RequestId: string;
-        IdempotencyKey: string;
-        CreatedFrom: string;
-        CreatedTo: string;
+    /** @enum {string} */
+    ApiErrorCategory:
+      | 'VALIDATION'
+      | 'AUTHENTICATION'
+      | 'AUTHORIZATION'
+      | 'NOT_FOUND'
+      | 'CONFLICT'
+      | 'DOMAIN'
+      | 'INTERNAL';
+    /** @enum {string} */
+    ApiRecoveryAction:
+      | 'RELOAD'
+      | 'VERIFY_COMMAND'
+      | 'OPEN_EXISTING_CANCELLATION'
+      | 'RETURN_TO_ORDER'
+      | 'SELECT_OPERATOR'
+      | 'READ_ONLY';
+    ApiError: {
+      category: components['schemas']['ApiErrorCategory'];
+      code: string;
+      message: string;
+      fieldErrors?: {
+        [key: string]: string[];
+      };
+      correlationId: string;
+      retryable: boolean;
+      recoveryAction?: components['schemas']['ApiRecoveryAction'] | null;
     };
-    requestBodies: never;
-    headers: {
-        /** @description Identificador efectivo de correlación */
-        CorrelationId: string;
-        /** @description Cuota comunicada para la ventana aplicable */
-        RateLimitLimit: number;
-        /** @description Capacidad restante */
-        RateLimitRemaining: number;
-        /** @description Segundos hasta recuperar capacidad */
-        RateLimitReset: number;
-        /** @description Segundos que el consumidor debe esperar */
-        RetryAfter: number;
+    ApiProblem: {
+      /** Format: uri-reference */
+      type: string;
+      title: string;
+      status: number;
+      detail: string;
+      /** Format: uri-reference */
+      instance: string;
+      error: components['schemas']['ApiError'];
     };
-    pathItems: never;
+    ProductSummary: {
+      id: string;
+      name: string;
+      description: string;
+      category: string;
+      imageUrl: string;
+      price: components['schemas']['Money'];
+      availableStock: number;
+      available: boolean;
+    };
+    ProductAttribute: {
+      name: string;
+      value: string;
+    };
+    ProductDetail: components['schemas']['ProductSummary'] & {
+      longDescription: string;
+      imageUrls: string[];
+      attributes: components['schemas']['ProductAttribute'][];
+    };
+    ProductListResponse: {
+      items: components['schemas']['ProductSummary'][];
+      pagination: components['schemas']['Pagination'];
+    };
+    UpdateCartItemRequest: {
+      quantity: number;
+    };
+    CartItem: {
+      productId: string;
+      productName: string;
+      imageUrl: string;
+      unitPrice: components['schemas']['Money'];
+      quantity: number;
+      lineTotal: components['schemas']['Money'];
+      availableStock: number;
+    };
+    Cart: {
+      id: string;
+      customerId: string;
+      items: components['schemas']['CartItem'][];
+      subtotal: components['schemas']['Money'];
+      totalItems: number;
+      /** Format: date-time */
+      updatedAt: string;
+    };
+    /** @enum {string} */
+    OrderItemStatus:
+      | 'PENDING'
+      | 'PREPARING'
+      | 'READY_FOR_PICKUP'
+      | 'IN_TRANSIT_TO_HUB'
+      | 'AT_HUB'
+      | 'CANCELLED';
+    /** @enum {string} */
+    OrderStatus: 'AWAITING_STORES' | 'READY_TO_DISPATCH' | 'DISPATCHED' | 'DELIVERED';
+    /** @enum {string} */
+    OrderCancellationStatus: 'NONE' | 'PARTIAL' | 'FULL';
+    /** @enum {string} */
+    CancellationRequestStatus: 'PENDING' | 'APPROVED' | 'REJECTED' | 'COMPLETED';
+    /** @enum {string} */
+    CancellationReasonCode:
+      | 'CUSTOMER_REQUEST'
+      | 'OUT_OF_STOCK'
+      | 'STORE_UNABLE'
+      | 'FRAUD_SUSPICION'
+      | 'OTHER';
+    /** @enum {string} */
+    RejectionCode:
+      | 'ORDER_ALREADY_DISPATCHED'
+      | 'ITEM_NOT_CANCELLABLE'
+      | 'REQUEST_ALREADY_RESOLVED'
+      | 'CONCURRENT_MODIFICATION'
+      | 'OTHER';
+    /** @enum {string} */
+    RefundStatus: 'NOT_REQUIRED' | 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
+    /** @enum {string} */
+    ActorType: 'CUSTOMER' | 'OPERATOR' | 'SYSTEM';
+    /** @enum {string} */
+    CustomerItemStatus: 'CONFIRMED' | 'PREPARING' | 'ON_THE_WAY' | 'DELIVERED' | 'CANCELLED';
+    CustomerAddress: {
+      recipientName: string;
+      line1: string;
+      line2: string | null;
+      city: string;
+      region: string;
+      postalCode: string;
+      countryCode: string;
+    };
+    CustomerOrderItem: {
+      id: string;
+      productId: string;
+      productName: string;
+      imageUrl: string;
+      quantity: number;
+      unitPrice: components['schemas']['Money'];
+      lineTotal: components['schemas']['Money'];
+      customerStatus: components['schemas']['CustomerItemStatus'];
+      cancellable: boolean;
+    };
+    CustomerRefundProjection: {
+      status: components['schemas']['RefundStatus'];
+      amount: components['schemas']['Money'] | null;
+      /** Format: date-time */
+      updatedAt: string | null;
+    };
+    CustomerCancellationSummary: {
+      requestId: string;
+      /** @enum {string} */
+      status: 'PENDING' | 'REJECTED' | 'COMPLETED';
+      affectedAmount: components['schemas']['Money'];
+      /** Format: date-time */
+      requestedAt: string;
+      /** Format: date-time */
+      resolvedAt: string | null;
+      refund: components['schemas']['CustomerRefundProjection'];
+    };
+    CustomerOrderSummary: {
+      id: string;
+      displayNumber: string;
+      /** Format: date-time */
+      createdAt: string;
+      status: components['schemas']['OrderStatus'];
+      cancellationStatus: components['schemas']['OrderCancellationStatus'];
+      /** @enum {string} */
+      progressStatus:
+        | 'PENDING'
+        | 'PREPARING'
+        | 'READY_FOR_PICKUP'
+        | 'IN_TRANSIT_TO_HUB'
+        | 'AT_HUB'
+        | 'DELIVERED';
+      paidTotal: components['schemas']['Money'];
+      activeTotal: components['schemas']['Money'];
+      totalItems: number;
+      cancelledItems: number;
+    };
+    CustomerOrderDetail: components['schemas']['CustomerOrderSummary'] & {
+      items: components['schemas']['CustomerOrderItem'][];
+      deliveryAddress: components['schemas']['CustomerAddress'];
+      cancellation: components['schemas']['CustomerCancellationSummary'] | null;
+      /** Format: int64 */
+      version: number;
+    };
+    CustomerOrderListResponse: {
+      items: components['schemas']['CustomerOrderSummary'][];
+      pagination: components['schemas']['Pagination'];
+    };
+    CreateOrderRequest: {
+      idempotencyKey: string;
+    };
+    CreateOrderResponse: {
+      order: components['schemas']['CustomerOrderDetail'];
+      idempotencyKey: string;
+      created: boolean;
+    };
+    CheckoutReconciliationResponse: {
+      /** @description Siempre `true` cuando la reconciliación encuentra el resultado durable. */
+      found: boolean;
+      idempotencyKey: string;
+      order: components['schemas']['CustomerOrderDetail'];
+    };
+    CreateCustomerCancellationRequest: {
+      itemIds: string[];
+      reasonCode: components['schemas']['CancellationReasonCode'];
+      reasonNote?: string;
+      idempotencyKey: string;
+      /** Format: int64 */
+      expectedOrderVersion: number;
+    };
+    CustomerCancellationReceipt: {
+      requestId: string;
+      orderId: string;
+      /** @constant */
+      status: 'PENDING';
+      itemIds: string[];
+      affectedAmount: components['schemas']['Money'];
+      /** Format: date-time */
+      requestedAt: string;
+      idempotencyKey: string;
+      created: boolean;
+    };
+    CustomerCancellationReconciliationResponse: {
+      /** @description Siempre `true` cuando la reconciliación encuentra el resultado durable. */
+      found: boolean;
+      request: components['schemas']['CustomerCancellationReceipt'];
+    };
+    /** @enum {string} */
+    OperatorRole: 'OPERATOR' | 'SUPERVISOR';
+    Operator: {
+      id: string;
+      name: string;
+      /** Format: email */
+      email: string;
+      avatarUrl: string | null;
+      role: components['schemas']['OperatorRole'];
+      active: boolean;
+    };
+    OperatorListResponse: {
+      items: components['schemas']['Operator'][];
+    };
+    OpsCustomerSummary: {
+      id: string;
+      name: string;
+      /** Format: email */
+      email: string;
+    };
+    OpsOrderSummary: {
+      id: string;
+      displayNumber: string;
+      customer: components['schemas']['OpsCustomerSummary'];
+      /** Format: date-time */
+      createdAt: string;
+      /** Format: date-time */
+      updatedAt: string;
+      status: components['schemas']['OrderStatus'];
+      cancellationStatus: components['schemas']['OrderCancellationStatus'];
+      /** Format: date-time */
+      dispatchedAt: string | null;
+      paidTotal: components['schemas']['Money'];
+      activeTotal: components['schemas']['Money'];
+      totalItems: number;
+      cancelledItems: number;
+      /** Format: int64 */
+      version: number;
+    };
+    OpsOrderListResponse: {
+      items: components['schemas']['OpsOrderSummary'][];
+      pagination: components['schemas']['Pagination'];
+    };
+    StoreProjection: {
+      id: string;
+      name: string;
+    };
+    HubProjection: {
+      id: string;
+      name: string;
+    };
+    OpsOrderItem: {
+      id: string;
+      productId: string;
+      productName: string;
+      imageUrl: string;
+      storeId: string;
+      storeName: string;
+      quantity: number;
+      unitPrice: components['schemas']['Money'];
+      lineTotal: components['schemas']['Money'];
+      status: components['schemas']['OrderItemStatus'];
+      cancellable: boolean;
+      /** Format: date-time */
+      cancelledAt: string | null;
+    };
+    CancellationEligibility: {
+      eligible: boolean;
+      eligibleItemIds: string[];
+      /** @enum {string|null} */
+      blockedBy: 'DISPATCHED' | 'EFFECTIVE_CANCELLATION' | 'NO_ELIGIBLE_ITEMS' | null;
+    };
+    OpsOrderDetail: components['schemas']['OpsOrderSummary'] & {
+      items: components['schemas']['OpsOrderItem'][];
+      deliveryAddress: components['schemas']['CustomerAddress'];
+      stores: components['schemas']['StoreProjection'][];
+      hub: components['schemas']['HubProjection'] | null;
+      activeCancellationRequestId: string | null;
+      cancellationEligibility: components['schemas']['CancellationEligibility'];
+    };
+    CancellationActor: {
+      type: components['schemas']['ActorType'];
+      id: string;
+      name: string;
+    };
+    CancellationRequestSummary: {
+      id: string;
+      orderId: string;
+      orderDisplayNumber: string;
+      status: components['schemas']['CancellationRequestStatus'];
+      requestedBy: components['schemas']['CancellationActor'];
+      /** Format: date-time */
+      requestedAt: string;
+      /** Format: date-time */
+      resolvedAt: string | null;
+      reasonCode: components['schemas']['CancellationReasonCode'];
+      requestedAmount: components['schemas']['Money'];
+      itemCount: number;
+    };
+    CancellationCounts: {
+      pending: number;
+      completed: number;
+      rejected: number;
+    };
+    CancellationRequestListResponse: {
+      items: components['schemas']['CancellationRequestSummary'][];
+      pagination: components['schemas']['Pagination'];
+      counts: components['schemas']['CancellationCounts'];
+    };
+    CancellationRequestItem: {
+      itemId: string;
+      productId: string;
+      productName: string;
+      storeId: string;
+      storeName: string;
+      quantity: number;
+      unitPrice: components['schemas']['Money'];
+      requestedAmount: components['schemas']['Money'];
+      currentStatus: components['schemas']['OrderItemStatus'];
+      stillCancellable: boolean;
+    };
+    RefundProjection: {
+      status: components['schemas']['RefundStatus'];
+      amount: components['schemas']['Money'] | null;
+      providerReference: string | null;
+      /** Format: date-time */
+      updatedAt: string | null;
+      failureCode: string | null;
+    };
+    /** @enum {string} */
+    OperationalEffectType: 'INVENTORY' | 'CUSTOMER_NOTIFICATION' | 'REFUND';
+    /** @enum {string} */
+    OperationalEffectStatus: 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
+    OperationalEffect: {
+      type: components['schemas']['OperationalEffectType'];
+      status: components['schemas']['OperationalEffectStatus'];
+      /** Format: date-time */
+      updatedAt: string;
+      failureCode: string | null;
+    };
+    /** @enum {string} */
+    AuditAction:
+      | 'REQUEST_CREATED'
+      | 'REQUEST_APPROVED'
+      | 'REQUEST_REJECTED'
+      | 'CANCELLATION_COMPLETED'
+      | 'EFFECT_UPDATED';
+    AuditEvent: {
+      id: string;
+      action: components['schemas']['AuditAction'];
+      actor: components['schemas']['CancellationActor'];
+      /** Format: date-time */
+      occurredAt: string;
+      note: string | null;
+    };
+    /** @enum {string} */
+    CancellationInvalidatedBy:
+      | 'DISPATCHED'
+      | 'ITEM_STATE_CHANGED'
+      | 'REQUEST_ALREADY_RESOLVED'
+      | 'CONCURRENT_MODIFICATION';
+    CancellationRequestDetail: {
+      id: string;
+      orderId: string;
+      orderDisplayNumber: string;
+      status: components['schemas']['CancellationRequestStatus'];
+      requestedBy: components['schemas']['CancellationActor'];
+      resolvedBy: components['schemas']['CancellationActor'] | null;
+      /** Format: date-time */
+      requestedAt: string;
+      /** Format: date-time */
+      resolvedAt: string | null;
+      reasonCode: components['schemas']['CancellationReasonCode'];
+      reasonNote: string | null;
+      rejectionCode: components['schemas']['RejectionCode'] | null;
+      rejectionNote: string | null;
+      items: components['schemas']['CancellationRequestItem'][];
+      requestedAmount: components['schemas']['Money'];
+      currentAffectedAmount: components['schemas']['Money'];
+      effectiveOrderId: string | null;
+      /** Format: int64 */
+      expectedOrderVersion: number;
+      /** Format: int64 */
+      currentOrderVersion: number;
+      /** Format: date-time */
+      orderDispatchedAt: string | null;
+      stillValid: boolean;
+      invalidatedBy: components['schemas']['CancellationInvalidatedBy'] | null;
+      refund: components['schemas']['RefundProjection'];
+      effects: components['schemas']['OperationalEffect'][];
+      audit: components['schemas']['AuditEvent'][];
+      /** Format: int64 */
+      version: number;
+    };
+    CreateOpsCancellationRequest: {
+      orderId: string;
+      itemIds: string[];
+      reasonCode: components['schemas']['CancellationReasonCode'];
+      reasonNote?: string;
+      idempotencyKey: string;
+      /** Format: int64 */
+      expectedOrderVersion: number;
+    };
+    CreateOpsCancellationResponse: {
+      request: components['schemas']['CancellationRequestDetail'];
+      idempotencyKey: string;
+      created: boolean;
+    };
+    ApproveCancellationRequest: {
+      idempotencyKey: string;
+      /** Format: int64 */
+      expectedRequestVersion: number;
+      /** Format: int64 */
+      expectedOrderVersion: number;
+      note?: string;
+    };
+    RejectCancellationRequest: {
+      idempotencyKey: string;
+      /** Format: int64 */
+      expectedRequestVersion: number;
+      rejectionCode: components['schemas']['RejectionCode'];
+      rejectionNote?: string;
+    };
+    ResolveCancellationResponse: {
+      request: components['schemas']['CancellationRequestDetail'];
+      order: components['schemas']['OpsOrderDetail'];
+      replayed: boolean;
+    };
+    /** @enum {string} */
+    IdempotencyScope: 'CREATE' | 'APPROVE' | 'REJECT';
+    OpsCancellationReconciliationResponse: {
+      /** @description Siempre `true` cuando la reconciliación encuentra el resultado durable. */
+      found: boolean;
+      scope: components['schemas']['IdempotencyScope'];
+      request: components['schemas']['CancellationRequestDetail'];
+      order: components['schemas']['OpsOrderDetail'] | null;
+    };
+    CancellationHistoryItem: {
+      requestId: string;
+      orderId: string;
+      orderDisplayNumber: string;
+      /** @enum {string} */
+      status: 'COMPLETED' | 'REJECTED';
+      reasonCode: components['schemas']['CancellationReasonCode'];
+      rejectionCode: components['schemas']['RejectionCode'] | null;
+      requestedBy: components['schemas']['CancellationActor'];
+      resolvedBy: components['schemas']['CancellationActor'] | null;
+      /** Format: date-time */
+      requestedAt: string;
+      /** Format: date-time */
+      resolvedAt: string;
+      affectedAmount: components['schemas']['Money'];
+      refundStatus: components['schemas']['RefundStatus'];
+    };
+    CancellationHistoryResponse: {
+      items: components['schemas']['CancellationHistoryItem'][];
+      pagination: components['schemas']['Pagination'];
+    };
+    /** @enum {string} */
+    MockScenario:
+      | 'normal'
+      | 'slow'
+      | 'empty'
+      | 'server-error'
+      | 'timeout-before-commit'
+      | 'timeout-after-commit'
+      | 'concurrent-resolution'
+      | 'dispatched-order';
+    ResetMockRequest: {
+      /** @default normal */
+      scenario: components['schemas']['MockScenario'];
+    };
+    ResetMockResponse: {
+      /** Format: date-time */
+      resetAt: string;
+      schemaVersion: number;
+      scenario: components['schemas']['MockScenario'];
+    };
+  };
+  responses: {
+    /** @description Petición malformada */
+    BadRequest: {
+      headers: {
+        'X-Correlation-Id': components['headers']['CorrelationId'];
+        [name: string]: unknown;
+      };
+      content: {
+        'application/problem+json': components['schemas']['ApiProblem'];
+      };
+    };
+    /** @description Identidad ausente o inválida */
+    Unauthenticated: {
+      headers: {
+        'X-Correlation-Id': components['headers']['CorrelationId'];
+        [name: string]: unknown;
+      };
+      content: {
+        'application/problem+json': components['schemas']['ApiProblem'];
+      };
+    };
+    /** @description Identidad sin permiso */
+    Forbidden: {
+      headers: {
+        'X-Correlation-Id': components['headers']['CorrelationId'];
+        [name: string]: unknown;
+      };
+      content: {
+        'application/problem+json': components['schemas']['ApiProblem'];
+      };
+    };
+    /** @description Recurso inexistente o no visible */
+    NotFound: {
+      headers: {
+        'X-Correlation-Id': components['headers']['CorrelationId'];
+        [name: string]: unknown;
+      };
+      content: {
+        'application/problem+json': components['schemas']['ApiProblem'];
+      };
+    };
+    /** @description Conflicto de dominio, versión o idempotencia */
+    Conflict: {
+      headers: {
+        'X-Correlation-Id': components['headers']['CorrelationId'];
+        [name: string]: unknown;
+      };
+      content: {
+        'application/problem+json': components['schemas']['ApiProblem'];
+      };
+    };
+    /** @description Validación semántica */
+    UnprocessableEntity: {
+      headers: {
+        'X-Correlation-Id': components['headers']['CorrelationId'];
+        [name: string]: unknown;
+      };
+      content: {
+        'application/problem+json': components['schemas']['ApiProblem'];
+      };
+    };
+    /** @description Límite de peticiones excedido */
+    TooManyRequests: {
+      headers: {
+        'X-Correlation-Id': components['headers']['CorrelationId'];
+        'Retry-After': components['headers']['RetryAfter'];
+        'RateLimit-Limit': components['headers']['RateLimitLimit'];
+        'RateLimit-Remaining': components['headers']['RateLimitRemaining'];
+        'RateLimit-Reset': components['headers']['RateLimitReset'];
+        [name: string]: unknown;
+      };
+      content: {
+        'application/problem+json': components['schemas']['ApiProblem'];
+      };
+    };
+    /** @description Error inesperado sin detalle interno */
+    InternalError: {
+      headers: {
+        'X-Correlation-Id': components['headers']['CorrelationId'];
+        [name: string]: unknown;
+      };
+      content: {
+        'application/problem+json': components['schemas']['ApiProblem'];
+      };
+    };
+  };
+  parameters: {
+    Page: number;
+    PageSize: number;
+    SortDirection: 'asc' | 'desc';
+    ProductId: string;
+    OrderId: string;
+    RequestId: string;
+    IdempotencyKey: string;
+    CreatedFrom: string;
+    CreatedTo: string;
+  };
+  requestBodies: never;
+  headers: {
+    /** @description Identificador efectivo de correlación */
+    CorrelationId: string;
+    /** @description Cuota comunicada para la ventana aplicable */
+    RateLimitLimit: number;
+    /** @description Capacidad restante */
+    RateLimitRemaining: number;
+    /** @description Segundos hasta recuperar capacidad */
+    RateLimitReset: number;
+    /** @description Segundos que el consumidor debe esperar */
+    RetryAfter: number;
+  };
+  pathItems: never;
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    listProducts: {
-        parameters: {
-            query?: {
-                search?: string;
-                category?: string;
-                page?: components["parameters"]["Page"];
-                pageSize?: components["parameters"]["PageSize"];
-                sortBy?: "name" | "price" | "createdAt";
-                sortDirection?: components["parameters"]["SortDirection"];
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Catálogo paginado */
-            200: {
-                headers: {
-                    "X-Correlation-Id": components["headers"]["CorrelationId"];
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProductListResponse"];
-                };
-            };
-            400: components["responses"]["BadRequest"];
-            422: components["responses"]["UnprocessableEntity"];
-            429: components["responses"]["TooManyRequests"];
-            500: components["responses"]["InternalError"];
-        };
+  listProducts: {
+    parameters: {
+      query?: {
+        search?: string;
+        category?: string;
+        page?: components['parameters']['Page'];
+        pageSize?: components['parameters']['PageSize'];
+        sortBy?: 'name' | 'price' | 'createdAt';
+        sortDirection?: components['parameters']['SortDirection'];
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    getProduct: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                productId: components["parameters"]["ProductId"];
-            };
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description Catálogo paginado */
+      200: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId'];
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description Producto encontrado */
-            200: {
-                headers: {
-                    "X-Correlation-Id": components["headers"]["CorrelationId"];
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ProductDetail"];
-                };
-            };
-            404: components["responses"]["NotFound"];
-            429: components["responses"]["TooManyRequests"];
-            500: components["responses"]["InternalError"];
+        content: {
+          'application/json': components['schemas']['ProductListResponse'];
         };
+      };
+      400: components['responses']['BadRequest'];
+      422: components['responses']['UnprocessableEntity'];
+      429: components['responses']['TooManyRequests'];
+      500: components['responses']['InternalError'];
     };
-    getCart: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Carrito actual */
-            200: {
-                headers: {
-                    "X-Correlation-Id": components["headers"]["CorrelationId"];
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Cart"];
-                };
-            };
-            401: components["responses"]["Unauthenticated"];
-            429: components["responses"]["TooManyRequests"];
-            500: components["responses"]["InternalError"];
-        };
+  };
+  getProduct: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        productId: components['parameters']['ProductId'];
+      };
+      cookie?: never;
     };
-    updateCartItem: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                productId: components["parameters"]["ProductId"];
-            };
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description Producto encontrado */
+      200: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId'];
+          [name: string]: unknown;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateCartItemRequest"];
-            };
+        content: {
+          'application/json': components['schemas']['ProductDetail'];
         };
-        responses: {
-            /** @description Carrito actualizado */
-            200: {
-                headers: {
-                    "X-Correlation-Id": components["headers"]["CorrelationId"];
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Cart"];
-                };
-            };
-            404: components["responses"]["NotFound"];
-            409: components["responses"]["Conflict"];
-            422: components["responses"]["UnprocessableEntity"];
-            429: components["responses"]["TooManyRequests"];
-        };
+      };
+      404: components['responses']['NotFound'];
+      429: components['responses']['TooManyRequests'];
+      500: components['responses']['InternalError'];
     };
-    deleteCartItem: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                productId: components["parameters"]["ProductId"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Línea ausente después de la operación */
-            204: {
-                headers: {
-                    "X-Correlation-Id": components["headers"]["CorrelationId"];
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            429: components["responses"]["TooManyRequests"];
-            500: components["responses"]["InternalError"];
-        };
+  };
+  getCart: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    listCustomerOrders: {
-        parameters: {
-            query?: {
-                status?: components["schemas"]["OrderStatus"];
-                page?: components["parameters"]["Page"];
-                pageSize?: components["parameters"]["PageSize"];
-                sortBy?: "createdAt" | "updatedAt" | "displayNumber";
-                sortDirection?: components["parameters"]["SortDirection"];
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description Carrito actual */
+      200: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId'];
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description Pedidos paginados */
-            200: {
-                headers: {
-                    "X-Correlation-Id": components["headers"]["CorrelationId"];
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CustomerOrderListResponse"];
-                };
-            };
-            422: components["responses"]["UnprocessableEntity"];
-            429: components["responses"]["TooManyRequests"];
+        content: {
+          'application/json': components['schemas']['Cart'];
         };
+      };
+      401: components['responses']['Unauthenticated'];
+      429: components['responses']['TooManyRequests'];
+      500: components['responses']['InternalError'];
     };
-    createOrder: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateOrderRequest"];
-            };
-        };
-        responses: {
-            /** @description Pedido creado o resultado idempotente reproducido */
-            201: {
-                headers: {
-                    "X-Correlation-Id": components["headers"]["CorrelationId"];
-                    /** @description URI del pedido creado */
-                    Location?: string;
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CreateOrderResponse"];
-                };
-            };
-            409: components["responses"]["Conflict"];
-            422: components["responses"]["UnprocessableEntity"];
-            429: components["responses"]["TooManyRequests"];
-            500: components["responses"]["InternalError"];
-        };
+  };
+  updateCartItem: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        productId: components['parameters']['ProductId'];
+      };
+      cookie?: never;
     };
-    reconcileCheckout: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                idempotencyKey: components["parameters"]["IdempotencyKey"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Resultado confirmado */
-            200: {
-                headers: {
-                    "X-Correlation-Id": components["headers"]["CorrelationId"];
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CheckoutReconciliationResponse"];
-                };
-            };
-            404: components["responses"]["NotFound"];
-            429: components["responses"]["TooManyRequests"];
-        };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateCartItemRequest'];
+      };
     };
-    getCustomerOrder: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                orderId: components["parameters"]["OrderId"];
-            };
-            cookie?: never;
+    responses: {
+      /** @description Carrito actualizado */
+      200: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId'];
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description Proyección del cliente */
-            200: {
-                headers: {
-                    "X-Correlation-Id": components["headers"]["CorrelationId"];
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CustomerOrderDetail"];
-                };
-            };
-            404: components["responses"]["NotFound"];
-            429: components["responses"]["TooManyRequests"];
+        content: {
+          'application/json': components['schemas']['Cart'];
         };
+      };
+      404: components['responses']['NotFound'];
+      409: components['responses']['Conflict'];
+      422: components['responses']['UnprocessableEntity'];
+      429: components['responses']['TooManyRequests'];
     };
-    createCustomerCancellation: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                orderId: components["parameters"]["OrderId"];
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateCustomerCancellationRequest"];
-            };
-        };
-        responses: {
-            /** @description Solicitud creada o reproducida */
-            201: {
-                headers: {
-                    "X-Correlation-Id": components["headers"]["CorrelationId"];
-                    Location?: string;
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CustomerCancellationReceipt"];
-                };
-            };
-            404: components["responses"]["NotFound"];
-            409: components["responses"]["Conflict"];
-            422: components["responses"]["UnprocessableEntity"];
-            429: components["responses"]["TooManyRequests"];
-        };
+  };
+  deleteCartItem: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        productId: components['parameters']['ProductId'];
+      };
+      cookie?: never;
     };
-    reconcileCustomerCancellation: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                idempotencyKey: components["parameters"]["IdempotencyKey"];
-            };
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description Línea ausente después de la operación */
+      204: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId'];
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description Resultado confirmado */
-            200: {
-                headers: {
-                    "X-Correlation-Id": components["headers"]["CorrelationId"];
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CustomerCancellationReconciliationResponse"];
-                };
-            };
-            404: components["responses"]["NotFound"];
-            429: components["responses"]["TooManyRequests"];
-        };
+        content?: never;
+      };
+      429: components['responses']['TooManyRequests'];
+      500: components['responses']['InternalError'];
     };
-    listOperators: {
-        parameters: {
-            query?: {
-                active?: boolean;
-                search?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Operadores visibles */
-            200: {
-                headers: {
-                    "X-Correlation-Id": components["headers"]["CorrelationId"];
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["OperatorListResponse"];
-                };
-            };
-            401: components["responses"]["Unauthenticated"];
-            403: components["responses"]["Forbidden"];
-            429: components["responses"]["TooManyRequests"];
-        };
+  };
+  listCustomerOrders: {
+    parameters: {
+      query?: {
+        status?: components['schemas']['OrderStatus'];
+        page?: components['parameters']['Page'];
+        pageSize?: components['parameters']['PageSize'];
+        sortBy?: 'createdAt' | 'updatedAt' | 'displayNumber';
+        sortDirection?: components['parameters']['SortDirection'];
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    listOpsOrders: {
-        parameters: {
-            query?: {
-                search?: string;
-                status?: components["schemas"]["OrderStatus"];
-                cancellationStatus?: components["schemas"]["OrderCancellationStatus"];
-                storeId?: string;
-                hubId?: string;
-                createdFrom?: components["parameters"]["CreatedFrom"];
-                createdTo?: components["parameters"]["CreatedTo"];
-                page?: components["parameters"]["Page"];
-                pageSize?: components["parameters"]["PageSize"];
-                sortBy?: "createdAt" | "updatedAt" | "displayNumber";
-                sortDirection?: components["parameters"]["SortDirection"];
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description Pedidos paginados */
+      200: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId'];
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description Pedidos operacionales paginados */
-            200: {
-                headers: {
-                    "X-Correlation-Id": components["headers"]["CorrelationId"];
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["OpsOrderListResponse"];
-                };
-            };
-            422: components["responses"]["UnprocessableEntity"];
-            429: components["responses"]["TooManyRequests"];
+        content: {
+          'application/json': components['schemas']['CustomerOrderListResponse'];
         };
+      };
+      422: components['responses']['UnprocessableEntity'];
+      429: components['responses']['TooManyRequests'];
     };
-    getOpsOrder: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                orderId: components["parameters"]["OrderId"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Proyección operacional */
-            200: {
-                headers: {
-                    "X-Correlation-Id": components["headers"]["CorrelationId"];
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["OpsOrderDetail"];
-                };
-            };
-            404: components["responses"]["NotFound"];
-            429: components["responses"]["TooManyRequests"];
-        };
+  };
+  createOrder: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
     };
-    listCancellationRequests: {
-        parameters: {
-            query?: {
-                status?: components["schemas"]["CancellationRequestStatus"];
-                search?: string;
-                reasonCode?: components["schemas"]["CancellationReasonCode"];
-                requestedByType?: components["schemas"]["ActorType"];
-                operatorId?: string;
-                createdFrom?: components["parameters"]["CreatedFrom"];
-                createdTo?: components["parameters"]["CreatedTo"];
-                page?: components["parameters"]["Page"];
-                pageSize?: components["parameters"]["PageSize"];
-                sortBy?: "requestedAt" | "resolvedAt" | "orderDisplayNumber";
-                sortDirection?: components["parameters"]["SortDirection"];
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Solicitudes paginadas y conteos filtrados */
-            200: {
-                headers: {
-                    "X-Correlation-Id": components["headers"]["CorrelationId"];
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CancellationRequestListResponse"];
-                };
-            };
-            422: components["responses"]["UnprocessableEntity"];
-            429: components["responses"]["TooManyRequests"];
-        };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateOrderRequest'];
+      };
     };
-    createOpsCancellation: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
+    responses: {
+      /** @description Pedido creado o resultado idempotente reproducido */
+      201: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId'];
+          /** @description URI del pedido creado */
+          Location?: string;
+          [name: string]: unknown;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateOpsCancellationRequest"];
-            };
+        content: {
+          'application/json': components['schemas']['CreateOrderResponse'];
         };
-        responses: {
-            /** @description Solicitud creada o reproducida */
-            201: {
-                headers: {
-                    "X-Correlation-Id": components["headers"]["CorrelationId"];
-                    Location?: string;
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CreateOpsCancellationResponse"];
-                };
-            };
-            401: components["responses"]["Unauthenticated"];
-            403: components["responses"]["Forbidden"];
-            404: components["responses"]["NotFound"];
-            409: components["responses"]["Conflict"];
-            422: components["responses"]["UnprocessableEntity"];
-            429: components["responses"]["TooManyRequests"];
-        };
+      };
+      409: components['responses']['Conflict'];
+      422: components['responses']['UnprocessableEntity'];
+      429: components['responses']['TooManyRequests'];
+      500: components['responses']['InternalError'];
     };
-    reconcileOpsCancellation: {
-        parameters: {
-            query: {
-                scope: components["schemas"]["IdempotencyScope"];
-            };
-            header?: never;
-            path: {
-                idempotencyKey: components["parameters"]["IdempotencyKey"];
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Resultado confirmado */
-            200: {
-                headers: {
-                    "X-Correlation-Id": components["headers"]["CorrelationId"];
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["OpsCancellationReconciliationResponse"];
-                };
-            };
-            404: components["responses"]["NotFound"];
-            422: components["responses"]["UnprocessableEntity"];
-            429: components["responses"]["TooManyRequests"];
-        };
+  };
+  reconcileCheckout: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        idempotencyKey: components['parameters']['IdempotencyKey'];
+      };
+      cookie?: never;
     };
-    getCancellationRequest: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                requestId: components["parameters"]["RequestId"];
-            };
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description Resultado confirmado */
+      200: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId'];
+          [name: string]: unknown;
         };
-        requestBody?: never;
-        responses: {
-            /** @description Detalle operacional de cancelación */
-            200: {
-                headers: {
-                    "X-Correlation-Id": components["headers"]["CorrelationId"];
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CancellationRequestDetail"];
-                };
-            };
-            404: components["responses"]["NotFound"];
-            429: components["responses"]["TooManyRequests"];
+        content: {
+          'application/json': components['schemas']['CheckoutReconciliationResponse'];
         };
+      };
+      404: components['responses']['NotFound'];
+      429: components['responses']['TooManyRequests'];
     };
-    approveCancellationRequest: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                requestId: components["parameters"]["RequestId"];
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ApproveCancellationRequest"];
-            };
-        };
-        responses: {
-            /** @description Solicitud y pedido actualizados o respuesta reproducida */
-            200: {
-                headers: {
-                    "X-Correlation-Id": components["headers"]["CorrelationId"];
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ResolveCancellationResponse"];
-                };
-            };
-            401: components["responses"]["Unauthenticated"];
-            403: components["responses"]["Forbidden"];
-            404: components["responses"]["NotFound"];
-            409: components["responses"]["Conflict"];
-            422: components["responses"]["UnprocessableEntity"];
-            429: components["responses"]["TooManyRequests"];
-        };
+  };
+  getCustomerOrder: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        orderId: components['parameters']['OrderId'];
+      };
+      cookie?: never;
     };
-    rejectCancellationRequest: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                requestId: components["parameters"]["RequestId"];
-            };
-            cookie?: never;
+    requestBody?: never;
+    responses: {
+      /** @description Proyección del cliente */
+      200: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId'];
+          [name: string]: unknown;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RejectCancellationRequest"];
-            };
+        content: {
+          'application/json': components['schemas']['CustomerOrderDetail'];
         };
-        responses: {
-            /** @description Solicitud rechazada o respuesta reproducida */
-            200: {
-                headers: {
-                    "X-Correlation-Id": components["headers"]["CorrelationId"];
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ResolveCancellationResponse"];
-                };
-            };
-            401: components["responses"]["Unauthenticated"];
-            403: components["responses"]["Forbidden"];
-            404: components["responses"]["NotFound"];
-            409: components["responses"]["Conflict"];
-            422: components["responses"]["UnprocessableEntity"];
-            429: components["responses"]["TooManyRequests"];
-        };
+      };
+      404: components['responses']['NotFound'];
+      429: components['responses']['TooManyRequests'];
     };
-    listCancellationHistory: {
-        parameters: {
-            query?: {
-                search?: string;
-                status?: "COMPLETED" | "REJECTED";
-                reasonCode?: components["schemas"]["CancellationReasonCode"];
-                rejectionCode?: components["schemas"]["RejectionCode"];
-                requestedByType?: components["schemas"]["ActorType"];
-                operatorId?: string;
-                createdFrom?: components["parameters"]["CreatedFrom"];
-                createdTo?: components["parameters"]["CreatedTo"];
-                resolvedFrom?: string;
-                resolvedTo?: string;
-                page?: components["parameters"]["Page"];
-                pageSize?: components["parameters"]["PageSize"];
-                sortBy?: "requestedAt" | "resolvedAt" | "orderDisplayNumber";
-                sortDirection?: components["parameters"]["SortDirection"];
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Historial paginado */
-            200: {
-                headers: {
-                    "X-Correlation-Id": components["headers"]["CorrelationId"];
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CancellationHistoryResponse"];
-                };
-            };
-            422: components["responses"]["UnprocessableEntity"];
-            429: components["responses"]["TooManyRequests"];
-        };
+  };
+  createCustomerCancellation: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        orderId: components['parameters']['OrderId'];
+      };
+      cookie?: never;
     };
-    resetDemo: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ResetMockRequest"];
-            };
-        };
-        responses: {
-            /** @description Demo restaurada */
-            200: {
-                headers: {
-                    "X-Correlation-Id": components["headers"]["CorrelationId"];
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ResetMockResponse"];
-                };
-            };
-            422: components["responses"]["UnprocessableEntity"];
-            429: components["responses"]["TooManyRequests"];
-        };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateCustomerCancellationRequest'];
+      };
     };
+    responses: {
+      /** @description Solicitud creada o reproducida */
+      201: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId'];
+          Location?: string;
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CustomerCancellationReceipt'];
+        };
+      };
+      404: components['responses']['NotFound'];
+      409: components['responses']['Conflict'];
+      422: components['responses']['UnprocessableEntity'];
+      429: components['responses']['TooManyRequests'];
+    };
+  };
+  reconcileCustomerCancellation: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        idempotencyKey: components['parameters']['IdempotencyKey'];
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Resultado confirmado */
+      200: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId'];
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CustomerCancellationReconciliationResponse'];
+        };
+      };
+      404: components['responses']['NotFound'];
+      429: components['responses']['TooManyRequests'];
+    };
+  };
+  listOperators: {
+    parameters: {
+      query?: {
+        active?: boolean;
+        search?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Operadores visibles */
+      200: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId'];
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['OperatorListResponse'];
+        };
+      };
+      401: components['responses']['Unauthenticated'];
+      403: components['responses']['Forbidden'];
+      429: components['responses']['TooManyRequests'];
+    };
+  };
+  listOpsOrders: {
+    parameters: {
+      query?: {
+        search?: string;
+        status?: components['schemas']['OrderStatus'];
+        cancellationStatus?: components['schemas']['OrderCancellationStatus'];
+        storeId?: string;
+        hubId?: string;
+        createdFrom?: components['parameters']['CreatedFrom'];
+        createdTo?: components['parameters']['CreatedTo'];
+        page?: components['parameters']['Page'];
+        pageSize?: components['parameters']['PageSize'];
+        sortBy?: 'createdAt' | 'updatedAt' | 'displayNumber';
+        sortDirection?: components['parameters']['SortDirection'];
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Pedidos operacionales paginados */
+      200: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId'];
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['OpsOrderListResponse'];
+        };
+      };
+      422: components['responses']['UnprocessableEntity'];
+      429: components['responses']['TooManyRequests'];
+    };
+  };
+  getOpsOrder: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        orderId: components['parameters']['OrderId'];
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Proyección operacional */
+      200: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId'];
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['OpsOrderDetail'];
+        };
+      };
+      404: components['responses']['NotFound'];
+      429: components['responses']['TooManyRequests'];
+    };
+  };
+  listCancellationRequests: {
+    parameters: {
+      query?: {
+        status?: components['schemas']['CancellationRequestStatus'];
+        search?: string;
+        reasonCode?: components['schemas']['CancellationReasonCode'];
+        requestedByType?: components['schemas']['ActorType'];
+        operatorId?: string;
+        createdFrom?: components['parameters']['CreatedFrom'];
+        createdTo?: components['parameters']['CreatedTo'];
+        page?: components['parameters']['Page'];
+        pageSize?: components['parameters']['PageSize'];
+        sortBy?: 'requestedAt' | 'resolvedAt' | 'orderDisplayNumber';
+        sortDirection?: components['parameters']['SortDirection'];
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Solicitudes paginadas y conteos filtrados */
+      200: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId'];
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CancellationRequestListResponse'];
+        };
+      };
+      422: components['responses']['UnprocessableEntity'];
+      429: components['responses']['TooManyRequests'];
+    };
+  };
+  createOpsCancellation: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateOpsCancellationRequest'];
+      };
+    };
+    responses: {
+      /** @description Solicitud creada o reproducida */
+      201: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId'];
+          Location?: string;
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CreateOpsCancellationResponse'];
+        };
+      };
+      401: components['responses']['Unauthenticated'];
+      403: components['responses']['Forbidden'];
+      404: components['responses']['NotFound'];
+      409: components['responses']['Conflict'];
+      422: components['responses']['UnprocessableEntity'];
+      429: components['responses']['TooManyRequests'];
+    };
+  };
+  reconcileOpsCancellation: {
+    parameters: {
+      query: {
+        scope: components['schemas']['IdempotencyScope'];
+      };
+      header?: never;
+      path: {
+        idempotencyKey: components['parameters']['IdempotencyKey'];
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Resultado confirmado */
+      200: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId'];
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['OpsCancellationReconciliationResponse'];
+        };
+      };
+      404: components['responses']['NotFound'];
+      422: components['responses']['UnprocessableEntity'];
+      429: components['responses']['TooManyRequests'];
+    };
+  };
+  getCancellationRequest: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        requestId: components['parameters']['RequestId'];
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Detalle operacional de cancelación */
+      200: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId'];
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CancellationRequestDetail'];
+        };
+      };
+      404: components['responses']['NotFound'];
+      429: components['responses']['TooManyRequests'];
+    };
+  };
+  approveCancellationRequest: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        requestId: components['parameters']['RequestId'];
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ApproveCancellationRequest'];
+      };
+    };
+    responses: {
+      /** @description Solicitud y pedido actualizados o respuesta reproducida */
+      200: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId'];
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ResolveCancellationResponse'];
+        };
+      };
+      401: components['responses']['Unauthenticated'];
+      403: components['responses']['Forbidden'];
+      404: components['responses']['NotFound'];
+      409: components['responses']['Conflict'];
+      422: components['responses']['UnprocessableEntity'];
+      429: components['responses']['TooManyRequests'];
+    };
+  };
+  rejectCancellationRequest: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        requestId: components['parameters']['RequestId'];
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RejectCancellationRequest'];
+      };
+    };
+    responses: {
+      /** @description Solicitud rechazada o respuesta reproducida */
+      200: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId'];
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ResolveCancellationResponse'];
+        };
+      };
+      401: components['responses']['Unauthenticated'];
+      403: components['responses']['Forbidden'];
+      404: components['responses']['NotFound'];
+      409: components['responses']['Conflict'];
+      422: components['responses']['UnprocessableEntity'];
+      429: components['responses']['TooManyRequests'];
+    };
+  };
+  listCancellationHistory: {
+    parameters: {
+      query?: {
+        search?: string;
+        status?: 'COMPLETED' | 'REJECTED';
+        reasonCode?: components['schemas']['CancellationReasonCode'];
+        rejectionCode?: components['schemas']['RejectionCode'];
+        requestedByType?: components['schemas']['ActorType'];
+        operatorId?: string;
+        createdFrom?: components['parameters']['CreatedFrom'];
+        createdTo?: components['parameters']['CreatedTo'];
+        resolvedFrom?: string;
+        resolvedTo?: string;
+        page?: components['parameters']['Page'];
+        pageSize?: components['parameters']['PageSize'];
+        sortBy?: 'requestedAt' | 'resolvedAt' | 'orderDisplayNumber';
+        sortDirection?: components['parameters']['SortDirection'];
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Historial paginado */
+      200: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId'];
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CancellationHistoryResponse'];
+        };
+      };
+      422: components['responses']['UnprocessableEntity'];
+      429: components['responses']['TooManyRequests'];
+    };
+  };
+  resetDemo: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ResetMockRequest'];
+      };
+    };
+    responses: {
+      /** @description Demo restaurada */
+      200: {
+        headers: {
+          'X-Correlation-Id': components['headers']['CorrelationId'];
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ResetMockResponse'];
+        };
+      };
+      422: components['responses']['UnprocessableEntity'];
+      429: components['responses']['TooManyRequests'];
+    };
+  };
 }

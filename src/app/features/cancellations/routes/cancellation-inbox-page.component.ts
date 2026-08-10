@@ -44,11 +44,7 @@ import { CancellationsStore } from '../state/cancellations.store';
       >
     </header>
     <nav class="tabs" aria-label="Estado de solicitudes">
-      <button
-        type="button"
-        [class.active]="status === 'REQUESTED'"
-        (click)="setStatus('REQUESTED')"
-      >
+      <button type="button" [class.active]="status === 'PENDING'" (click)="setStatus('PENDING')">
         Pendientes</button
       ><button
         type="button"
@@ -62,10 +58,7 @@ import { CancellationsStore } from '../state/cancellations.store';
     </nav>
 
     <ng-container *ngIf="store.requests$ | async as state">
-      <section
-        class="request-list content-card"
-        *ngIf="state.status === 'success' && state.data.length"
-      >
+      <section class="request-list content-card" *ngIf="state.data !== null && state.data.length">
         <a
           class="request-row"
           *ngFor="let request of state.data; trackBy: trackRequest"
@@ -82,7 +75,7 @@ import { CancellationsStore } from '../state/cancellations.store';
             ></span
           ><span
             class="validity"
-            *ngIf="request.status === 'REQUESTED'"
+            *ngIf="request.status === 'PENDING'"
             [class.validity--invalid]="!request.validNow"
             ><lucide-icon
               [name]="request.validNow ? 'circle-check' : 'triangle-alert'"
@@ -96,7 +89,7 @@ import { CancellationsStore } from '../state/cancellations.store';
           ><lucide-icon name="chevron-right" [size]="16"
         /></a>
       </section>
-      <div class="empty-center panel" *ngIf="state.status === 'success' && !state.data.length">
+      <div class="empty-center panel" *ngIf="state.data !== null && !state.data.length">
         <app-page-state
           title="No hay solicitudes en esta vista"
           message="Las solicitudes que coincidan con el estado elegido aparecerán acá."
@@ -110,7 +103,7 @@ import { CancellationsStore } from '../state/cancellations.store';
           message="Estamos verificando el estado vigente de cada orden."
         />
       </div>
-      <div class="empty-center" *ngIf="state.status === 'error'">
+      <div class="empty-center" *ngIf="state.status === 'error' && state.data === null">
         <app-page-state
           [title]="state.error.title"
           [message]="state.error.message"
@@ -266,13 +259,13 @@ import { CancellationsStore } from '../state/cancellations.store';
 })
 export class CancellationInboxPageComponent implements OnInit {
   readonly store = inject(CancellationsStore);
-  status = 'REQUESTED';
+  status = 'PENDING';
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
   ngOnInit(): void {
     this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
-      this.status = params.get('status') ?? 'REQUESTED';
+      this.status = params.get('status') ?? 'PENDING';
       this.store.loadRequests(this.status);
     });
   }
@@ -287,7 +280,7 @@ export class CancellationInboxPageComponent implements OnInit {
   }
   statusLabel(status: CancellationRequestStatus): string {
     return {
-      REQUESTED: 'Pendiente',
+      PENDING: 'Pendiente',
       APPROVED: 'Aprobada',
       COMPLETED: 'Completada',
       REJECTED: 'Rechazada',

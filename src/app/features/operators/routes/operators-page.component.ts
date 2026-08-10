@@ -36,7 +36,7 @@ import { OperatorsStore } from '../state/operators.store';
       >
     </header>
     <ng-container *ngIf="store.operators$ | async as state">
-      <section class="team-grid" *ngIf="state.status === 'success' && state.data.length">
+      <section class="team-grid" *ngIf="state.data !== null && state.data.length">
         <article class="member panel" *ngFor="let operator of state.data; trackBy: trackOperator">
           <div class="member__top">
             <span class="avatar">{{ operator.initials }}</span
@@ -58,7 +58,7 @@ import { OperatorsStore } from '../state/operators.store';
           message="Estamos recuperando la actividad de operadores."
         />
       </div>
-      <div class="empty-center" *ngIf="state.status === 'error'">
+      <div class="empty-center" *ngIf="state.status === 'error' && state.data === null">
         <app-page-state
           [title]="state.error.title"
           [message]="state.error.message"

@@ -37,10 +37,7 @@ import { CancellationsStore } from '../state/cancellations.store';
       >
     </header>
     <ng-container *ngIf="store.history$ | async as state">
-      <section
-        class="timeline content-card"
-        *ngIf="state.status === 'success' && state.data.length"
-      >
+      <section class="timeline content-card" *ngIf="state.data !== null && state.data.length">
         <article class="event" *ngFor="let event of state.data; trackBy: trackEvent">
           <span class="event-icon" [class.event-icon--rejected]="event.action.includes('REJECTED')"
             ><lucide-icon
@@ -67,7 +64,7 @@ import { CancellationsStore } from '../state/cancellations.store';
           />
         </article>
       </section>
-      <div class="empty-center panel" *ngIf="state.status === 'success' && !state.data.length">
+      <div class="empty-center panel" *ngIf="state.data !== null && !state.data.length">
         <app-page-state
           title="Todavía no hay actividad"
           message="Las decisiones sobre cancelaciones aparecerán acá con su atribución."
@@ -79,7 +76,7 @@ import { CancellationsStore } from '../state/cancellations.store';
           message="Estamos recuperando la trazabilidad operacional."
         />
       </div>
-      <div class="empty-center" *ngIf="state.status === 'error'">
+      <div class="empty-center" *ngIf="state.status === 'error' && state.data === null">
         <app-page-state
           [title]="state.error.title"
           [message]="state.error.message"

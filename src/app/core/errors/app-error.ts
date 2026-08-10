@@ -69,4 +69,12 @@ export const errorScreenState = <T>(error: AppError, data: T | null = null): Scr
   error,
 });
 
+export const beginScreenState = <T>(previous: ScreenState<T>): ScreenState<T> =>
+  previous.data === null
+    ? initialScreenState()
+    : { status: 'refreshing', data: previous.data, error: null };
+
+export const failScreenState = <T>(previous: ScreenState<T>, error: AppError): ScreenState<T> =>
+  errorScreenState(error, previous.data);
+
 export const idleCommandState = <T>(): CommandState<T> => ({ status: 'idle' });

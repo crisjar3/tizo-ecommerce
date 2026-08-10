@@ -21,6 +21,7 @@ export const seedProducts: Product[] = [
     stock: 18,
     imageUrl: '/assets/products/running-shoe.jpg',
     imageAlt: 'Zapatilla deportiva roja sobre fondo claro',
+    available: true,
   },
   {
     id: 'prod-jacket',
@@ -33,6 +34,7 @@ export const seedProducts: Product[] = [
     stock: 7,
     imageUrl: '/assets/products/jacket.jpg',
     imageAlt: 'Campera de cuero oscura colgada',
+    available: true,
   },
   {
     id: 'prod-shirt',
@@ -45,6 +47,7 @@ export const seedProducts: Product[] = [
     stock: 24,
     imageUrl: '/assets/products/shirt.jpg',
     imageAlt: 'Remera blanca de algodón',
+    available: true,
   },
   {
     id: 'prod-headphones',
@@ -57,6 +60,7 @@ export const seedProducts: Product[] = [
     stock: 11,
     imageUrl: '/assets/products/headphones.jpg',
     imageAlt: 'Auriculares negros sobre fondo amarillo',
+    available: true,
   },
 ];
 
@@ -104,6 +108,7 @@ const order1042: OpsOrder = {
   fulfillmentStatus: 'PREPARING',
   cancellationStatus: 'NONE',
   version: 3,
+  dispatchedAt: null,
   paidTotal: ars(12_840_000),
   cancelledTotal: ars(0),
   activeTotal: ars(12_840_000),
@@ -164,6 +169,7 @@ const order1040: OpsOrder = {
   paidTotal: ars(3_120_000),
   activeTotal: ars(3_120_000),
   version: 5,
+  dispatchedAt: '2026-08-03T11:00:00.000Z',
   items: [
     {
       id: 'item-1040-1',

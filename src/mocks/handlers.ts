@@ -2,7 +2,6 @@ import { delay, http, HttpResponse } from 'msw';
 import type { JsonBodyType } from 'msw';
 
 import type {
-  ApiErrorEnvelope,
   CancellationRequest,
   CheckoutCommand,
   CreateCancellationCommand,
@@ -14,19 +13,53 @@ import type { MockScenario } from '../app/core/demo/mock-scenario';
 import {
   buildCart,
   fingerprint,
-  projectCustomerOrder,
   readDatabase,
   recalculateOrder,
   resetDatabase,
   updateDatabase,
 } from './db';
 import type { MockDatabase } from './db';
+import {
+  pagination,
+  toCancellationDetail,
+  toCancellationSummary,
+  toCart,
+  toCustomerOrderDetail,
+  toCustomerOrderSummary,
+  toHistory,
+  toOperator,
+  toOpsOrderDetail,
+  toOpsOrderSummary,
+  toProductDetail,
+  toProductSummary,
+} from './official-projections';
 
 const ok = <T extends JsonBodyType>(body: T, status = 200) => HttpResponse.json(body, { status });
 
 const apiError = (status: number, code: string, message: string) =>
-  HttpResponse.json<ApiErrorEnvelope>(
-    { code, message, correlationId: `corr-${crypto.randomUUID()}` },
+  HttpResponse.json(
+    {
+      type: `https://tizo.test/problems/${code.toLowerCase().replaceAll('_', '-')}`,
+      title: message,
+      status,
+      detail: message,
+      instance: '/api',
+      error: {
+        category:
+          status === 404
+            ? 'NOT_FOUND'
+            : status === 409
+              ? 'CONFLICT'
+              : status === 422
+                ? 'VALIDATION'
+                : 'INTERNAL',
+        code,
+        message,
+        correlationId: `corr-${crypto.randomUUID()}`,
+        retryable: status >= 500,
+        recoveryAction: status >= 500 ? 'RELOAD' : 'NONE',
+      },
+    },
     { status },
   );
 
@@ -56,12 +89,13 @@ function withCurrentValidity(
   request: CancellationRequest,
   database: MockDatabase,
 ): CancellationRequest {
-  if (request.status !== 'REQUESTED') return { ...request, validNow: false };
+  if (request.status !== 'PENDING') return { ...request, validNow: false };
   const order = database.orders.find((candidate) => candidate.id === request.orderId);
   const items = order?.items.filter((item) => request.itemIds.includes(item.id)) ?? [];
   const validNow =
     Boolean(items.length) &&
-    items.every((item) => item.cancellable && item.status !== 'DISPATCHED');
+    order?.dispatchedAt === null &&
+    items.every((item) => item.cancellable);
   return {
     ...request,
     validNow,
@@ -72,6 +106,7 @@ function withCurrentValidity(
 function createCancellationResponse(
   command: CreateCancellationCommand,
   requesterName: string,
+  audience: 'customer' | 'ops',
 ): Response {
   return updateDatabase((database) => {
     const scope = `create-cancellation:${command.orderId}`;
@@ -83,15 +118,28 @@ function createCancellationResponse(
       if (previous.fingerprint !== commandFingerprint) {
         return apiError(409, 'IDEMPOTENCY_KEY_REUSED', 'La clave ya fue usada con otros datos.');
       }
-      return ok(previous.response as CancellationRequest);
+      const previousRequest = previous.response as CancellationRequest;
+      return audience === 'customer'
+        ? ok(customerReceipt(previousRequest, command.idempotencyKey, false))
+        : ok({
+            request: toCancellationDetail(previousRequest, database),
+            idempotencyKey: command.idempotencyKey,
+            created: false,
+          });
     }
 
     const order = database.orders.find((candidate) => candidate.id === command.orderId);
     if (!order) return apiError(404, 'ORDER_NOT_FOUND', 'La orden solicitada no existe.');
+    if (
+      typeof command.expectedOrderVersion === 'number' &&
+      command.expectedOrderVersion !== order.version
+    ) {
+      return apiError(409, 'CONCURRENT_MODIFICATION', 'La orden cambiÃ³ mientras la revisabas.');
+    }
     if (!command.reasonCode || command.itemIds.length === 0) {
       return apiError(422, 'VALIDATION_ERROR', 'Seleccioná productos y un motivo.');
     }
-    if (order.items.some((item) => item.status === 'DISPATCHED' || item.status === 'DELIVERED')) {
+    if (order.dispatchedAt !== null) {
       return apiError(
         409,
         'ORDER_ALREADY_DISPATCHED',
@@ -102,7 +150,7 @@ function createCancellationResponse(
       database.requests.some(
         (candidate) =>
           candidate.orderId === order.id &&
-          (candidate.status === 'REQUESTED' || candidate.status === 'COMPLETED'),
+          (candidate.status === 'PENDING' || candidate.status === 'COMPLETED'),
       )
     ) {
       return apiError(409, 'ORDER_ALREADY_HAS_CANCELLATION', 'La orden ya tiene una cancelación.');
@@ -125,7 +173,7 @@ function createCancellationResponse(
         itemStatusBefore: item.status,
         operationalEffect: item.operationalEffect,
       })),
-      status: 'REQUESTED',
+      status: 'PENDING',
       reasonCode: command.reasonCode,
       reasonNote: command.reasonNote,
       requestedAt: new Date().toISOString(),
@@ -135,6 +183,7 @@ function createCancellationResponse(
         currency: order.paidTotal.currency,
       },
       version: 1,
+      currentOrderVersion: order.version,
       validNow: true,
     };
     database.requests.unshift(request);
@@ -155,15 +204,38 @@ function createCancellationResponse(
       status: 201,
       response: request,
     });
-    return ok(request, 201);
+    return audience === 'customer'
+      ? ok(customerReceipt(request, command.idempotencyKey, true), 201)
+      : ok(
+          {
+            request: toCancellationDetail(request, database),
+            idempotencyKey: command.idempotencyKey,
+            created: true,
+          },
+          201,
+        );
   });
+}
+
+function customerReceipt(request: CancellationRequest, idempotencyKey: string, created: boolean) {
+  return {
+    requestId: request.id,
+    orderId: request.orderId,
+    status: 'PENDING' as const,
+    itemIds: [...request.itemIds],
+    affectedAmount: request.affectedAmount,
+    requestedAt: request.requestedAt,
+    idempotencyKey,
+    created,
+  };
 }
 
 export const handlers = [
   http.get('/api/catalog/products', async () => {
     const blocked = await preflight();
     if (blocked) return blocked;
-    return ok(isEmptyScenario() ? [] : readDatabase().products);
+    const items = isEmptyScenario() ? [] : readDatabase().products.map(toProductSummary);
+    return ok({ items, pagination: pagination(items.length) });
   }),
 
   http.get('/api/catalog/products/:productId', async ({ params }) => {
@@ -172,13 +244,15 @@ export const handlers = [
     const product = readDatabase().products.find(
       (candidate) => candidate.id === String(params['productId']),
     );
-    return product ? ok(product) : apiError(404, 'PRODUCT_NOT_FOUND', 'El producto no existe.');
+    return product
+      ? ok(toProductDetail(product))
+      : apiError(404, 'PRODUCT_NOT_FOUND', 'El producto no existe.');
   }),
 
   http.get('/api/me/cart', async () => {
     const blocked = await preflight();
     if (blocked) return blocked;
-    return ok(buildCart(readDatabase()));
+    return ok(toCart(buildCart(readDatabase())));
   }),
 
   http.put('/api/me/cart/items/:productId', async ({ params, request }) => {
@@ -198,7 +272,7 @@ export const handlers = [
       const existing = database.cart.find((line) => line.productId === productId);
       if (existing) existing.quantity = body.quantity ?? 1;
       else database.cart.push({ productId, quantity: body.quantity ?? 1 });
-      return ok(buildCart(database));
+      return ok(toCart(buildCart(database)));
     });
   }),
 
@@ -209,7 +283,7 @@ export const handlers = [
       database.cart = database.cart.filter(
         (line) => line.productId !== String(params['productId']),
       );
-      return ok(buildCart(database));
+      return new HttpResponse(null, { status: 204 });
     });
   }),
 
@@ -226,10 +300,15 @@ export const handlers = [
         if (previous.fingerprint !== commandFingerprint) {
           return apiError(409, 'IDEMPOTENCY_KEY_REUSED', 'La clave ya fue usada con otra compra.');
         }
-        return ok(previous.response as JsonBodyType);
+        const previousOrder = previous.response as OpsOrder;
+        return ok({
+          order: toCustomerOrderDetail(previousOrder, database),
+          idempotencyKey: command.idempotencyKey,
+          created: false,
+        });
       }
       const cart = buildCart(database);
-      if (!cart.items.length) return apiError(422, 'EMPTY_CART', 'El carrito está vacío.');
+      if (!cart.items.length) return apiError(422, 'CART_EMPTY', 'El carrito está vacío.');
 
       const nextId = String(Math.max(...database.orders.map((order) => Number(order.id))) + 1);
       const order: OpsOrder = {
@@ -241,6 +320,7 @@ export const handlers = [
         fulfillmentStatus: 'CONFIRMED',
         cancellationStatus: 'NONE',
         version: 1,
+        dispatchedAt: null,
         paidTotal: cart.total,
         cancelledTotal: { amountMinor: 0, currency: cart.total.currency },
         activeTotal: cart.total,
@@ -261,15 +341,21 @@ export const handlers = [
       };
       database.orders.unshift(order);
       database.cart = [];
-      const projection = projectCustomerOrder(order);
       database.idempotency.push({
         scope: 'checkout',
         key: command.idempotencyKey,
         fingerprint: commandFingerprint,
         status: 201,
-        response: projection,
+        response: order,
       });
-      return ok(projection, 201);
+      return ok(
+        {
+          order: toCustomerOrderDetail(order, database),
+          idempotencyKey: command.idempotencyKey,
+          created: true,
+        },
+        201,
+      );
     });
     return isUncertainScenario() ? HttpResponse.error() : response;
   }),
@@ -277,8 +363,25 @@ export const handlers = [
   http.get('/api/me/orders', async () => {
     const blocked = await preflight();
     if (blocked) return blocked;
-    const orders = isEmptyScenario() ? [] : readDatabase().orders.map(projectCustomerOrder);
-    return ok(orders);
+    const orders = isEmptyScenario() ? [] : readDatabase().orders.map(toCustomerOrderSummary);
+    return ok({ items: orders, pagination: pagination(orders.length) });
+  }),
+
+  http.get('/api/me/orders/by-idempotency-key/:key', async ({ params }) => {
+    const blocked = await preflight();
+    if (blocked) return blocked;
+    const database = readDatabase();
+    const record = database.idempotency.find(
+      (candidate) => candidate.scope === 'checkout' && candidate.key === String(params['key']),
+    );
+    if (!record)
+      return apiError(404, 'IDEMPOTENCY_RESULT_NOT_FOUND', 'Todavía no encontramos un resultado.');
+    const order = record.response as OpsOrder;
+    return ok({
+      found: true,
+      idempotencyKey: String(params['key']),
+      order: toCustomerOrderDetail(order, database),
+    });
   }),
 
   http.get('/api/me/orders/:orderId', async ({ params }) => {
@@ -288,7 +391,7 @@ export const handlers = [
       (candidate) => candidate.id === String(params['orderId']),
     );
     return order
-      ? ok(projectCustomerOrder(order))
+      ? ok(toCustomerOrderDetail(order, readDatabase()))
       : apiError(404, 'ORDER_NOT_FOUND', 'El pedido no existe.');
   }),
 
@@ -299,14 +402,36 @@ export const handlers = [
     const response = createCancellationResponse(
       { ...command, orderId: String(params['orderId']) },
       'Cliente demo',
+      'customer',
     );
     return isUncertainScenario() ? HttpResponse.error() : response;
+  }),
+
+  http.get('/api/me/cancellation-requests/by-idempotency-key/:key', async ({ params }) => {
+    const blocked = await preflight();
+    if (blocked) return blocked;
+    const database = readDatabase();
+    const record = database.idempotency.find(
+      (candidate) =>
+        candidate.scope.startsWith('create-cancellation:') &&
+        candidate.key === String(params['key']),
+    );
+    if (!record)
+      return apiError(404, 'IDEMPOTENCY_RESULT_NOT_FOUND', 'Todavía no encontramos un resultado.');
+    return ok({
+      found: true,
+      request: customerReceipt(
+        record.response as CancellationRequest,
+        String(params['key']),
+        false,
+      ),
+    });
   }),
 
   http.get('/api/ops/operators', async () => {
     const blocked = await preflight();
     if (blocked) return blocked;
-    return ok(readDatabase().operators);
+    return ok({ items: readDatabase().operators.map(toOperator) });
   }),
 
   http.get('/api/ops/orders', async ({ request }) => {
@@ -314,7 +439,7 @@ export const handlers = [
     if (blocked) return blocked;
     const url = new URL(request.url);
     const status = url.searchParams.get('status') ?? '';
-    const cancellation = url.searchParams.get('cancellation') ?? '';
+    const cancellation = url.searchParams.get('cancellationStatus') ?? '';
     const search = (url.searchParams.get('search') ?? '').toLowerCase();
     const items = isEmptyScenario()
       ? []
@@ -326,7 +451,10 @@ export const handlers = [
               order.id.includes(search) ||
               order.customerName.toLowerCase().includes(search)),
         );
-    return ok({ items, page: 1, total: items.length });
+    return ok({
+      items: items.map(toOpsOrderSummary),
+      pagination: pagination(items.length),
+    });
   }),
 
   http.get('/api/ops/orders/:orderId', async ({ params }) => {
@@ -335,7 +463,9 @@ export const handlers = [
     const order = readDatabase().orders.find(
       (candidate) => candidate.id === String(params['orderId']),
     );
-    return order ? ok(order) : apiError(404, 'ORDER_NOT_FOUND', 'La orden no existe.');
+    return order
+      ? ok(toOpsOrderDetail(order, readDatabase()))
+      : apiError(404, 'ORDER_NOT_FOUND', 'La orden no existe.');
   }),
 
   http.post('/api/ops/cancellation-requests', async ({ request }) => {
@@ -343,7 +473,11 @@ export const handlers = [
     if (blocked) return blocked;
     const command = (await request.json()) as CreateCancellationCommand;
     const database = readDatabase();
-    const response = createCancellationResponse(command, selectedOperatorName(request, database));
+    const response = createCancellationResponse(
+      command,
+      selectedOperatorName(request, database),
+      'ops',
+    );
     return isUncertainScenario() ? HttpResponse.error() : response;
   }),
 
@@ -357,20 +491,47 @@ export const handlers = [
       : database.requests
           .filter((candidate) => !status || candidate.status === status)
           .map((candidate) => withCurrentValidity(candidate, database));
-    return ok(requests);
+    return ok({
+      items: requests.map(toCancellationSummary),
+      pagination: pagination(requests.length),
+      counts: {
+        pending: database.requests.filter((request) => request.status === 'PENDING').length,
+        completed: database.requests.filter((request) => request.status === 'COMPLETED').length,
+        rejected: database.requests.filter((request) => request.status === 'REJECTED').length,
+      },
+    });
   }),
 
-  http.get('/api/ops/cancellation-requests/by-idempotency-key/:key', async ({ params }) => {
-    const blocked = await preflight();
-    if (blocked) return blocked;
-    const database = readDatabase();
-    const record = database.idempotency.find(
-      (candidate) => candidate.key === String(params['key']),
-    );
-    return record
-      ? ok(record.response as JsonBodyType)
-      : apiError(404, 'IDEMPOTENCY_RESULT_NOT_FOUND', 'Todavía no encontramos un resultado.');
-  }),
+  http.get(
+    '/api/ops/cancellation-requests/by-idempotency-key/:key',
+    async ({ params, request }) => {
+      const blocked = await preflight();
+      if (blocked) return blocked;
+      const database = readDatabase();
+      const scope = new URL(request.url).searchParams.get('scope') ?? 'CREATE';
+      const expectedScopePrefix =
+        scope === 'APPROVE' ? 'approve:' : scope === 'REJECT' ? 'reject:' : 'create-cancellation:';
+      const record = database.idempotency.find(
+        (candidate) =>
+          candidate.scope.startsWith(expectedScopePrefix) &&
+          candidate.key === String(params['key']),
+      );
+      if (!record)
+        return apiError(
+          404,
+          'IDEMPOTENCY_RESULT_NOT_FOUND',
+          'Todavía no encontramos un resultado.',
+        );
+      const cancellation = record.response as CancellationRequest;
+      const order = database.orders.find((candidate) => candidate.id === cancellation.orderId);
+      return ok({
+        found: true,
+        scope,
+        request: toCancellationDetail(cancellation, database),
+        order: order ? toOpsOrderDetail(order, database) : null,
+      });
+    },
+  ),
 
   http.get('/api/ops/cancellation-requests/:requestId', async ({ params }) => {
     const blocked = await preflight();
@@ -380,14 +541,23 @@ export const handlers = [
       (candidate) => candidate.id === String(params['requestId']),
     );
     return request
-      ? ok(withCurrentValidity(request, database))
+      ? ok(toCancellationDetail(withCurrentValidity(request, database), database))
       : apiError(404, 'REQUEST_NOT_FOUND', 'La solicitud no existe.');
   }),
 
   http.post('/api/ops/cancellation-requests/:requestId/approve', async ({ params, request }) => {
     const blocked = await preflight();
     if (blocked) return blocked;
-    const command = (await request.json()) as ResolveCancellationCommand;
+    const body = (await request.json()) as {
+      idempotencyKey: string;
+      expectedRequestVersion: number;
+      expectedOrderVersion: number;
+    };
+    const command: ResolveCancellationCommand = {
+      idempotencyKey: body.idempotencyKey,
+      expectedVersion: body.expectedRequestVersion,
+      expectedOrderVersion: body.expectedOrderVersion,
+    };
     const response = updateDatabase((database) => {
       const requestIndex = database.requests.findIndex(
         (candidate) => candidate.id === String(params['requestId']),
@@ -407,9 +577,19 @@ export const handlers = [
             'La clave ya fue usada con otra decisión.',
           );
         }
-        return ok(previous.response as JsonBodyType);
+        const previousRequest = previous.response as CancellationRequest;
+        const previousOrder = database.orders.find(
+          (candidate) => candidate.id === previousRequest.orderId,
+        );
+        if (!previousOrder)
+          return apiError(404, 'ORDER_NOT_FOUND', 'La orden ya no estÃ¡ disponible.');
+        return ok({
+          request: toCancellationDetail(previousRequest, database),
+          order: toOpsOrderDetail(previousOrder, database),
+          replayed: true,
+        });
       }
-      if (current.status !== 'REQUESTED') {
+      if (current.status !== 'PENDING') {
         return apiError(409, 'REQUEST_ALREADY_RESOLVED', 'Otro operador ya resolvió la solicitud.');
       }
       if (current.version !== command.expectedVersion) {
@@ -422,8 +602,10 @@ export const handlers = [
       const orderIndex = database.orders.findIndex((order) => order.id === current.orderId);
       const order = database.orders[orderIndex];
       if (!order) return apiError(404, 'ORDER_NOT_FOUND', 'La orden no existe.');
-      const selected = order.items.filter((item) => current.itemIds.includes(item.id));
-      if (selected.some((item) => item.status === 'DISPATCHED' || item.status === 'DELIVERED')) {
+      if (command.expectedOrderVersion !== order.version) {
+        return apiError(409, 'CONCURRENT_MODIFICATION', 'La orden cambiÃ³ mientras la revisabas.');
+      }
+      if (order.dispatchedAt !== null) {
         database.requests[requestIndex] = {
           ...current,
           status: 'REJECTED',
@@ -477,7 +659,11 @@ export const handlers = [
         status: 200,
         response: completed,
       });
-      return ok(completed);
+      return ok({
+        request: toCancellationDetail(completed, database),
+        order: toOpsOrderDetail(updatedOrder, database),
+        replayed: false,
+      });
     });
     return isUncertainScenario() ? HttpResponse.error() : response;
   }),
@@ -485,7 +671,18 @@ export const handlers = [
   http.post('/api/ops/cancellation-requests/:requestId/reject', async ({ params, request }) => {
     const blocked = await preflight();
     if (blocked) return blocked;
-    const command = (await request.json()) as ResolveCancellationCommand;
+    const body = (await request.json()) as {
+      idempotencyKey: string;
+      expectedRequestVersion: number;
+      rejectionCode?: string;
+      rejectionNote?: string;
+    };
+    const command: ResolveCancellationCommand = {
+      idempotencyKey: body.idempotencyKey,
+      expectedVersion: body.expectedRequestVersion,
+      rejectionCode: body.rejectionCode,
+      rejectionNote: body.rejectionNote,
+    };
     const response = updateDatabase((database) => {
       const index = database.requests.findIndex(
         (candidate) => candidate.id === String(params['requestId']),
@@ -505,9 +702,19 @@ export const handlers = [
             'La clave ya fue usada con otra decisión.',
           );
         }
-        return ok(previous.response as JsonBodyType);
+        const previousRequest = previous.response as CancellationRequest;
+        const previousOrder = database.orders.find(
+          (candidate) => candidate.id === previousRequest.orderId,
+        );
+        if (!previousOrder)
+          return apiError(404, 'ORDER_NOT_FOUND', 'La orden ya no estÃ¡ disponible.');
+        return ok({
+          request: toCancellationDetail(previousRequest, database),
+          order: toOpsOrderDetail(previousOrder, database),
+          replayed: true,
+        });
       }
-      if (current.status !== 'REQUESTED') {
+      if (current.status !== 'PENDING') {
         return apiError(409, 'REQUEST_ALREADY_RESOLVED', 'Otro operador ya resolvió la solicitud.');
       }
       const rejected: CancellationRequest = {
@@ -515,7 +722,7 @@ export const handlers = [
         status: 'REJECTED',
         resolverName: selectedOperatorName(request, database),
         resolvedAt: new Date().toISOString(),
-        rejectionCode: command.rejectionCode ?? 'OPERATOR_REJECTED',
+        rejectionCode: command.rejectionCode ?? 'OTHER',
         rejectionNote: command.rejectionNote,
         validNow: false,
         version: current.version + 1,
@@ -538,7 +745,13 @@ export const handlers = [
         status: 200,
         response: rejected,
       });
-      return ok(rejected);
+      const order = database.orders.find((candidate) => candidate.id === rejected.orderId);
+      if (!order) return apiError(404, 'ORDER_NOT_FOUND', 'La orden no existe.');
+      return ok({
+        request: toCancellationDetail(rejected, database),
+        order: toOpsOrderDetail(order, database),
+        replayed: false,
+      });
     });
     return isUncertainScenario() ? HttpResponse.error() : response;
   }),
@@ -546,8 +759,16 @@ export const handlers = [
   http.get('/api/ops/cancellation-history', async () => {
     const blocked = await preflight();
     if (blocked) return blocked;
-    return ok(isEmptyScenario() ? [] : readDatabase().audit);
+    const items = isEmptyScenario() ? [] : toHistory(readDatabase());
+    return ok({ items, pagination: pagination(items.length) });
   }),
 
-  http.post('/api/mock/reset', async () => ok(resetDatabase())),
+  http.post('/api/mock/reset', async () => {
+    const database = resetDatabase();
+    return ok({
+      resetAt: new Date().toISOString(),
+      schemaVersion: database.schemaVersion,
+      scenario: 'normal',
+    });
+  }),
 ];

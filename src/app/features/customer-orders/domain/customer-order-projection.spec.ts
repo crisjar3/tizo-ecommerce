@@ -36,7 +36,11 @@ describe('customer order projection', () => {
 
   it('maps every operational milestone to the safe customer progress', () => {
     expect(progressFromItemStatus('PENDING')).toBe('CONFIRMED');
+    expect(progressFromItemStatus('AWAITING_STORES')).toBe('CONFIRMED');
+    expect(progressFromItemStatus('READY_FOR_PICKUP')).toBe('PREPARING');
+    expect(progressFromItemStatus('IN_TRANSIT_TO_HUB')).toBe('PREPARING');
     expect(progressFromItemStatus('AT_HUB')).toBe('PREPARING');
+    expect(progressFromItemStatus('READY_TO_DISPATCH')).toBe('PREPARING');
     expect(progressFromItemStatus('PREPARING')).toBe('PREPARING');
     expect(progressFromItemStatus('DISPATCHED')).toBe('IN_TRANSIT');
     expect(progressFromItemStatus('DELIVERED')).toBe('DELIVERED');
@@ -45,6 +49,7 @@ describe('customer order projection', () => {
 
   it('orders internal milestones without exposing them to the projection', () => {
     expect(itemStatusRank('PENDING')).toBeLessThan(itemStatusRank('AT_HUB'));
+    expect(itemStatusRank('IN_TRANSIT_TO_HUB')).toBeLessThan(itemStatusRank('READY_TO_DISPATCH'));
     expect(itemStatusRank('AT_HUB')).toBeLessThan(itemStatusRank('DELIVERED'));
   });
 });

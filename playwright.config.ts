@@ -21,7 +21,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'pnpm start --host 127.0.0.1 --port 4300',
+    command: 'pnpm start:mock --host 127.0.0.1 --port 4300',
     url: 'http://127.0.0.1:4300/',
     reuseExistingServer: !process.env['CI'],
     timeout: 120_000,

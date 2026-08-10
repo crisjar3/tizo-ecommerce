@@ -11,6 +11,7 @@
 /node_modules/
 /out-tsc/
 /playwright-report/
+/playwright-report-official/
 /test-results/
 /specs/
 

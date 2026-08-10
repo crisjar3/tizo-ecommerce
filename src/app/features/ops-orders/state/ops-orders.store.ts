@@ -1,17 +1,17 @@
 import { inject, Injectable } from '@angular/core';
 import { ComponentStore, tapResponse } from '@ngrx/component-store';
-import { map, switchMap, tap } from 'rxjs';
+import { switchMap, tap } from 'rxjs';
 
 import type { OpsOrder, PaginatedOrders } from '../../../core/api/api-contract';
-import { TizoApiService } from '../../../core/api/tizo-api.service';
 import type { ScreenState } from '../../../core/errors/app-error';
 import {
-  errorScreenState,
+  beginScreenState,
+  failScreenState,
   initialScreenState,
   successScreenState,
 } from '../../../core/errors/app-error';
 import { normalizeHttpError } from '../../../core/errors/error-mapper';
-import { mapOpsOrderDto, mapPaginatedOpsOrdersDto } from '../data-access/ops-order.mapper';
+import { OpsOrdersApiClient } from '../data-access/ops-orders-api.client';
 
 interface OpsOrdersState {
   readonly orders: ScreenState<PaginatedOrders>;
@@ -20,20 +20,21 @@ interface OpsOrdersState {
 
 @Injectable()
 export class OpsOrdersStore extends ComponentStore<OpsOrdersState> {
-  private readonly api = inject(TizoApiService);
+  private readonly api = inject(OpsOrdersApiClient);
   readonly orders$ = this.select((state) => state.orders);
   readonly selected$ = this.select((state) => state.selected);
 
   readonly loadOrders = this.effect<Readonly<Record<string, string>>>((filters$) =>
     filters$.pipe(
-      tap(() => this.patchState({ orders: initialScreenState() })),
+      tap(() => this.patchState({ orders: beginScreenState(this.get().orders) })),
       switchMap((filters) =>
-        this.api.listOpsOrders(filters).pipe(
-          map(mapPaginatedOpsOrdersDto),
+        this.api.list(filters).pipe(
           tapResponse(
             (orders) => this.patchState({ orders: successScreenState(orders) }),
             (error: unknown) =>
-              this.patchState({ orders: errorScreenState(normalizeHttpError(error)) }),
+              this.patchState({
+                orders: failScreenState(this.get().orders, normalizeHttpError(error)),
+              }),
           ),
         ),
       ),
@@ -42,14 +43,15 @@ export class OpsOrdersStore extends ComponentStore<OpsOrdersState> {
 
   readonly loadOrder = this.effect<string>((orderId$) =>
     orderId$.pipe(
-      tap(() => this.patchState({ selected: initialScreenState() })),
+      tap(() => this.patchState({ selected: beginScreenState(this.get().selected) })),
       switchMap((orderId) =>
-        this.api.getOpsOrder(orderId).pipe(
-          map(mapOpsOrderDto),
+        this.api.get(orderId).pipe(
           tapResponse(
             (order) => this.patchState({ selected: successScreenState(order) }),
             (error: unknown) =>
-              this.patchState({ selected: errorScreenState(normalizeHttpError(error)) }),
+              this.patchState({
+                selected: failScreenState(this.get().selected, normalizeHttpError(error)),
+              }),
           ),
         ),
       ),

@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
 
-import { TizoApiService } from '../../../core/api/tizo-api.service';
+import { DemoApiClient } from '../../../core/demo/demo-api.client';
 import { MOCK_SCENARIO_KEY, MOCK_SCENARIOS } from '../../../core/demo/mock-scenario';
 import type { MockScenario } from '../../../core/demo/mock-scenario';
 
@@ -145,7 +145,7 @@ export class DemoPanelComponent {
   open = false;
   resetting = false;
   scenario = (sessionStorage.getItem(MOCK_SCENARIO_KEY) ?? 'normal') as MockScenario;
-  private readonly api = inject(TizoApiService);
+  private readonly api = inject(DemoApiClient);
 
   get scenarioDescription(): string {
     return this.scenarios.find((option) => option.value === this.scenario)?.description ?? '';
@@ -159,7 +159,7 @@ export class DemoPanelComponent {
   reset(): void {
     this.resetting = true;
     sessionStorage.setItem(MOCK_SCENARIO_KEY, 'normal');
-    this.api.resetDemoData().subscribe({
+    this.api.reset().subscribe({
       next: () => window.location.reload(),
       error: () => {
         this.resetting = false;

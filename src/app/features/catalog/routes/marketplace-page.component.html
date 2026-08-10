@@ -23,7 +23,7 @@
   </div>
 
   <ng-container *ngIf="store.products$ | async as state">
-    <div class="product-grid" *ngIf="state.status === 'success' && filtered(state.data).length">
+    <div class="product-grid" *ngIf="state.data !== null && filtered(state.data).length">
       <a
         class="product-card"
         *ngFor="let product of filtered(state.data); trackBy: trackProduct"
@@ -47,7 +47,7 @@
         message="Estamos reuniendo la selección para vos."
       />
     </div>
-    <div class="empty-center" *ngIf="state.status === 'success' && !filtered(state.data).length">
+    <div class="empty-center" *ngIf="state.data !== null && !filtered(state.data).length">
       <app-page-state
         title="No encontramos productos"
         message="Probá con otra búsqueda o limpiá el texto ingresado."
@@ -55,7 +55,7 @@
         (action)="search.setValue('')"
       />
     </div>
-    <div class="empty-center" *ngIf="state.status === 'error'">
+    <div class="empty-center" *ngIf="state.status === 'error' && state.data === null">
       <app-page-state
         [title]="state.error.title"
         [message]="state.error.message"

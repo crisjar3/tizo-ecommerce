@@ -1,59 +1,94 @@
-import type { Money, OpsOrder, OpsOrderItem } from '../../../core/api/api-contract';
+import type {
+  CustomerOrderProgress,
+  Money,
+  OpsOrder,
+  OpsOrderItem,
+  PaginatedOrders,
+} from '../../../core/api/api-contract';
+import type { components } from '../../../core/api/generated/tizo-api.types';
+import { resolveProductImage } from '../../../core/api/product-image';
 
-/** Wire shape owned by the operations order data-access boundary. */
-export interface OpsOrderDto {
-  readonly id: string;
-  readonly createdAt: string;
-  readonly progress: OpsOrder['progress'];
-  readonly paidTotal: Money;
-  readonly cancelledTotal: Money;
-  readonly activeTotal: Money;
-  readonly customerName: string;
-  readonly customerEmail: string;
-  readonly fulfillmentStatus: OpsOrder['fulfillmentStatus'];
-  readonly cancellationStatus: OpsOrder['cancellationStatus'];
-  readonly version: number;
-  readonly items: readonly OpsOrderItem[];
-}
+export type OpsOrderSummaryDto = components['schemas']['OpsOrderSummary'];
+export type OpsOrderDetailDto = components['schemas']['OpsOrderDetail'];
+export type PaginatedOpsOrdersDto = components['schemas']['OpsOrderListResponse'];
 
-export interface PaginatedOpsOrdersDto {
-  readonly items: readonly OpsOrderDto[];
-  readonly page: number;
-  readonly total: number;
-}
-
-export function mapOpsOrderDto(dto: OpsOrderDto): OpsOrder {
+export function mapOpsOrderSummary(dto: OpsOrderSummaryDto): OpsOrder {
   return {
     id: dto.id,
     createdAt: dto.createdAt,
-    progress: dto.progress,
+    progress: mapProgress(dto.status, dto.cancellationStatus),
     paidTotal: cloneMoney(dto.paidTotal),
-    cancelledTotal: cloneMoney(dto.cancelledTotal),
+    cancelledTotal: subtractMoney(dto.paidTotal, dto.activeTotal),
     activeTotal: cloneMoney(dto.activeTotal),
-    customerName: dto.customerName,
-    customerEmail: dto.customerEmail,
-    fulfillmentStatus: dto.fulfillmentStatus,
+    customerName: dto.customer.name,
+    customerEmail: dto.customer.email,
+    fulfillmentStatus: dto.status,
     cancellationStatus: dto.cancellationStatus,
     version: dto.version,
-    items: dto.items.map((item) => ({
-      ...item,
-      lineTotal: cloneMoney(item.lineTotal),
-    })),
+    dispatchedAt: dto.dispatchedAt,
+    items: [],
   };
 }
 
-export function mapPaginatedOpsOrdersDto(dto: PaginatedOpsOrdersDto): {
-  readonly items: readonly OpsOrder[];
-  readonly page: number;
-  readonly total: number;
-} {
+export function mapOpsOrderDto(dto: OpsOrderDetailDto): OpsOrder {
   return {
-    items: dto.items.map(mapOpsOrderDto),
-    page: dto.page,
-    total: dto.total,
+    ...mapOpsOrderSummary(dto),
+    items: dto.items.map(mapOpsOrderItem),
   };
+}
+
+export function mapPaginatedOpsOrdersDto(dto: PaginatedOpsOrdersDto): PaginatedOrders {
+  return {
+    items: dto.items.map(mapOpsOrderSummary),
+    page: dto.pagination.page,
+    total: dto.pagination.totalItems,
+  };
+}
+
+function mapOpsOrderItem(dto: OpsOrderDetailDto['items'][number]): OpsOrderItem {
+  return {
+    id: dto.id,
+    productId: dto.productId,
+    name: dto.productName,
+    quantity: dto.quantity,
+    lineTotal: cloneMoney(dto.lineTotal),
+    cancelled: dto.status === 'CANCELLED',
+    refundStatus: 'NOT_REQUIRED',
+    imageUrl: resolveProductImage(dto.productId, dto.imageUrl),
+    cancellable: dto.cancellable,
+    sku: dto.productId,
+    store: dto.storeName,
+    status: dto.status,
+    operationalEffect: dto.cancellable
+      ? 'Se liberará el inventario reservado al aprobar.'
+      : 'La línea ya no admite cancelación.',
+  };
+}
+
+function mapProgress(
+  status: OpsOrderSummaryDto['status'],
+  cancellationStatus: OpsOrderSummaryDto['cancellationStatus'],
+): CustomerOrderProgress {
+  if (cancellationStatus === 'FULL') return 'CANCELLED';
+  switch (status) {
+    case 'AWAITING_STORES':
+      return 'CONFIRMED';
+    case 'READY_TO_DISPATCH':
+      return 'PREPARING';
+    case 'DISPATCHED':
+      return 'IN_TRANSIT';
+    case 'DELIVERED':
+      return 'DELIVERED';
+  }
 }
 
 function cloneMoney(money: Money): Money {
   return { amountMinor: money.amountMinor, currency: money.currency };
+}
+
+function subtractMoney(paid: Money, active: Money): Money {
+  return {
+    amountMinor: Math.max(0, paid.amountMinor - active.amountMinor),
+    currency: paid.currency,
+  };
 }

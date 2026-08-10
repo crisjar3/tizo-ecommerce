@@ -14,6 +14,7 @@ import { LucideAngularModule } from 'lucide-angular';
 
 import { CANCELLATION_REASONS } from '../../../core/api/api-contract';
 import type { Money } from '../../../core/api/api-contract';
+import { IdempotencyKeyFactory } from '../../../core/api/idempotency-key.factory';
 import { NetworkStatusService } from '../../../core/network/network-status.service';
 import { MoneyPipe } from '../../../shared/ui/money/money.pipe';
 import { PageStateComponent } from '../../../shared/ui/page-state/page-state.component';
@@ -418,12 +419,14 @@ export class CancellationRequestPageComponent implements OnInit, HasPendingCance
   loading = true;
   loadError: { readonly title: string; readonly message: string } | null = null;
   submitting = false;
+  orderVersion = 0;
   private completed = false;
   private readonly customerOrders = inject(CustomerOrdersStore);
   private readonly opsOrders = inject(OpsOrdersStore);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
   private readonly changeDetector = inject(ChangeDetectorRef);
+  private readonly commandKey = inject(IdempotencyKeyFactory).create();
 
   get selectedIds(): readonly string[] {
     return this.form.controls.itemIds.value;
@@ -441,24 +444,28 @@ export class CancellationRequestPageComponent implements OnInit, HasPendingCance
     if (this.customer) {
       this.customerOrders.selected$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((state) => {
         this.loading = state.status === 'loading';
-        this.loadError = state.status === 'error' ? state.error : null;
-        if (state.status === 'success')
-          this.lines = state.data.items.map((item) => ({
+        this.loadError = state.status === 'error' && state.data === null ? state.error : null;
+        if (state.data !== null) {
+          const order = state.data;
+          this.orderVersion = order.version ?? 0;
+          this.lines = order.items.map((item) => ({
             id: item.id,
             name: item.name,
             detail: `${item.quantity} unidad`,
             effect: '',
             amount: item.lineTotal,
-            disabled: item.cancelled || !['CONFIRMED', 'PREPARING'].includes(state.data.progress),
+            disabled: item.cancelled || !['CONFIRMED', 'PREPARING'].includes(order.progress),
           }));
+        }
         this.changeDetector.markForCheck();
       });
       this.customerOrders.loadOrder(this.orderId);
     } else {
       this.opsOrders.selected$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((state) => {
         this.loading = state.status === 'loading';
-        this.loadError = state.status === 'error' ? state.error : null;
-        if (state.status === 'success')
+        this.loadError = state.status === 'error' && state.data === null ? state.error : null;
+        if (state.data !== null) {
+          this.orderVersion = state.data.version;
           this.lines = state.data.items.map((item) => ({
             id: item.id,
             name: item.name,
@@ -467,6 +474,7 @@ export class CancellationRequestPageComponent implements OnInit, HasPendingCance
             amount: item.lineTotal,
             disabled: !item.cancellable,
           }));
+        }
         this.changeDetector.markForCheck();
       });
       this.opsOrders.loadOrder(this.orderId);
@@ -512,7 +520,8 @@ export class CancellationRequestPageComponent implements OnInit, HasPendingCance
         itemIds: value.itemIds,
         reasonCode: value.reasonCode,
         reasonNote: value.reasonNote,
-        idempotencyKey: crypto.randomUUID(),
+        idempotencyKey: this.commandKey,
+        expectedOrderVersion: this.orderVersion,
       },
     });
   }

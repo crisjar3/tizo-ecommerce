@@ -30,7 +30,7 @@ import { CustomerOrdersStore } from '../state/customer-orders.store';
       ><lucide-icon name="arrow-left" [size]="16" /> Mis pedidos</a
     >
     <ng-container *ngIf="store.selected$ | async as state">
-      <article *ngIf="state.status === 'success'">
+      <article *ngIf="state.data !== null">
         <section class="success-notice" *ngIf="created">
           <lucide-icon name="circle-check" [size]="20" /><span
             ><strong>¡Compra confirmada!</strong>Tu pedido #{{ state.data.id }} ya está en
@@ -74,7 +74,7 @@ import { CustomerOrdersStore } from '../state/customer-orders.store';
               ><small
                 >{{ item.quantity }} unidad ·
                 {{
-                  item.refundStatus === 'SUCCEEDED'
+                  item.refundStatus === 'COMPLETED' || item.refundStatus === 'SUCCEEDED'
                     ? 'Reembolso simulado completado'
                     : 'Compra activa'
                 }}</small
@@ -117,7 +117,7 @@ import { CustomerOrdersStore } from '../state/customer-orders.store';
           message="Estamos recuperando la información más reciente."
         />
       </div>
-      <div class="empty-center" *ngIf="state.status === 'error'">
+      <div class="empty-center" *ngIf="state.status === 'error' && state.data === null">
         <app-page-state
           [title]="state.error.title"
           [message]="state.error.message"

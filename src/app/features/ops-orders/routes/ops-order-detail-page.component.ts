@@ -31,7 +31,7 @@ import { OpsOrdersStore } from '../state/ops-orders.store';
       ><lucide-icon name="arrow-left" [size]="16" /> Volver a órdenes</a
     >
     <ng-container *ngIf="store.selected$ | async as state">
-      <article *ngIf="state.status === 'success'">
+      <article *ngIf="state.data !== null">
         <header class="detail-heading">
           <div>
             <span class="eyebrow">Orden #{{ state.data.id }}</span>
@@ -107,7 +107,7 @@ import { OpsOrdersStore } from '../state/ops-orders.store';
           message="Estamos verificando el estado de cada línea."
         />
       </div>
-      <div class="empty-center panel" *ngIf="state.status === 'error'">
+      <div class="empty-center panel" *ngIf="state.status === 'error' && state.data === null">
         <app-page-state
           [title]="state.error.title"
           [message]="state.error.message"
@@ -236,7 +236,11 @@ export class OpsOrderDetailPageComponent implements OnInit {
       PENDING: 'Pendiente',
       CONFIRMED: 'Confirmada',
       PREPARING: 'En preparación',
+      READY_FOR_PICKUP: 'Lista para retirar',
+      IN_TRANSIT_TO_HUB: 'Hacia el hub',
       AT_HUB: 'En hub',
+      AWAITING_STORES: 'Esperando tiendas',
+      READY_TO_DISPATCH: 'Lista para despachar',
       DISPATCHED: 'Despachada',
       DELIVERED: 'Entregada',
       CANCELLED: 'Cancelada',

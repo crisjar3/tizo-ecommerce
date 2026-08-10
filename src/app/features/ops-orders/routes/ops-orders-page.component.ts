@@ -54,8 +54,8 @@ import { OpsOrdersStore } from '../state/ops-orders.store';
       /></label>
       <select formControlName="status" aria-label="Estado de preparación">
         <option value="">Todos los estados</option>
-        <option value="CONFIRMED">Confirmadas</option>
-        <option value="PREPARING">En preparación</option>
+        <option value="AWAITING_STORES">Esperando tiendas</option>
+        <option value="READY_TO_DISPATCH">Listas para despachar</option>
         <option value="DISPATCHED">Despachadas</option>
         <option value="DELIVERED">Entregadas</option>
       </select>
@@ -73,7 +73,7 @@ import { OpsOrdersStore } from '../state/ops-orders.store';
     <ng-container *ngIf="store.orders$ | async as state">
       <section
         class="orders-table content-card"
-        *ngIf="state.status === 'success' && state.data.items.length"
+        *ngIf="state.data !== null && state.data.items.length"
       >
         <div class="table-header">
           <span>Orden</span><span>Cliente</span><span>Preparación</span><span>Cancelación</span
@@ -102,10 +102,7 @@ import { OpsOrdersStore } from '../state/ops-orders.store';
           ><lucide-icon name="chevron-right" [size]="16"
         /></a>
       </section>
-      <div
-        class="empty-center panel"
-        *ngIf="state.status === 'success' && !state.data.items.length"
-      >
+      <div class="empty-center panel" *ngIf="state.data !== null && !state.data.items.length">
         <app-page-state
           title="No hay órdenes con estos filtros"
           message="Ajustá la búsqueda o limpiá los filtros para ver más resultados."
@@ -119,7 +116,7 @@ import { OpsOrdersStore } from '../state/ops-orders.store';
           message="Estamos consultando la operación más reciente."
         />
       </div>
-      <div class="empty-center" *ngIf="state.status === 'error'">
+      <div class="empty-center" *ngIf="state.status === 'error' && state.data === null">
         <app-page-state
           [title]="state.error.title"
           [message]="state.error.message"
@@ -322,7 +319,7 @@ export class OpsOrdersPageComponent implements OnInit {
       const values = {
         search: params.get('search') ?? '',
         status: params.get('status') ?? '',
-        cancellation: params.get('cancellation') ?? '',
+        cancellation: params.get('cancellationStatus') ?? '',
       };
       this.filters.setValue(values, { emitEvent: false });
       this.store.loadOrders(values);
@@ -335,7 +332,7 @@ export class OpsOrdersPageComponent implements OnInit {
           queryParams: {
             search: values.search || null,
             status: values.status || null,
-            cancellation: values.cancellation || null,
+            cancellationStatus: values.cancellation || null,
           },
           replaceUrl: true,
         });
@@ -371,7 +368,11 @@ export class OpsOrdersPageComponent implements OnInit {
       PENDING: 'Pendiente',
       CONFIRMED: 'Confirmada',
       PREPARING: 'En preparación',
+      READY_FOR_PICKUP: 'Lista para retirar',
+      IN_TRANSIT_TO_HUB: 'Hacia el hub',
       AT_HUB: 'En hub',
+      AWAITING_STORES: 'Esperando tiendas',
+      READY_TO_DISPATCH: 'Lista para despachar',
       DISPATCHED: 'Despachada',
       DELIVERED: 'Entregada',
       CANCELLED: 'Cancelada',

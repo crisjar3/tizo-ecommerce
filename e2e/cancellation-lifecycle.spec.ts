@@ -48,7 +48,7 @@ test('una respuesta perdida se reconcilia sin duplicar la solicitud', async ({ p
   await expect(page).toHaveURL(/\/my\/orders\/1042/);
 
   await page.evaluate(() => sessionStorage.setItem('tizo:mock-scenario:v1', 'normal'));
-  await page.goto('/cancellations?status=REQUESTED');
+  await page.goto('/cancellations?status=PENDING');
   await expect(page.getByText('Orden #1042')).toHaveCount(1);
 });
 

@@ -19,12 +19,13 @@
     "test": "ng test",
     "test:ci": "node scripts/test-ci.mjs",
     "e2e": "playwright test",
+    "e2e:official": "playwright test --config playwright.official.config.ts",
     "e2e:update": "playwright test --update-snapshots",
     "api:sync": "node scripts/sync-official-openapi.mjs && pnpm api:generate",
-    "api:generate": "openapi-typescript docs/contracts/tizo.openapi.yaml -o src/app/core/api/generated/tizo-api.types.ts",
+    "api:generate": "openapi-typescript docs/contracts/tizo.openapi.yaml -o src/app/core/api/generated/tizo-api.types.ts && prettier --write src/app/core/api/generated/tizo-api.types.ts",
     "api:contract:lint": "redocly lint docs/contracts/tizo.openapi.yaml --skip-rule no-ambiguous-paths",
     "api:contract:check": "pnpm api:contract:lint && pnpm api:generate && git diff --exit-code -- docs/contracts/tizo.openapi.yaml src/app/core/api/generated/tizo-api.types.ts",
-    "format:check": "prettier --check \"src/**/*.{ts,html,scss}\" \"e2e/**/*.ts\" \"*.{json,ts}\" \".github/**/*.yml\"",
+    "format:check": "prettier --check \"src/**/*.{ts,html,scss}\" \"e2e/**/*.ts\" \"e2e-official/**/*.ts\" \"*.{json,ts}\" \".github/**/*.yml\"",
     "format": "prettier --write ."
   },
   "dependencies": {

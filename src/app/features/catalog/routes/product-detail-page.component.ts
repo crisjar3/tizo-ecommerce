@@ -20,7 +20,7 @@ import { CatalogStore } from '../state/catalog.store';
     >
 
     <ng-container *ngIf="store.selectedProduct$ | async as state">
-      <article class="product-detail" *ngIf="state.status === 'success'">
+      <article class="product-detail" *ngIf="state.data !== null">
         <div class="product-visual">
           <img [src]="state.data.imageUrl" [alt]="state.data.imageAlt" />
           <span>{{ state.data.category }}</span>
@@ -52,7 +52,7 @@ import { CatalogStore } from '../state/catalog.store';
           message="Un momento, estamos preparando el detalle."
         />
       </div>
-      <div class="empty-center" *ngIf="state.status === 'error'">
+      <div class="empty-center" *ngIf="state.status === 'error' && state.data === null">
         <app-page-state
           [title]="state.error.title"
           [message]="state.error.message"

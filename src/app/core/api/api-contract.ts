@@ -14,6 +14,10 @@ export interface Product {
   readonly stock: number;
   readonly imageUrl: string;
   readonly imageAlt: string;
+  readonly available: boolean;
+  readonly longDescription?: string;
+  readonly imageUrls?: readonly string[];
+  readonly attributes?: readonly { readonly name: string; readonly value: string }[];
 }
 
 export interface CartItem {
@@ -39,13 +43,25 @@ export type OrderItemStatus =
   | 'PENDING'
   | 'CONFIRMED'
   | 'PREPARING'
+  | 'READY_FOR_PICKUP'
+  | 'IN_TRANSIT_TO_HUB'
   | 'AT_HUB'
+  | 'AWAITING_STORES'
+  | 'READY_TO_DISPATCH'
   | 'DISPATCHED'
   | 'DELIVERED'
   | 'CANCELLED';
 
 export type CancellationStatus = 'NONE' | 'REQUESTED' | 'PARTIAL' | 'FULL';
-export type RefundStatus = 'NONE' | 'PENDING' | 'SUCCEEDED' | 'MANUAL_REVIEW';
+export type RefundStatus =
+  | 'NONE'
+  | 'NOT_REQUIRED'
+  | 'PENDING'
+  | 'PROCESSING'
+  | 'COMPLETED'
+  | 'FAILED'
+  | 'SUCCEEDED'
+  | 'MANUAL_REVIEW';
 
 export interface CustomerOrderItem {
   readonly id: string;
@@ -55,6 +71,8 @@ export interface CustomerOrderItem {
   readonly lineTotal: Money;
   readonly cancelled: boolean;
   readonly refundStatus: RefundStatus;
+  readonly imageUrl?: string;
+  readonly cancellable?: boolean;
 }
 
 export interface CustomerOrder {
@@ -65,6 +83,7 @@ export interface CustomerOrder {
   readonly paidTotal: Money;
   readonly cancelledTotal: Money;
   readonly activeTotal: Money;
+  readonly version?: number;
 }
 
 export interface OpsOrderItem extends CustomerOrderItem {
@@ -81,6 +100,7 @@ export interface OpsOrder extends Omit<CustomerOrder, 'items'> {
   readonly fulfillmentStatus: OrderItemStatus;
   readonly cancellationStatus: CancellationStatus;
   readonly version: number;
+  readonly dispatchedAt: string | null;
   readonly items: readonly OpsOrderItem[];
 }
 
@@ -90,7 +110,7 @@ export interface PaginatedOrders {
   readonly total: number;
 }
 
-export type CancellationRequestStatus = 'REQUESTED' | 'APPROVED' | 'COMPLETED' | 'REJECTED';
+export type CancellationRequestStatus = 'PENDING' | 'APPROVED' | 'COMPLETED' | 'REJECTED';
 
 export interface CancellationRequestItem {
   readonly itemId: string;
@@ -118,6 +138,7 @@ export interface CancellationRequest {
   readonly effectiveOrderId?: string;
   readonly affectedAmount: Money;
   readonly version: number;
+  readonly currentOrderVersion?: number;
   readonly validNow: boolean;
   readonly invalidReason?: string;
 }
@@ -129,6 +150,9 @@ export interface Operator {
   readonly team: string;
   readonly online: boolean;
   readonly resolvedCount: number;
+  readonly email?: string;
+  readonly role?: 'OPERATOR' | 'SUPERVISOR';
+  readonly active?: boolean;
 }
 
 export interface AuditEvent {
@@ -148,6 +172,7 @@ export interface CreateCancellationCommand {
   readonly reasonCode: string;
   readonly reasonNote: string;
   readonly idempotencyKey: string;
+  readonly expectedOrderVersion?: number;
 }
 
 export interface CheckoutCommand {
@@ -157,6 +182,7 @@ export interface CheckoutCommand {
 export interface ResolveCancellationCommand {
   readonly idempotencyKey: string;
   readonly expectedVersion: number;
+  readonly expectedOrderVersion?: number;
   readonly rejectionCode?: string;
   readonly rejectionNote?: string;
 }
@@ -172,6 +198,7 @@ export interface ApiErrorEnvelope {
 export const CANCELLATION_REASONS = [
   { code: 'CUSTOMER_REQUEST', label: 'Pedido del cliente' },
   { code: 'OUT_OF_STOCK', label: 'Sin stock en tienda' },
-  { code: 'PRICING_ERROR', label: 'Error de precio' },
-  { code: 'DAMAGED_ITEM', label: 'Producto dañado' },
+  { code: 'STORE_UNABLE', label: 'La tienda no puede completar la línea' },
+  { code: 'FRAUD_SUSPICION', label: 'Revisión preventiva por fraude' },
+  { code: 'OTHER', label: 'Otro motivo' },
 ] as const;

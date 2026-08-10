@@ -1,16 +1,19 @@
 import { inject, Injectable } from '@angular/core';
 import { ComponentStore, tapResponse } from '@ngrx/component-store';
-import { EMPTY, switchMap, tap } from 'rxjs';
+import { concatMap, exhaustMap, switchMap, tap } from 'rxjs';
 
 import type { Cart, CustomerOrder } from '../../../core/api/api-contract';
-import { TizoApiService } from '../../../core/api/tizo-api.service';
+import { IdempotencyKeyFactory } from '../../../core/api/idempotency-key.factory';
 import type { CommandState, ScreenState } from '../../../core/errors/app-error';
 import {
-  errorScreenState,
+  beginScreenState,
+  failScreenState,
   initialScreenState,
   successScreenState,
 } from '../../../core/errors/app-error';
 import { normalizeHttpError } from '../../../core/errors/error-mapper';
+import { CartApiClient } from '../data-access/cart-api.client';
+import { CheckoutApiClient } from '../data-access/checkout-api.client';
 
 interface CartState {
   readonly cart: ScreenState<Cart>;
@@ -31,20 +34,24 @@ const initialState: CartState = {
 
 @Injectable({ providedIn: 'root' })
 export class CartStore extends ComponentStore<CartState> {
-  private readonly api = inject(TizoApiService);
+  private readonly cartApi = inject(CartApiClient);
+  private readonly checkoutApi = inject(CheckoutApiClient);
+  private readonly idempotencyKeys = inject(IdempotencyKeyFactory);
 
   readonly cart$ = this.select((state) => state.cart);
   readonly command$ = this.select((state) => state.command);
 
   readonly load = this.effect<void>((trigger$) =>
     trigger$.pipe(
-      tap(() => this.patchState({ cart: initialScreenState() })),
+      tap(() => this.patchState({ cart: beginScreenState(this.get().cart) })),
       switchMap(() =>
-        this.api.getCart().pipe(
+        this.cartApi.get().pipe(
           tapResponse(
             (cart) => this.patchState({ cart: successScreenState(cart) }),
             (error: unknown) =>
-              this.patchState({ cart: errorScreenState(normalizeHttpError(error)) }),
+              this.patchState({
+                cart: failScreenState(this.get().cart, normalizeHttpError(error)),
+              }),
           ),
         ),
       ),
@@ -54,8 +61,8 @@ export class CartStore extends ComponentStore<CartState> {
   readonly setQuantity = this.effect<QuantityCommand>((command$) =>
     command$.pipe(
       tap(() => this.patchState({ command: { status: 'submitting' } })),
-      switchMap(({ productId, quantity }) =>
-        this.api.setCartQuantity(productId, quantity).pipe(
+      concatMap(({ productId, quantity }) =>
+        this.cartApi.setQuantity(productId, quantity).pipe(
           tapResponse(
             (cart) =>
               this.patchState({
@@ -75,8 +82,8 @@ export class CartStore extends ComponentStore<CartState> {
   readonly removeItem = this.effect<string>((productId$) =>
     productId$.pipe(
       tap(() => this.patchState({ command: { status: 'submitting' } })),
-      switchMap((productId) =>
-        this.api.removeCartItem(productId).pipe(
+      exhaustMap((productId) =>
+        this.cartApi.remove(productId).pipe(
           tapResponse(
             (cart) =>
               this.patchState({
@@ -95,11 +102,10 @@ export class CartStore extends ComponentStore<CartState> {
 
   readonly checkout = this.effect<void>((trigger$) =>
     trigger$.pipe(
-      switchMap(() => {
-        if (this.get().command.status === 'submitting') return EMPTY;
-        const idempotencyKey = this.get().checkoutKey ?? crypto.randomUUID();
+      exhaustMap(() => {
+        const idempotencyKey = this.get().checkoutKey ?? this.idempotencyKeys.create();
         this.patchState({ checkoutKey: idempotencyKey, command: { status: 'submitting' } });
-        return this.api.checkout({ idempotencyKey }).pipe(
+        return this.checkoutApi.checkout({ idempotencyKey }).pipe(
           tapResponse(
             (order) =>
               this.patchState({
@@ -123,6 +129,36 @@ export class CartStore extends ComponentStore<CartState> {
           ),
         );
       }),
+    ),
+  );
+
+  readonly reconcileCheckout = this.effect<string>((key$) =>
+    key$.pipe(
+      exhaustMap((idempotencyKey) =>
+        this.checkoutApi.reconcile(idempotencyKey).pipe(
+          tapResponse(
+            (order) =>
+              this.patchState({
+                cart: successScreenState({
+                  items: [],
+                  itemCount: 0,
+                  total: { amountMinor: 0, currency: 'ARS' },
+                }),
+                command: { status: 'success', data: order },
+                checkoutKey: null,
+              }),
+            (error: unknown) => {
+              const appError = normalizeHttpError(error, true);
+              this.patchState({
+                command:
+                  appError.kind === 'not-found'
+                    ? { status: 'error', error: appError }
+                    : { status: 'uncertain', error: appError, idempotencyKey },
+              });
+            },
+          ),
+        ),
+      ),
     ),
   );
 
