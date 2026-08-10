@@ -1,48 +1,72 @@
-# Migración del mock a una API REST real
+# Integración con la API oficial de Tizo
 
-## Precondiciones del backend
+## Estado actual
 
-El backend debe implementar los endpoints consumidos por
-`src/app/core/api/tizo-api.service.ts`, usando las formas públicas definidas en
-`src/app/core/api/api-contract.ts`, y preservar:
+La aplicación Angular consume la API oficial tanto en desarrollo como en producción:
 
-- dinero en unidades menores enteras y moneda ISO-4217;
-- endpoints separados para cliente y operaciones;
-- proyección cliente sin tienda, hub, estado interno de línea ni efecto operacional;
-- `X-Operator-Id` en las rutas `/api/ops`;
-- envelopes de error con `code`, `message`, `correlationId` y errores de campo opcionales;
-- idempotencia para checkout, creación, aprobación y rechazo;
-- reconciliación de solicitudes por clave idempotente;
-- resolución atómica de orden, solicitud y auditoría.
+- Documentación: <https://d39uqv4p1mtopj.cloudfront.net/docs>
+- OpenAPI: <https://d39uqv4p1mtopj.cloudfront.net/openapi/openapi.yaml>
+- URL base: `https://d39uqv4p1mtopj.cloudfront.net/api`
 
-## Cambio de configuración
+MSW no forma parte del bundle de producción. El modo mock se inicia explícitamente con
+`pnpm start:mock` y utiliza los mismos endpoints y DTO que la API oficial.
 
-En `src/environments/environment.ts`:
+## Límites de transporte
 
-```ts
-export const environment = {
-  production: true,
-  mockApi: false,
-  apiBaseUrl: 'https://api.example.com/api',
-  demoControls: false,
-} as const;
+El contrato versionado vive en `docs/contracts/tizo.openapi.yaml`. Los tipos generados están en
+`src/app/core/api/generated/tizo-api.types.ts` y solo se importan desde adaptadores de
+`data-access`. Las rutas, componentes y stores reciben modelos del dominio, nunca DTO HTTP.
+
+Los clientes están separados por capacidad:
+
+- catálogo;
+- carrito y checkout;
+- pedidos del cliente;
+- pedidos operacionales;
+- cancelaciones;
+- operadores;
+- controles del mock.
+
+Las lecturas aplican timeout y reintentos acotados solamente para red, timeout y `5xx`. Los comandos
+no se reintentan automáticamente: usan claves idempotentes y, ante un resultado incierto, consultan
+el endpoint de reconciliación correspondiente.
+
+## Actualizar el contrato
+
+```powershell
+pnpm api:sync
+pnpm api:contract:check
 ```
 
-Con `mockApi=false`, `src/main.ts` no inicia MSW. Angular conserva los mismos servicios, stores,
-rutas y páginas.
+`api:sync` descarga el OpenAPI oficial, verifica que el documento recibido sea YAML y regenera los
+tipos. El cambio debe revisarse antes de adaptar mappers o clientes. Un cambio del backend no debe
+propagarse a templates ni ComponentStores.
 
-## Validación
+## Validación local
 
-1. Ejecutar `pnpm build` y comprobar que el bootstrap no intenta registrar el worker.
-2. Ejecutar pruebas contractuales contra un entorno aislado del backend.
-3. Verificar códigos `409`, especialmente despacho, resolución concurrente e idempotencia.
-4. Simular timeout posterior al commit y confirmar que el GET de reconciliación encuentra el
-   resultado.
-5. Ejecutar la suite E2E con `baseURL` y `apiBaseUrl` del entorno de integración.
-6. Revisar que ninguna respuesta cliente incluya campos operacionales.
+```powershell
+pnpm lint
+pnpm test:ci
+pnpm build:mock
+pnpm build
+pnpm e2e
+pnpm e2e:official
+```
 
-## Cambios permitidos
+`pnpm e2e` ejecuta la cobertura funcional completa sobre el mock determinístico. La prueba
+`e2e:official` valida por navegador las superficies de lectura de catálogo, carrito, pedidos,
+operadores y órdenes. Deliberadamente no ejecuta checkout ni cancelaciones contra el entorno oficial
+compartido.
 
-Si la API real introduce una diferencia justificada, el ajuste debe quedar en un gateway o mapper de
-`data-access`. No se modifican componentes para adaptarlos a DTOs, y los DTOs nunca se almacenan en
-ComponentStore ni se exponen a templates.
+## Despliegue
+
+Netlify ejecuta `pnpm run build`. El artefacto resultante:
+
+- usa la URL oficial;
+- no contiene `mockServiceWorker.js`;
+- elimina cualquier registro legado del worker antes del bootstrap;
+- conserva la redirección SPA hacia `index.html` para rutas profundas.
+
+Si se incorpora otro entorno, la única diferencia permitida en configuración es `apiBaseUrl`. Una
+diferencia justificada del transporte se resuelve en el cliente o mapper de la feature, sin cambiar
+la UI ni el dominio.

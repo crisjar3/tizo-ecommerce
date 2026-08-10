@@ -41,11 +41,14 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      - name: Validate official API contract
+        run: pnpm api:contract:check
+
       - name: Unit tests and coverage
         run: pnpm test:ci
 
-      - name: Build demo
-        run: pnpm build:demo
+      - name: Build isolated mock
+        run: pnpm build:mock
 
       - name: Build production without mock
         run: pnpm build

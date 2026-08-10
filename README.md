@@ -1,12 +1,12 @@
 # Tizo Ecommerce
 
-Demo funcional de ecommerce y backoffice construida con Angular 16. Incluye catálogo, carrito,
+Aplicación funcional de ecommerce y backoffice construida con Angular 16. Incluye catálogo, carrito,
 checkout, pedidos del cliente, investigación operacional, solicitudes de cancelación, resolución
 concurrente, reconciliación de resultados inciertos e historial auditable.
 
-La aplicación consume un contrato REST tipado. En desarrollo ese contrato lo implementa un mock
-stateful con MSW; en producción el mock está desactivado y la misma UI queda preparada para una API
-real.
+La aplicación consume la API oficial de Tizo en desarrollo y producción. Su OpenAPI se versiona y
+genera los DTO de transporte; cada feature los adapta a modelos del dominio antes de llegar al estado
+o a la interfaz. El mock stateful con MSW se conserva como un entorno aislado para pruebas y demos.
 
 ## Requisitos
 
@@ -35,8 +35,17 @@ pnpm exec playwright install chromium
 pnpm start
 ```
 
-Abrí `http://localhost:4200`. El entorno de desarrollo activa MSW y muestra el control flotante
-**Demo**, desde donde se pueden reproducir estados de carga, vacío, error, offline e incertidumbre.
+Abrí `http://localhost:4200`. Esta ejecución usa
+`https://d39uqv4p1mtopj.cloudfront.net/api` y no registra el worker de MSW.
+
+Para trabajar con datos determinísticos sin escribir en la API oficial:
+
+```powershell
+pnpm start:mock
+```
+
+El modo mock muestra el control flotante **Demo**, desde donde se pueden reproducir estados de carga,
+vacío, error, offline e incertidumbre.
 
 Rutas principales:
 
@@ -50,14 +59,18 @@ Rutas principales:
 ```powershell
 pnpm format:check
 pnpm lint
+pnpm api:contract:check
 pnpm test:ci
-pnpm build:demo
+pnpm build:mock
 pnpm build
 pnpm e2e
+pnpm e2e:official
 ```
 
 `pnpm test:ci` ejecuta Karma con Chromium de Playwright y genera cobertura. `pnpm e2e` levanta la
-aplicación en el puerto 4300 y ejecuta flujos funcionales, Axe, responsive y regresión visual.
+aplicación mock en el puerto 4300 y ejecuta flujos funcionales, Axe, responsive y regresión visual.
+`pnpm e2e:official` ejecuta únicamente lecturas seguras contra la API oficial desde localhost; no
+crea pedidos ni cancelaciones.
 
 Para aceptar intencionalmente un cambio visual después de revisarlo:
 
@@ -82,42 +95,40 @@ src/app/
     └── operators/
 ```
 
-- Las páginas no usan `HttpClient`; delegan en ComponentStores y en `TizoApiService`.
+- Las páginas no usan `HttpClient`; delegan en ComponentStores y clientes pequeños por feature.
 - El Router conserva búsqueda, filtros y pestañas compartibles.
 - Los formularios reactivos tipados poseen selección, validación y estado sucio.
-- El mock y la API real comparten los contratos tipados de
-  [`src/app/core/api/api-contract.ts`](src/app/core/api/api-contract.ts).
+- Los DTO se generan desde
+  [`docs/contracts/tizo.openapi.yaml`](docs/contracts/tizo.openapi.yaml) y permanecen dentro de
+  `data-access`.
+- Los modelos de [`src/app/core/api/api-contract.ts`](src/app/core/api/api-contract.ts) son
+  independientes de las formas HTTP.
 - El dinero se representa en unidades menores enteras mediante `Money`.
 - Las mutaciones nunca se reintentan automáticamente. Un timeout queda en estado `uncertain` y se
   reconcilia por clave idempotente.
 
 ## Datos y escenarios del mock
 
-MSW persiste la base versionada en `sessionStorage`; el operador seleccionado vive en
+El mock se inicia únicamente con `pnpm start:mock`. MSW persiste la base versionada en
+`sessionStorage`; el operador seleccionado vive en
 `localStorage`. **Restaurar datos seed** borra pedidos y decisiones creados durante la sesión.
 
 El catálogo completo de escenarios y sus efectos está en
 [docs/mock-scenarios.md](docs/mock-scenarios.md).
 
-## Conectar la API REST real
+## API oficial
 
-El build de producción ya usa:
+Desarrollo, producción y Netlify usan:
 
 ```ts
 mockApi: false;
+apiBaseUrl: 'https://d39uqv4p1mtopj.cloudfront.net/api';
 ```
 
-Para conectar el backend:
-
-1. Configurá `apiBaseUrl` en `src/environments/environment.ts`.
-2. Implementá las superficies REST consumidas por
-   [`TizoApiService`](src/app/core/api/tizo-api.service.ts), respetando los contratos públicos.
-3. Conservá `X-Operator-Id`, códigos de dominio, `correlationId` e idempotencia.
-4. Ejecutá ambos builds y la suite contractual/E2E.
-
-No deberían cambiar rutas, páginas, ComponentStores ni componentes. Si el backend justifica otra
-forma de transporte, ajustá el mapper de `data-access`, sin filtrar DTOs a la UI. La guía detallada
-está en [docs/real-api-migration.md](docs/real-api-migration.md).
+El cliente envía `X-Operator-Id` en el contexto operacional, normaliza errores RFC 9457 y conserva
+idempotencia y reconciliación para los comandos. Para actualizar el contrato publicado ejecutá
+`pnpm api:sync`, revisá el diff y validá con `pnpm api:contract:check`. La guía detallada está en
+[docs/real-api-migration.md](docs/real-api-migration.md).
 
 ## Documentación de producto
 
