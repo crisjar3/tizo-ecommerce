@@ -12,6 +12,17 @@ const recoveryByCode: Readonly<Record<string, RecoveryAction>> = {
   CONCURRENT_MODIFICATION: 'reload-readonly',
 };
 
+const recoveryFromApi: Readonly<Record<string, RecoveryAction>> = {
+  RELOAD: 'retry-read',
+  VERIFY_COMMAND: 'verify-command',
+  OPEN_EXISTING_CANCELLATION: 'open-existing',
+  RETURN_TO_ORDER: 'return-order',
+  SELECT_OPERATOR: 'select-operator',
+  READ_ONLY: 'reload-readonly',
+  FIX_REQUEST: 'fix-request',
+  NONE: 'none',
+};
+
 export function normalizeHttpError(error: unknown, command = false): AppError {
   if (error instanceof TimeoutError) {
     return {
@@ -40,7 +51,9 @@ export function normalizeHttpError(error: unknown, command = false): AppError {
   const envelope = readEnvelope(error.error);
   const code = envelope?.code ?? `HTTP_${error.status}`;
   const recovery =
-    recoveryByCode[code] ?? (command && error.status === 0 ? 'verify-command' : 'none');
+    (envelope?.recoveryAction ? recoveryFromApi[envelope.recoveryAction] : undefined) ??
+    recoveryByCode[code] ??
+    (command && error.status === 0 ? 'verify-command' : 'none');
 
   if (error.status === 0) {
     return {
@@ -82,9 +95,36 @@ export function normalizeHttpError(error: unknown, command = false): AppError {
 }
 
 function readEnvelope(value: unknown): ApiErrorEnvelope | null {
-  if (!value || typeof value !== 'object' || !('code' in value) || !('message' in value))
-    return null;
-  return value as ApiErrorEnvelope;
+  if (!isRecord(value)) return null;
+
+  const candidate = isRecord(value['error']) ? value['error'] : value;
+  const code = candidate['code'];
+  const message = candidate['message'];
+  const correlationId = candidate['correlationId'];
+  if (typeof code !== 'string' || typeof message !== 'string') return null;
+
+  return {
+    code,
+    message,
+    correlationId: typeof correlationId === 'string' ? correlationId : '',
+    fieldErrors: readFieldErrors(candidate['fieldErrors']),
+    recoveryAction:
+      typeof candidate['recoveryAction'] === 'string' ? candidate['recoveryAction'] : undefined,
+  };
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function readFieldErrors(value: unknown): Readonly<Record<string, readonly string[]>> | undefined {
+  if (!isRecord(value)) return undefined;
+
+  const entries = Object.entries(value).filter(
+    (entry): entry is [string, string[]] =>
+      Array.isArray(entry[1]) && entry[1].every((message) => typeof message === 'string'),
+  );
+  return entries.length ? Object.fromEntries(entries) : undefined;
 }
 
 function titleFor(code: string, status: number): string {
@@ -94,6 +134,8 @@ function titleFor(code: string, status: number): string {
     NO_CANCELLABLE_ITEMS: 'No hay productos cancelables',
     REQUEST_ALREADY_RESOLVED: 'La solicitud ya fue resuelta',
     IDEMPOTENCY_KEY_REUSED: 'La confirmación no coincide',
+    CART_EMPTY: 'Tu carrito está vacío',
+    OPERATOR_REQUIRED: 'Seleccioná un operador',
   };
   return known[code] ?? (status === 409 ? 'La información cambió' : 'No fue posible continuar');
 }

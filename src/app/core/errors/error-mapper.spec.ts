@@ -79,4 +79,33 @@ describe('normalizeHttpError', () => {
     expect(result.fieldErrors?.['reasonNote']).toEqual(['Escribí más detalle.']);
     expect(result.status).toBe(400);
   });
+
+  it('reads the official RFC 9457 problem envelope and recovery action', () => {
+    const result = normalizeHttpError(
+      new HttpErrorResponse({
+        status: 422,
+        error: {
+          type: 'https://tizo.test/problems/cart-empty',
+          title: 'Validation error',
+          status: 422,
+          detail: 'The cart is empty.',
+          instance: '/api/me/orders',
+          error: {
+            category: 'DOMAIN',
+            code: 'CART_EMPTY',
+            message: 'Agregá productos antes de confirmar.',
+            correlationId: 'corr-official',
+            retryable: false,
+            recoveryAction: 'FIX_REQUEST',
+          },
+        },
+      }),
+      true,
+    );
+
+    expect(result.code).toBe('CART_EMPTY');
+    expect(result.message).toBe('Agregá productos antes de confirmar.');
+    expect(result.correlationId).toBe('corr-official');
+    expect(result.recovery).toBe('fix-request');
+  });
 });

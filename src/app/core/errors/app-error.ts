@@ -16,6 +16,8 @@ export type RecoveryAction =
   | 'open-existing'
   | 'return-order'
   | 'reload-readonly'
+  | 'select-operator'
+  | 'fix-request'
   | 'none';
 
 export interface AppError {

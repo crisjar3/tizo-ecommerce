@@ -166,6 +166,7 @@ export interface ApiErrorEnvelope {
   readonly message: string;
   readonly correlationId: string;
   readonly fieldErrors?: Readonly<Record<string, readonly string[]>>;
+  readonly recoveryAction?: string;
 }
 
 export const CANCELLATION_REASONS = [
